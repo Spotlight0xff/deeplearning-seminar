@@ -1,0 +1,6 @@
+#!/bin/bash
+#set -xv
+convert $1 `echo $1 | sed s/.png$/.eps/`;
+convert $1 `echo $1 | sed s/.gif$/.eps/`;
+convert $1 `echo $1 | sed s/.jpg$/.eps/`;
+convert $1 `echo $1 | sed s/.pgm$/.eps/`;

@@ -1,0 +1,64 @@
+_____________________________________________________________________
+
+Q: How can I force mplayer to open multimedia files?  
+A: Please check your ${HOME}/.mailcap file and add the following lines
+   if neccessary:
+
+audio/mpeg; /usr/bin/mplayer -fs '%s'; description="MPEG Audio Format"
+audio/x-mpegurl; /usr/bin/mplayer '%s'; description="Icecast Playlists"
+audio/x-ms-wax; /usr/bin/mplayer '%s'; description="Audio Format"
+audio/x-ms-wma; /usr/bin/mplayer -fs '%s'; description="Audio Format"
+audio/x-pls; /usr/bin/mplayer '%s'; description="MP3 ShoutCast/IceCast Playlist"
+audio/x-scpls; /usr/bin/mplayer '%s'; description="Shoutcast Playlists"
+audio/x-wav; /usr/bin/mplayer '%s'; description="Waveform Microsoft Wave/RIFF"
+video/avi; /usr/bin/mplayer -fs '%s'; description="AVI Video Format"; test=test -n "$DISPLAY"
+video/mpeg; /usr/bin/mplayer -fs '%s'; description="MPEG Video Format"; test=test -n "$DISPLAY"
+video/quicktime; /usr/bin/mplayer -fs '%s'; description="Apple Quicktime Video"; test=test -n "$DISPLAY"
+video/x-mpeg2; /usr/bin/mplayer -fs '%s'; description="MPEG Video"; test=test -n "$DISPLAY"
+video/x-mpeg; /usr/bin/mplayer -fs '%s'; description="MPEG 2 Video"; test=test -n "$DISPLAY"
+video/x-ms-afs; /usr/bin/mplayer -fs '%s'; description="Audio Video Interleave - Microsoft"; test=test -n "$DISPLAY"
+video/x-ms-asf; /usr/bin/mplayer '%s'; description="MS ASF video"; test=test -n "$DISPLAY"
+video/x-msvideo; /usr/bin/mplayer '%s'; description="Audio Video Interleave - Microsoft"; test=test -n "$DISPLAY"
+video/x-ms-wma; /usr/bin/mplayer '%s'; description="Audio Video Interleave - Microsoft"; test=test -n "$DISPLAY"
+video/x-ms-wmv; /usr/bin/mplayer '%s'; description="Audio Video Interleave - Microsoft"; test=test -n "$DISPLAY"
+video/x-ms-wmx; /usr/bin/mplayer '%s'; description="Audio Video Interleave - Microsoft"; test=test -n "$DISPLAY"
+video/x-ms-wvx; /usr/bin/mplayer '%s'; description="Audio Video Interleave - Microsoft"; test=test -n "$DISPLAY"
+
+_____________________________________________________________________
+
+Q: How can I force mplayer to open multimedia files on my Apple
+   Notebook?  
+A: Please check your file settings using the 'finder' application. Go
+   to the corresponding video file folder, and select a file using
+   <APPLE>-i. Then select the application you wish to use from the
+   application selector and apply this setup to _all_ files having the
+   same extension.
+
+_____________________________________________________________________
+
+Q: I would like to open a specific video e.g. in slow motion and
+   fullscreen. What can I do?
+
+A: Please create a file dependent '.conf' file for that video with the
+   corresponding options (check 'man mplayer' for further
+   information). For an example see:
+
+        /u/figures/dreuw/video/Tagesschau-TrackingSpatialFeaturesWoHand_Dreuw_01Jun06.avi
+        /u/figures/dreuw/video/Tagesschau-TrackingSpatialFeaturesWoHand_Dreuw_01Jun06.avi.conf
+
+_____________________________________________________________________
+
+Q: The file dependent '.conf' files for mplayer seem not work. What
+   can I do?
+A: Please create/edit your ${HOME}/.mplayer/config and add the
+   following lines if neccessary:
+
+# You can also write file-specific configuration files. If you wish to
+# have a configuration file for a file called ’movie.avi’, create a
+# file named ’movie.avi.conf’ with the file-specific options in it
+# and put it in ~/.mplayer/. You can also put the configuration file in
+# the same directory as the file to be played, as long as you give the
+# -use-filedir-conf option (either on the command line or in your global
+#config file).
+use-filedir-conf=yes
+_____________________________________________________________________

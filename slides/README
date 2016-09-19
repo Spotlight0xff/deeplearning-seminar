@@ -1,0 +1,47 @@
+This latex beamer style was created by Philippe Dreuw and Thomas
+Deselaers and should be used for talks presented at the Lehrstuhl fuer
+Informatik VI at the RWTH Aachen University.
+
+Any requests or comments should be sent to 
+{deselaers,dreuw}@informatik.rwth-aachen.de
+http://www-i6.informatik.rwth-aachen.de/
+
+
+** Multimedia files 
+   All multimedia files should be stored in the folders specifyed
+   in \audiodir (default=./audio), \videodir (default=./video), and
+   \sourcedir (default=./sources). Use the \renewcommand to change these
+   paths.
+
+   [mplayer]
+   If you want to have specific setting for a single video file than
+   create a mplayer config file, e.g. for video/your_video.avi create a
+   file video/your_video.avi.conf with specific settings for mplayer. If
+   mplayer is not the default application for the extension '.avi' you
+   have to adapt your ~/.mailcap file. Mac users should use Finder to
+   choose the default application for their multimedia files.
+
+   [xpdf-viewer only]
+   Playing multimedia files simply requests to have a shell script
+   with the same name than the multimedia file which will launch the
+   appilcation to play that file, e.g. ./video/myVideo.sh should start
+   ./video/myVideo.mpg
+
+
+** Creation of demo slides:
+   just type 'make' to create the slides in PDF and PS format.
+
+
+** Howto to export the slides?
+   cvs -d /u/cvs/image export -D now slides
+
+
+** Too much information?
+   Use the file 'template.tex' or 'vortrag_vorlage.tex' to start with 
+   an empty slide.
+
+
+** LaTeX hacks?
+   If you want to see the result of the latex hacks on your slides, 
+   you have to compile the slides using:
+     pdflatex -shell-escape slides.tex
