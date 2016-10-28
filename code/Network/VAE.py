@@ -7,6 +7,8 @@ import os
 import logging
 from Layer.Dense import Dense
 from Utils import compose_all
+import matplotlib.gridspec as gridspec
+
 
 from progressbar import ETA, Bar, Percentage, ProgressBar
 import matplotlib.pyplot as plt
@@ -231,14 +233,30 @@ class VAE(object):
                 path = os.path.join(dir, "img_{}.png".format(i))
                 f.savefig(path)
                 pbar.update(i)
-        plt.close('all')
+            plt.close('all')
         print("done")
 
-    def plot_manifold(self, save_dir = False):
-        pass
-
-
-
+    def plot_manifold(self, range_x=20, range_y=20, output="manifold.pdf"):
+        mid_x = range_x // 2
+        mid_y = range_y // 2
+        x1 = range(range_x)
+        x2 = range(range_y)
+        plt.figure(figsize=(range_x, range_y))
+        gs = gridspec.GridSpec(len(x1), len(x2))
+        gs.update(wspace=0, hspace=0)
+        pbar = ProgressBar(max_value = len(x1)*len(x2))
+        pbar.start()
+        i=0
+        for x in x1:
+            for y in x2:
+                ax = plt.subplot(gs[x,y])
+                ax.set_yticks([])
+                ax.set_xticks([])
+                img = self.decode([[x - mid_x,y - mid_y]])
+                ax.imshow(img.reshape(28,28), cmap=plt.cm.gray)
+                pbar.update(i)
+                i += 1
+        plt.savefig(output)
 
 
     
