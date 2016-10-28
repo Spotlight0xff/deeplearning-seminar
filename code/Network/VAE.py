@@ -192,6 +192,15 @@ class VAE(object):
         return self.decode(self.sample_gaussian(*self.encode(x)))
     
     def plot_reconstruction(self, data, save_dir = False):
+        """Try to reconstruct input data using the VAE Network
+
+        Args:
+            data(Dataset): input data, where we will get
+                           one batch (self.batch_size large) for reconstruction
+            save_dir(bool): If true, save all reconstructions (and originals)
+                            in the directory "out/run_"+self.constructed
+                            Otherwise, print one single image and its reconstruction
+        """
         # setup plots
         x,_ = data.validation.next_batch(self.batch_size)
         fetches = [self.x_reconstructed, self.cost]
