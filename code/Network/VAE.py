@@ -255,7 +255,7 @@ class VAE(object):
 
 
     
-    def train(self, X, num_epochs = np.inf):
+    def train(self, X, num_epochs = np.inf, plot_manifold = False):
         avg_train_error = 0
         now = datetime.now().isoformat()[11:]
         print("[**] Begin training: {}".format(now))
@@ -287,6 +287,9 @@ class VAE(object):
                 self.summary_writer.add_summary(summary, epoch)
             save_path = self.saver.save(self.sess, "/tmp/models/model_{}_{}.cpkt".format(self.constructed, epoch))
             print("epoch {}: avg cost: {}".format(epoch, avg_error_train))
+            if plot_manifold:
+                self.plot_manifold(range_x=20, range_y=20, output = "manifold_{}.pdf".format(epoch))
+                print("done plotting manifold")
 
         now = datetime.now().strftime("%y%m%d_%H%M")
         print("[***] Training end: {}".format(now))
