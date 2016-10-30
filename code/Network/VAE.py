@@ -44,6 +44,7 @@ class VAE(object):
         logs_path = os.path.join("logs", "run_"+self.constructed)
         self.summary_writer = tf.train.SummaryWriter(logs_path, self.sess.graph)
         self.writer = tf.merge_all_summaries()
+        self.saver = tf.train.Saver()
 
         self.sess.run(tf.initialize_all_variables())
         (self.x_in, self.dropout_, self.z_mean, self.z_log_sigma,
@@ -284,6 +285,7 @@ class VAE(object):
 
                 # write summary every batch
                 self.summary_writer.add_summary(summary, epoch)
+            save_path = self.saver.save(self.sess, "/tmp/models/model_{}_{}.cpkt".format(self.constructed, epoch))
             print("epoch {}: avg cost: {}".format(epoch, avg_error_train))
 
         now = datetime.now().strftime("%y%m%d_%H%M")
