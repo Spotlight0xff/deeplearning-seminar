@@ -259,7 +259,7 @@ class VAE(object):
 
 
     
-    def train(self, X, num_epochs = np.inf, plot_manifold = False):
+    def train(self, X, num_epochs = 75, plot_manifold = False):
         avg_train_error = 0
         now = datetime.now().isoformat()[11:]
         print("[**] Begin training: {}".format(now))
