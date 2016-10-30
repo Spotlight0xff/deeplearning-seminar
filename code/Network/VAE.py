@@ -29,7 +29,11 @@ class VAE(object):
     def __init__(self,
             network_architecture = [], # list of nodes per layer
             hyper_params = {}, # update to HYPERPARAMS
+            models_dir = "models/"
             ):
+        if not os.path.isdir(models_dir):
+            os.makedirs(models_dir)
+        self.models_dir = models_dir
         # insert updated hyper parameters into class
         tf.reset_default_graph()
         self.__dict__.update(VAE.HYPERPARAMS, **hyper_params)
@@ -285,7 +289,8 @@ class VAE(object):
 
                 # write summary every batch
                 self.summary_writer.add_summary(summary, epoch)
-            save_path = self.saver.save(self.sess, "/tmp/models/model_{}_{}.cpkt".format(self.constructed, epoch))
+            model_path = os.path.join(self.models_dir, "model_{}_epoch_{:03d}.cpkt".format(self.constructed, epoch))
+            save_path = self.saver.save(self.sess, model_path)
             print("epoch {}: avg cost: {}".format(epoch, avg_error_train))
             if plot_manifold:
                 self.plot_manifold(range_x=20, range_y=20, output = "manifold_{}.pdf".format(epoch))
