@@ -295,5 +295,4 @@ class VAE(object):
         now = datetime.now().strftime("%y%m%d_%H%M")
         print("[***] Training end: {}".format(now))
         print("average cost after {} epochs achieved: {}".format(num_epochs, avg_error_train))
-        self.writer.close()
         return avg_error_train
