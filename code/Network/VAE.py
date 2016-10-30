@@ -241,21 +241,15 @@ class VAE(object):
         mid_y = range_y // 2
         x1 = range(range_x)
         x2 = range(range_y)
-        plt.figure(figsize=(range_x, range_y))
-        gs = gridspec.GridSpec(len(x1), len(x2))
-        gs.update(wspace=0, hspace=0)
-        pbar = ProgressBar(max_value = len(x1)*len(x2))
-        pbar.start()
+        manifold = np.zeros(shape=(range_x*28, range_y*28))
         i=0
         for x in x1:
             for y in x2:
-                ax = plt.subplot(gs[x,y])
-                ax.set_yticks([])
-                ax.set_xticks([])
                 img = self.decode([[x - mid_x,y - mid_y]])
-                ax.imshow(img.reshape(28,28), cmap=plt.cm.gray)
-                pbar.update(i)
+                manifold[x*28:(x+1)*28,y*28:(y+1)*28] = img.reshape(28,28)
                 i += 1
+        plt.imshow(manifold, cmap=plt.cm.gray)
+        plt.axis('off')
         plt.savefig(output)
 
 
