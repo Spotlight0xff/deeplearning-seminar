@@ -254,6 +254,12 @@ class VAE(object):
         plt.axis('off')
         plt.savefig(output)
 
+    def plot_z_mean(self, data, num_samples = 5000):
+        x, y = data.test.next_batch(num_samples)
+        z_mean, _ = self.encode(x)
+        plt.scatter(z_mean[:,0], z_mean[:,1], c=np.argmax(y, 1), alpha=1, edgecolors='black')
+        plt.show()
+
 
     
     def train(self, X, num_epochs = 75, plot_manifold = False):
