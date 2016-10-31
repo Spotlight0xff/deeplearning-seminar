@@ -241,18 +241,15 @@ class VAE(object):
             plt.close('all')
         print("done")
 
-    def plot_manifold(self, range_x=20, range_y=20, output="manifold.pdf"):
-        mid_x = range_x // 2
-        mid_y = range_y // 2
-        x1 = range(range_x)
-        x2 = range(range_y)
-        manifold = np.zeros(shape=(range_x*28, range_y*28))
-        i=0
-        for x in x1:
-            for y in x2:
-                img = self.decode([[x - mid_x,y - mid_y]])
-                manifold[x*28:(x+1)*28,y*28:(y+1)*28] = img.reshape(28,28)
-                i += 1
+    def plot_manifold(self, range_x=(-4,4), range_y=(-4,4), num_rowdigits = 20, output="manifold.pdf"):
+        x1 = np.linspace(range_x[0], range_x[1], num = num_rowdigits)
+        x2 = np.linspace(range_y[0], range_y[1], num = num_rowdigits)
+
+        manifold = np.zeros(shape=(len(x1)*28, len(x2)*28))
+        for i_x, x in enumerate(x1):
+            for i_y, y in enumerate(x2):
+                img = self.decode([[x,y]])
+                manifold[i_x*28:(i_x+1)*28,i_y*28:(i_y+1)*28] = img.reshape(28,28)
         plt.imshow(manifold, cmap=plt.cm.gray)
         plt.axis('off')
         plt.savefig(output)
