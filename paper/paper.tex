@@ -220,14 +220,103 @@ This plateau is called Nash equilibrium (citation needed).
 \section{Variational Autoencoders}
 \label{sec:vae}
 
+%Variational Autoencoders (VAE) have been a popular choice for unsupervised learning of complicated distributions (citation needed) and generative modelling.
+In order to generate data from unknown and mostly intractable distributions, we need approximations.
+There are basically two approaches for sampling from these distributions,
+first there are approximate samples (MCMC, gibbs sampling, etc) which try to directly approximate $p(x)$.
+Variational Autoencoders instead try to match an easier to compute distribution $q(x)$ to $p(x)$.
+By using this approach, VAEs are computationally less intensive (citation?) but have the drawback of being more restricted in their modelling approach.
+Practically, this means that with more computation MCMC methods approach $p(x)$, while there is no such guarantee for variational methods (--> not for all).
+
+VAE can be learned with just backpropagation (paper,TODO), but they differ from denoising and sparse autoencoders due to the different loss function.
+
+
+%VAEs are built on top of neural networks and are designed in a way to allow training with gradient-based methods.
+%Learning and inference are reasonable efficient and relatively easy to implement and show decent results, but have been overshadowed by more recent adversarial approaches (citation needed!!,see \ref{sec:gan}).
+
 \subsection{Architecture}
 \label{sub:vae_architecture}
+VAE just like other autoencoders encode the input data into a smaller latent space similar to compression of data and is able to decode a vector of latent variables into output while trying to match the output to the input.
+But in contrast to other autoencoders (sparse, denoising), we enforce a specific distribution on the latent space.
+This allows to sample from this distribution and generate output which will look similar to the data on which the VAE has been trained.
+\ref{fig:vae_architecture}.
+
+\subsubsection{Reparameterization Trick}
+To be able to backpropagate the loss function through the VAE, it has to be differentiable and deterministic.
+Because we add noise to the encoding, the gradients can't be computed directly. In order to circumvent this restriction, the so-called "reparameterization trick" is applied.
+Instead of drawing $z ~ \mathcal{N}(\mu(x), \Sigma(x))$, we sample an auxiliary variable $\epsilon$ from $\mathcal{N}(0, I)$ which we then transform with equation \ref{eq:rep_trick} into $z$.
+\begin{equation}
+  \label{eq:rep_trick}
+  z = \mu(x) + \Sigma^{1/2}(x)*\epsilon
+\end{equation}
+This allows us to compute the gradient of the loss function and backpropagate through the entire model and only have the stochastic variable $\epsilon$ as input.\\\\
+
+The core idea of VAEs is to match a distribution $q(x)$ to the desired $p(x)$ by enforcing a lower variational bound on $q(x)$ in a way that it seeks to match $p(x)$.
+In contrast to other autoencoders, VAEs behave differently due to this lower bound but they resemble the architecture of traditional autoencoders (sparse, denoising).
+
+
+
+Variational Autoencoders achieve this by using a measurement of inequality between $q(x)$ and $p(x)$ called Kullback-Leibler Divergence (KL divergence).
+
+%VAEs are unlike \emph{traditional} auto-encoders (sparse autoencoders or denoising autoencoders for example) because they have a different architecture
+%VAEs resembles traditional autoencoders
+%\begin{equation}
+%P(x) = \int P(x|z;\theta)P(z) dz
+  %\label{eq:max_likelihood}
+%\end{equation}
+
+We use VAEs when we have a complicated distribution $p_\theta(x,z)$ with unknown latent variables $z$.
+The prior distribution $p_\theta(z)$ over the latent structure is a centered isotropic(?) multivariate Gaussian denoted by $\mathcal{N}(z;0, I)$.
+The constructed architecture uses an probabilistic encoder $q_\theta(z|x)$ and a probabilistic decoder $p_\theta(x|z)$ in a form of neural networks, in the original paper MLP are used\cite{vae:2013} but there are various extensions (see \ref{sub:vae_extensions}, TODO).
+Because the posterior is intractable ($p_\theta(x)$), we instead approximately maximize the lower variational bound $L(\theta,\phi;x)$.\\
+\begin{equation}
+  \mathcal{L}(\theta,\phi;x) = -D_{KL}(q_\theta(z|x)||p_\theta(z)) + \mathbb{E}_{q_\theta(z|x)}[log_{p_\theta}(x|z)]
+\end{equation}
+\paragraph{Derivation of lower bound}
+We want to minimize the KL divergence from $P(z|x)$ to $Q(z)$ for some arbitrary $Q$.
+  \begin{align*}
+    \label{eq:der_lower_bound}
+    \mathcal{D}[Q(z)||P(z|x)] &= \mathbb{E}_{z~q_\theta}(\log Q(z) - \log P(z|x))
+    &= \mathbb{E}_{z ~ q_\theta}[]
+  \end{align*}
+Where $D_{KL}(q_\theta(z|x) || p_\theta(z))$ is defined as the Kullback-Leibler divergence, which can be intuitively thought of as a measurement for the distance between two probabilistic distributions (even though it lacks the symmetric property).
+
+
+
+
+
+\subsection{Learning}
+\label{sub:vae_learning}
+In practice, the usual choice for $q_\theta(z|x)$ is the multivariate gaussian distribution.
+$$
+q_\theta(z|x) = \mathcal{N}(z|\mu(X;\vartheta), \Sigma(X;\vartheta))
+$$
+Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the KL-divergence can now be computed in closed form as follows\cite{derivations:2007}.
+\begin{align*}
+  \mathcal{D}_{\mathrm{KL}}\big[Q(z) || P(z|x)\big] &= \mathbb{E}\big[\log \frac{p}{q}\big]\\
+  \mathcal{D}_{\mathrm{KL}}\big[\mathcal{N}(\mu_0,\Sigma_0) || \mathcal{N}(\mu_1,\Sigma_1)\big]
+  &= \frac{1}{2} \big(\mathrm{tr}\big(\Sigma_1^{-1}\Sigma_0\big) + \big(\big)\big)
+\end{align*}
+
+
+\subsection{Inference}
+\label{sub:vae_inference}
+
+\subsection{Performance}
+\label{sub:vae_performance}
 
 \subsection{Extensions}
 \label{sub:vae_extensions}
 
-\subsubsection{Deep Recurrent Attention Writer (DRAW)}
-\label{ssub:deep_recurrent_attention_writer_draw_}
+\subsubsection{Deep Recurrent Attention Writer}
+\label{ssub:vae_deep_recurrent_attention_writer}
+
+\subsubsection{Importance Weighted Autoencoder}
+\label{ssub:vae_importance_weighted_autoencoder}
+
+\subsubsection{Conditional VAE}
+\label{ssub:vae_conditional_vae}
+
 
 
 
