@@ -331,8 +331,23 @@ Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the 
 \section{Generative Adversarial Networks}
 \label{sec:gan}
 
+Generative Adversarial Networks (GAN) are a recently proposed framework by Goodfellow et al which has gathered a lot of attention in the deep learning community and in the last few years many extensions have been [proposed] (citations).
+GANs can be understood as a two-player game where one player is called generator $G$ playing against the discriminator $D$.
+The goal of $G$ is to produce similar data to the given training set while $D$ is tasked with discriminating(?) the generated samples from the training data. Both $G$ and $D$ are learning function approximators, for example Multi-Layer Peceptron (MLP) networks as proposed in the original GAN paper.
+% --> declare distribution p_data, p_model, x, z
+During learning, both networks are updated in parallel according to the gradient of their respective loss function which we will explore now.\\
+In the following $p_{data}$ is the true data generating distribution from which the training samples have been generated.
+We don't have access to that distribution.
+
 \subsection{Architecture}
 \label{sub:gan_arch}
+
+\subsubsection{Generator Network}
+The generator network in the GAN framework tries to fool the discriminator $D$ by producing samples which are indistinguishable from the training data.
+
+
+\subsubsection{Discriminator Network}
+
 
 \subsection{Training}
 \label{sub:gan_training}
