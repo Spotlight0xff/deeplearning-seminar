@@ -4,12 +4,18 @@
 \usepackage{graphicx,curves,float,rotating}
 
 \usepackage{amsmath, amssymb, latexsym}  % math stuff
+\usepackage{amsfonts}
 \usepackage{amsopn}                             % um mathe operatoren zu deklarieren
 \usepackage[american]{babel}                     % otherwise use british or american
 \usepackage{theorem}                            % instead of \usepackage{amsthm}
 \usepackage{dcolumn}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+
 
 % @ environment %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{xspace}                             % context sensitive space after macros
@@ -331,7 +337,7 @@ Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the 
 \section{Generative Adversarial Networks}
 \label{sec:gan}
 
-Generative Adversarial Networks (GAN) are a recently proposed framework by Goodfellow et al which has gathered a lot of attention in the deep learning community and in the last few years many extensions have been [proposed] (citations).
+Generative Adversarial Networks (GAN) is a framework recently proposed by Goodfellow et al which has gathered a lot of attention in the deep learning community and in the last few years many extensions have been [proposed] (citations).
 GANs can be understood as a two-player game where one player is called generator $G$ playing against the discriminator $D$.
 The goal of $G$ is to produce similar data to the given training set while $D$ is tasked with discriminating(?) the generated samples from the training data. Both $G$ and $D$ are learning function approximators, for example Multi-Layer Peceptron (MLP) networks as proposed in the original GAN paper.
 % --> declare distribution p_data, p_model, x, z
@@ -342,15 +348,57 @@ We don't have access to that distribution.
 \subsection{Architecture}
 \label{sub:gan_arch}
 
+
 \subsubsection{Generator Network}
 The generator network in the GAN framework tries to fool the discriminator $D$ by producing samples which are indistinguishable from the training data.
+This process can be formally written as minimizing the following cost function.
+$$
+\mathcal{C}_g = \log(1 - D(G(z)))
+$$
+$z$ is produced by sampling from the noise prior $p_g(z)$.\\
+
+Note that this loss function is fully differentiable which means it can be trained with backpropagation.
+
 
 
 \subsubsection{Discriminator Network}
+The objective of the discriminator network $D$ is to distinguish the generated samples produced by $G$ from the training set samples.
+This process can be formalized to maximizing the cost function $\mathcal{C}_d$.
+$$
+\mathcal{C}_d = \log\big(\log D(x) + \log (1 - D(G(z))\big)
+$$
+
 
 
 \subsection{Training}
 \label{sub:gan_training}
+The GAN framework can be fully trained with stochastic backpropagation due to both $D$ and $G$ being differentiable.
+
+Combining the cost functions of generator and discriminator yield us the following objective with value function $V(G,D)$.
+$$
+\min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]
+$$
+In the original GAN paper an minibatch-based algorithm for training GAN is proposed, but we will take a look at an the online learning version below:\\
+\begin{algorithm}
+  \caption{Online learning of generative adversarial networks $-$ simple version ($k=1$)}
+  \label{alg:gan_online}
+  \begin{algorithmic}[1]
+    \Let{$\eta_d, \eta_g$}{Learning rate of discriminator and generator networks, respectively}
+    \Let{$\theta_d, \theta_g$}{Parameters of function approximators}
+    \For{number of training iterations}
+      \Let{$z_d$}{sample from noise prior $p_g(z)$}
+      \Let{$z_g$}{sample from noise prior $p_g(z)$}
+      \Let{$x$}{example from training set}
+      \Let{$\theta_d$}{$\theta_d + \eta_d \nabla_{\theta_d} \bigg[\log D(x) + \log \big(1 - D(G(z_d))\big)\bigg]$}
+      \Let{$\theta_g$}{$\theta_g - \eta_g \nabla_{\theta_g} \bigg[\log\big(1 - D(G(z_d))\big)\bigg]$}
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+In algorithm \ref{alg:gan_online} the original algorithm has been modified for single pass (online) learning.
+Sampling minibatches from the noise prior and $p_{data}(x)$ result in the minibatch version.
+Additionally, it is often required for practical reasons to let the discriminator run multiple backward passes while updating the generator once (why?).
+Note that the discriminator will ascend while the generator descend its gradient due to maximizing $\mathcal{C}_d$ but minimizing $\mathcal{C}_g$ (correct?).
 
 \subsection{Stability and Performance}
 \label{sub:gan_stability}
@@ -372,6 +420,8 @@ The generator network in the GAN framework tries to fool the discriminator $D$ b
 \label{ssub:gan_label_smoothing}
 
 
+\subsubsection{Normalizing Flows}
+\label{ssub:gan_nf}
 
 
 
@@ -383,7 +433,7 @@ The generator network in the GAN framework tries to fool the discriminator $D$ b
 
 \subsection{Application}
 \label{sub:gan_application}
-
+GAN have been applied to many different areas which include generating images (GAN, DCGAN, LAPGAN), sequences (SeqGAN), videos (\cite{gan_video:2016}), 3D objects (\cite{gan_3d:2016}), text-to-image synthesis (\cite{gan_t2i:2016})
 \subsection{Extensions}
 \label{sub:gan_extensions}
 
