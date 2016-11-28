@@ -225,6 +225,14 @@ This plateau is called Nash equilibrium (citation needed).
 %----------------------------------
 \section{Variational Autoencoders}
 \label{sec:vae}
+Variational Autoencoders (VAE) have been introduced in 2014 by Kingma and Welling which uses variational inference to perform efficient inference and learning in deep latent models.
+To define VAEs, we first declare the observed variables $x$, as well as latent variables $z$.
+VAEs are directed graphical models where we wish to infer \emph{good} low-dimensional latent variables from the input data.
+In this setup we define $p(x,z)$ as the joint probability distribution over both input and latent variables.
+Performing statistical inference means computing $p(z|x)$ which is intractable in all but very simple cases (integrating over it, show calc).
+ 
+In this setup we have observed variables $x$ from which we would like to infer latent variables $z$
+
 
 %Variational Autoencoders (VAE) have been a popular choice for unsupervised learning of complicated distributions (citation needed) and generative modelling.
 In order to generate data from unknown and mostly intractable distributions, we need approximations.
