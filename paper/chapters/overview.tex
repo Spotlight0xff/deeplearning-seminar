@@ -1,0 +1,44 @@
+\section{Overview of Directed Generative Models}
+\label{sec:overview}
+
+
+\paragraph{Variational Autoencoders\cite{vae:2013}}
+\label{par:overview_vae}
+Variational Autoencoders (VAE) use two networks called encoder and decoder where the encoder transform the given data into a latent space and the decoder translates this latent space back into the data space.
+The input and output space are usually high-dimensional data spaces, for example images while the latent space is low-dimensional in comparison.
+Like other autoencoders, VAEs try to reconstruct the input data using the latent variables as closely as possible.
+But in addition to regular autoencoders encourages the VAE the latent space to match a specific probability distribution.
+This encouragement is done using a variational lower bound on the distribution output by the encoder network.
+
+%where the encoder takes input data and translates it into a latent structure while
+%the decoder takes the latent structure and produces data which is as close as possible to the initial input data.
+
+%In the case of VAEs, the distribution is intractable and we can only approximate the posterior distribution.
+% intractable -> use neural network, which we can train
+% --> no closed form possible
+%We use the KL-Divergence to train the network.
+
+% TODO read chapter 19, approximate inference
+%In VAEs however, this 
+
+
+
+
+\paragraph{Generative Adversarial Networks}
+\label{par:overview_gan}
+GANs are a game theoretic approach to generative modelling
+in which two networks compete against each other.
+The discriminator $D$ is trying to distinguish the generated samples
+by the generator $G$ from real world data.
+The goal for $G$ however is to produce data as realistic as possible.\\
+During the early phase of training, $G$ produces random noise which
+is easy to differentiate from groundtruth data.
+Both networks are trained in parallel, where both networks try to get better
+at their respective objective.
+In the best-case scenario is $G$ able to produce data indistinguishly from real world data in which
+case the discriminator will only be able to guess correctly with a 50\% chance.
+This plateau is called Nash equilibrium (citation needed).
+
+
+
+

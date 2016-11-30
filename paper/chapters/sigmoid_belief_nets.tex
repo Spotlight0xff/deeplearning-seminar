@@ -1,0 +1,14 @@
+\section{Sigmoid Belief Networks}
+\label{sec:sbn}
+Sigmoid Belief Networks (SBN) have been proposed in 1990 by Neal (citation) and thus are one of the earliest generative models and also predating all other presented models presented in this paper.
+In its most common form, SBNs are comprised by a number of layers where each node in a layer is a sigmoid function of its ancestors:
+$$
+p(s_i) = \sigma\bigg(\sum_{j<i}W_{j,i}s_j+b_i\bigg)
+$$
+
+While sampling from these networks is very efficient, computing the inference $p(z|x)$ over the hidden units is intractable.
+% show why?
+
+There have been several attempts on solving the inference problem, using inference networks which have shown promising results.
+
+
