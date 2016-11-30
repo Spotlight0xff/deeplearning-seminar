@@ -3,6 +3,7 @@
 % packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{graphicx,curves,float,rotating}
 
+
 \usepackage{amsmath, amssymb, latexsym}  % math stuff
 \usepackage{amsfonts}
 \usepackage{amsopn}                             % um mathe operatoren zu deklarieren
@@ -17,15 +18,16 @@
 \newcommand*\Let[2]{\State #1 $\gets$ #2}
 
 
+
 % @ environment %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{xspace}                             % context sensitive space after macros
-\makeatletter 
+\makeatletter
 \DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
 \def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
 \def\eg{{e.g}\onedot} \def\Eg{{E.g}\onedot}
 \def\ie{{i.e}\onedot} \def\Ie{{I.e}\onedot}
 \def\cf{{c.f}\onedot} \def\Cf{{C.f}\onedot}
-\def\etc{{etc}\onedot} \def\vs{{vs}\onedot} 
+\def\etc{{etc}\onedot} \def\vs{{vs}\onedot}
 \def\wrt{w.r.t\onedot} \def\dof{d.o.f\onedot}
 \def\etal{{et al}\onedot}
 \def\zB{z.B\onedot} \def\ZB{Z.B\onedot}
@@ -67,7 +69,7 @@
 
 
 \theoremstyle{break}
-\theorembodyfont{\itshape}	
+\theorembodyfont{\itshape}
 \theoremheaderfont{\scshape}
 
 \newtheorem{Cor}{Corollary}
@@ -99,7 +101,7 @@
     Chair of Computer Science 6 \\
     Prof. Dr.-Ing. Hermann Ney\\[6ex]
     Selected Topics in Human Language Technology and Pattern Recognition WS 16/17\\[12ex]
-   
+
     \LARGE
     \textbf{Deep Directed Generative Models} \\[6ex]
     \textit{André Merboldt} \\[6ex]
@@ -107,12 +109,11 @@
 
     \vfill
     \Large Supervisor: Tobias Menne
-	    
 \end{center}
 
 % blank page
 \newpage
-\ 
+\
 \newpage
 
 
@@ -123,7 +124,7 @@
 \listoffigures
 %\newpage
 %\pagestyle{empty}
-%\ 
+%\
 \newpage
 \pagestyle{headings}
 
