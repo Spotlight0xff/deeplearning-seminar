@@ -1,0 +1,24 @@
+\begin{align*}
+  \log p(x)\\
+  &= \int_z q_\phi(z|x) \log p(x)\\
+  &= \int_z q_\phi(z|x) \log \frac{p(x,z)}{p(z|x)} \tag{Bayes' rule}\\
+  &= \int_z q_\phi(z|x) \log\bigg(\frac{p(z,x)}{q_\phi(z|x)} \frac{q_\phi(z|x)}{p(z|x)}\bigg) \tag{Chain rule}\\
+  &= \int_z q_\phi(z|x) \bigg(\log\frac{p(z,x)}{q_\phi(z|x)} + \log\frac{q_\phi(z|x)}{p(z|x)}\bigg)\\
+  &= \int_z q_\phi(z|x) \log \frac{p(z,x)}{q_\phi(z|x)} + \int_z q_\phi(z|x) \log\frac{q_\phi(z|x)}{p(z|x)}\\
+  &= \underbrace{\int_z q_\phi(z|x) \log \frac{p(z,x)}{q_\phi(z|x)}}_{= \mathcal{L}}+ \underbrace{\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p(z|x)\big)}_{\geq 0}\\
+  &\geq \mathcal{L}\\
+\end{align*}
+
+$\mathcal{L}$ is the lower bound to $\log p(x)$.\\
+In order to get the loss function for individual data points or minibatches we rewrite the lower bound.
+
+\begin{align*}
+  \mathcal{L}
+  &= \int_z q_\phi(z|x) \log\frac{p(z,x)}{q_\phi(z|x)}\\
+  &= \int_z q_\phi(z|x) \log\frac{p(z) p(x|z)}{q_\phi(z|x)} \tag{we assume that x is conditionally dependent on z}\\
+  &= \int_z q_\phi(z|x) \bigg(\log\frac{p(z)}{q_\phi(z|x)} + \log p(x|z)\bigg)\\
+  &= -\int_z q_\phi(z|x) \log\frac{q_\phi(z|x)}{p(z)} + \int_z q_\phi(z|x) \log p(x|z)\\
+  &= -\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p(z)\big) + \int_z q_\phi(z|x) \log p(x|z)\\
+  &= \underbrace{-\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p(z)\big)}_{\mathcal{L}_{reg}} + \underbrace{\mathbb{E}_{z \sim q_\phi(z|x)}\big[ \log p(x|z)\big]}_{\mathcal{L}_{rec}}\\
+  &= \mathcal{L}_{reg} + \mathcal{L}_{rec}
+\end{align*}

@@ -142,229 +142,24 @@
 %----------------------------------
 % Motivation
 %----------------------------------
-\section{Motivation}
-\label{sec:motivation}
-Generative models have been proposed as one of the most promising approaches towards
-learning representations of real world data by some of the leading researches (YannLeCun, OpenAI blogpost).
-
-In recent years supervised learning has yielded impressive results,
-however for these models to suceed huge amount of labelled data is needed.
-Unsupervised learning, that is learning from unlabelled data, has been expressed
-as one hurdles toward general articial intelligence (citation needed).
-Early approaches toward this problem however have shown that these problems are very hard to learn (intractable?).
-
-In generative models the approach is different in a way that
-we search for a good internal representation of the data.
-This resembles the way humans learn about the world where we incrementally build
-a model of the world.
-
+\input{chapters/introduction}
 
 %----------------------------------
 % Overview of Directed Generative Models
 %----------------------------------
-\section{Overview of Directed Generative Models}
-\label{sec:overview}
-
-
-\paragraph{Variational Autoencoders\cite{vae:2013}}
-\label{par:overview_vae}
-Variational Autoencoders (VAE) use two networks called encoder and decoder where the encoder transform the given data into a latent space and the decoder translates this latent space back into the data space.
-The input and output space are usually high-dimensional data spaces, for example images while the latent space is low-dimensional in comparison.
-Like other autoencoders, VAEs try to reconstruct the input data using the latent variables as closely as possible.
-But in addition to regular autoencoders encourages the VAE the latent space to match a specific probability distribution.
-This encouragement is done using a variational lower bound on the distribution output by the encoder network.
-
-%where the encoder takes input data and translates it into a latent structure while
-%the decoder takes the latent structure and produces data which is as close as possible to the initial input data.
-
-%In the case of VAEs, the distribution is intractable and we can only approximate the posterior distribution.
-% intractable -> use neural network, which we can train
-% --> no closed form possible
-%We use the KL-Divergence to train the network.
-
-% TODO read chapter 19, approximate inference
-%In VAEs however, this 
-
-
-
-
-\paragraph{Generative Adversarial Networks}
-\label{par:overview_gan}
-GANs are a game theoretic approach to generative modelling
-in which two networks compete against each other.
-The discriminator $D$ is trying to distinguish the generated samples
-by the generator $G$ from real world data.
-The goal for $G$ however is to produce data as realistic as possible.\\
-During the early phase of training, $G$ produces random noise which
-is easy to differentiate from groundtruth data.
-Both networks are trained in parallel, where both networks try to get better
-at their respective objective.
-In the best-case scenario is $G$ able to produce data indistinguishly from real world data in which
-case the discriminator will only be able to guess correctly with a 50\% chance.
-This plateau is called Nash equilibrium (citation needed).
-
-
-
+\input{chapters/overview}
 
 
 
 %----------------------------------
 % Sigmoid Belief Networks
 %----------------------------------
-\section{Sigmoid Belief Networks}
-\label{sec:sbn}
-Sigmoid Belief Networks (SBN) have been proposed in 1990 by Neal (citation) and thus are one of the earliest generative models and also predating all other presented models presented in this paper.
-In its most common form, SBNs are comprised by a number of layers where each node in a layer is a sigmoid function of its ancestors:
-$$
-p(s_i) = \sigma\bigg(\sum_{j<i}W_{j,i}s_j+b_i\bigg)
-$$
-
-While sampling from these networks is very efficient, computing the inference $p(z|x)$ over the hidden units is intractable.
-% show why?
-
-There have been several attempts on solving the inference problem, using inference networks which have shown promising results.
-
+\input{chapters/sigmoid_belief_nets}
 
 %----------------------------------
 % Variational Autoencoders
 %----------------------------------
-\section{Variational Autoencoders}
-\label{sec:vae}
-Variational Autoencoders (VAE) have been introduced in 2014 by Kingma and Welling which uses variational inference to perform efficient inference and learning in deep latent models.
-To define VAEs, we first declare the observed variables $x$, as well as latent variables $z$.
-VAEs are directed graphical models where we wish to infer \emph{good} low-dimensional latent variables from the input data.
-In this setup we define $p(x,z)$ as the joint probability distribution over both input and latent variables.
-Performing statistical inference means computing $p(z|x)$ which is intractable in all but very simple cases (integrating over it, show calc).
- 
-In this setup we have observed variables $x$ from which we would like to infer latent variables $z$
-
-
-%Variational Autoencoders (VAE) have been a popular choice for unsupervised learning of complicated distributions (citation needed) and generative modelling.
-In order to generate data from unknown and mostly intractable distributions, we need approximations.
-There are basically two approaches for sampling from these distributions,
-first there are approximate samples (MCMC, gibbs sampling, etc) which try to directly approximate $p(x)$.
-Variational Autoencoders instead try to match an easier to compute distribution $q(x)$ to $p(x)$.
-By using this approach, VAEs are computationally less intensive (citation?) but have the drawback of being more restricted in their modelling approach.
-Practically, this means that with more computation MCMC methods approach $p(x)$, while there is no such guarantee for variational methods (--> not for all).
-
-VAE can be learned with just backpropagation (paper,TODO), but they differ from denoising and sparse autoencoders due to the different loss function.
-
-
-%VAEs are built on top of neural networks and are designed in a way to allow training with gradient-based methods.
-%Learning and inference are reasonable efficient and relatively easy to implement and show decent results, but have been overshadowed by more recent adversarial approaches (citation needed!!,see \ref{sec:gan}).
-
-\subsection{Architecture}
-\label{sub:vae_architecture}
-VAE just like other autoencoders encode the input data into a smaller latent space similar to compression of data and is able to decode a vector of latent variables into output while trying to match the output to the input.
-But in contrast to other autoencoders (sparse, denoising), we enforce a specific distribution on the latent space.
-This allows to sample from this distribution and generate output which will look similar to the data on which the VAE has been trained.
-\ref{fig:vae_architecture}.
-
-\subsection{Loss function}
-The loss function of the VAE consists of two terms, the negative log-likelihood or the reconstruction error $\mathcal{C}_{\mathrm{rec}}$ and the second term $\mathcal{C}_{\mathrm{KL}}$ serves as the regularizer.
-We will discuss both terms in detail below.
-
-
-\paragraph{Reconstruction error}
-$\mathcal{C}_{\mathrm{rec}}$ measures how well the decoder reconstructs the input data using the latent space $z$.
-This error is measures using the negative log-likelihood of the conditional probability distribution $p_\theta(x_i|z)$ where $z$ is sampled from $q_\varphi(z | x_i)$.
-$\mathcal{C}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent variables which can be used to reconstruct the input data well.
-
-
-\paragraph{KL divergence (regularization)}
-The second term in $\mathcal{C}$ is the KL divergence between the approximated distribution $q_\varphi(z|x)$ and $p(z)$. This serves as the regularizer in the VAE as it encourages $q_\varphi(z|x)$ to match $p(z)$.\\
-% move to architecture:
-%In the original VAE paper, the unit gaussian distribution with diagonal variance was proposed for $p(z)$ and although there have been multiple proposals (citations, multi-modal etc) for different distributions we will stick with $\mathcal{N}(0,I)$ for the sake of simplicity.
-% ---
-
-For two probability distributions $P$ and $Q$, the KL divergence $\mathcal{D}_{\mathrm{KL}}(P||Q)$ can informally be described as the amount of information which is lost when using $Q$ to represent $P$.
-The KL divergence does not obey the triangle inequality and is also not symmetrical, therefore it does not qualify as a metric.
-$\mathcal{D}_{\mathrm{KL}}(P||Q)$ can nevertheless be understood as a measure of the difference between $P$ and $Q$ and is as such used in the VAE to let $q_\varphi(z|x)$ approach $p(z)$.
-
-
-
-
-
-\subsubsection{Reparameterization Trick}
-To be able to backpropagate the loss function through the VAE, it has to be differentiable and deterministic.
-Because we add noise to the encoding, the gradients can't be computed directly. In order to circumvent this restriction, the so-called "reparameterization trick" is applied.
-Instead of drawing $z ~ \mathcal{N}(\mu(x), \Sigma(x))$, we sample an auxiliary variable $\epsilon$ from $\mathcal{N}(0, I)$ which we then transform with equation \ref{eq:rep_trick} into $z$.
-\begin{equation}
-  \label{eq:rep_trick}
-  z = \mu(x) + \Sigma^{1/2}(x)*\epsilon
-\end{equation}
-This allows us to compute the gradient of the loss function and backpropagate through the entire model and only have the stochastic variable $\epsilon$ as input.\\\\
-
-The core idea of VAEs is to match a distribution $q(x)$ to the desired $p(x)$ by enforcing a lower variational bound on $q(x)$ in a way that it seeks to match $p(x)$.
-In contrast to other autoencoders, VAEs behave differently due to this lower bound but they resemble the architecture of traditional autoencoders (sparse, denoising).
-
-
-
-Variational Autoencoders achieve this by using a measurement of inequality between $q(x)$ and $p(x)$ called Kullback-Leibler Divergence (KL divergence).
-
-%VAEs are unlike \emph{traditional} auto-encoders (sparse autoencoders or denoising autoencoders for example) because they have a different architecture
-%VAEs resembles traditional autoencoders
-%\begin{equation}
-%P(x) = \int P(x|z;\theta)P(z) dz
-  %\label{eq:max_likelihood}
-%\end{equation}
-
-We use VAEs when we have a complicated distribution $p_\theta(x,z)$ with unknown latent variables $z$.
-The prior distribution $p_\theta(z)$ over the latent structure is a centered isotropic(?) multivariate Gaussian denoted by $\mathcal{N}(z;0, I)$.
-The constructed architecture uses an probabilistic encoder $q_\theta(z|x)$ and a probabilistic decoder $p_\theta(x|z)$ in a form of neural networks, in the original paper MLP are used\cite{vae:2013} but there are various extensions (see \ref{sub:vae_extensions}, TODO).
-Because the posterior is intractable ($p_\theta(x)$), we instead approximately maximize the lower variational bound $L(\theta,\phi;x)$.\\
-\begin{equation}
-  \mathcal{L}(\theta,\phi;x) = -D_{KL}(q_\theta(z|x)||p_\theta(z)) + \mathbb{E}_{q_\theta(z|x)}[log_{p_\theta}(x|z)]
-\end{equation}
-\paragraph{Derivation of lower bound}
-We want to minimize the KL divergence from $P(z|x)$ to $Q(z)$ for some arbitrary $Q$.
-  \begin{align*}
-    \label{eq:der_lower_bound}
-    \mathcal{D}[Q(z)||P(z|x)] &= \mathbb{E}_{z~q_\theta}(\log Q(z) - \log P(z|x))
-    &= \mathbb{E}_{z ~ q_\theta}[]
-  \end{align*}
-Where $D_{KL}(q_\theta(z|x) || p_\theta(z))$ is defined as the Kullback-Leibler divergence, which can be intuitively thought of as a measurement for the distance between two probabilistic distributions (even though it lacks the symmetric property).
-
-
-
-
-
-\subsection{Learning}
-\label{sub:vae_learning}
-In practice, the usual choice for $q_\theta(z|x)$ is the multivariate gaussian distribution.
-$$
-q_\theta(z|x) = \mathcal{N}(z|\mu(X;\vartheta), \Sigma(X;\vartheta))
-$$
-Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the KL-divergence can now be computed in closed form as follows\cite{derivations:2007}.
-\begin{align*}
-  \mathcal{D}_{\mathrm{KL}}\big[Q(z) || P(z|x)\big] &= \mathbb{E}\big[\log \frac{p}{q}\big]\\
-  \mathcal{D}_{\mathrm{KL}}\big[\mathcal{N}(\mu_0,\Sigma_0) || \mathcal{N}(\mu_1,\Sigma_1)\big]
-  &= \frac{1}{2} \big(\mathrm{tr}\big(\Sigma_1^{-1}\Sigma_0\big) + \big(\big)\big)
-\end{align*}
-
-
-\subsection{Inference}
-\label{sub:vae_inference}
-
-\subsection{Performance}
-\label{sub:vae_performance}
-
-\subsection{Extensions}
-\label{sub:vae_extensions}
-
-\subsubsection{Deep Recurrent Attention Writer}
-\label{ssub:vae_deep_recurrent_attention_writer}
-
-\subsubsection{Importance Weighted Autoencoder}
-\label{ssub:vae_importance_weighted_autoencoder}
-
-\subsubsection{Conditional VAE}
-\label{ssub:vae_conditional_vae}
-
-
-
-
-
+\input{chapters/vae}
 
 
 

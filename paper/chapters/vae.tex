@@ -1,0 +1,147 @@
+\section{Variational Autoencoders}
+\label{sec:vae}
+Variational Autoencoders (VAE) have been introduced in 2014 by Kingma and Welling which uses variational inference to perform efficient inference and learning in deep latent models.
+% maybe extra section/sub?
+We assume that the high-dimensional input data $x$ can be explained using low-dimensional latent variables $z$.\\
+While this might be surprising at first, most high-dimensional data we encounter can be explained using far fewer dimensions.
+Let us take a look at different examples:\\
+\begin{itemize}
+  \item \textbf{Images} often have multiple thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
+  \item \textbf{Speech} or more precisely the recording of it is high-dimensional, while the information it carries (the spoken words) can be represented in a low-dimensional space.
+  \item \textbf{...}
+\end{itemize}
+Given this assumption, building a good representation in the latent space is crucial for minimal reconstruction error as well as good generative modelling (?).
+%The VAE framework provides a directed model which aims to infer low-dimensional latent variables $z$ from high-dimensional input data $x$ and reconstruct the input.
+Formally, $p(x,z)$ is the joint probability distribution over both input and latent variables while $p(z|x)$ is the conditional probability of the latent variables given input data.
+Inferring the posterior distribution $p(z|x)$ is particularly interesting, because it means to enable learning parameters for good latent space representation.
+$p(z|x)$ can be expanded using bayes rule to $\frac{p(x|z) p(z)}{p(x)}$.
+Computing the nominator is straightforward, $p(z)$ is the probability distribution we chose for the latent space, oftenmost simply a gaussian.
+$p(x|z)$ is easy to compute as well, ...? (forward pass?).\\
+Meanwhile is the denominator difficult to evaluate, because it requires to consider all possible input combinations.
+What we do instead in the variational autoencoders is to derive a lower-bound on $p(z|x)$ using a auxiliary distribution called $q_\theta(z|x)$. The subscript $\theta$ indicates that the distribution is parametrized by an variational term, so that for one $\theta$, $q_\theta(z|x) \approxeq p(z|x)$ holds ($q(z|x)$ doesn't need to depend on $x$).
+%Performing statistical inference means computing $p(z|x)$ which is intractable in all but very simple cases (integrating over it, show calc).
+ 
+%In this setup we have observed variables $x$ from which we would like to infer latent variables $z$
+
+
+%Variational Autoencoders (VAE) have been a popular choice for unsupervised learning of complicated distributions (citation needed) and generative modelling.
+%In order to generate data from unknown and mostly intractable distributions, we need approximations.
+%There are basically two approaches for sampling from these distributions,
+%first there are approximate samples (MCMC, gibbs sampling, etc) which try to directly approximate $p(x)$.
+%Variational Autoencoders instead try to match an easier to compute distribution $q(x)$ to $p(x)$.
+%By using this approach, VAEs are computationally less intensive (citation?) but have the drawback of being more restricted in their modelling approach.
+%Practically, this means that with more computation MCMC methods approach $p(x)$, while there is no such guarantee for variational methods (--> not for all).
+
+%VAE can be learned with just backpropagation (paper,TODO), but they differ from denoising and sparse autoencoders due to the different loss function.
+
+
+%VAEs are built on top of neural networks and are designed in a way to allow training with gradient-based methods.
+%Learning and inference are reasonable efficient and relatively easy to implement and show decent results, but have been overshadowed by more recent adversarial approaches (citation needed!!,see \ref{sec:gan}).
+
+\subsection{Architecture}
+\label{sub:vae_architecture}
+
+\begin{figure}[htb]
+\centering
+\resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
+  \caption{VAE architecture (source: VAE paper)}\label{fig:vae_architecture}
+\end{figure}
+VAE just like other autoencoders encode the input data into a smaller latent space similar to compression of data and is able to decode a vector of latent variables into output while trying to match the output to the input.
+But in contrast to other autoencoders (sparse, denoising), we enforce a specific distribution on the latent space.
+This allows to sample from this distribution and generate output which will look similar to the data on which the VAE has been trained.
+\ref{fig:vae_architecture}.
+
+\paragraph{The Kullback-Leibler Divergence} (KL divergence) is a measurement for the difference between two probability distributions. $\mathcal{D}_{\mathrm{KL}}(P \| Q)$ can informally described as the amount of information which is lost when using $Q$ to represent $P$.
+The KL divergence does not obey the triangle inequality and is also not symmetrical, therefore it does not qualify as a metric.
+$\mathcal{D}_{\mathrm{KL}}(P||Q)$ can nevertheless be understood as a measure of the difference between $P$ and $Q$ and is as such used in the VAE to approximate the true posterior distribution.
+
+\subsection{Loss function}
+The loss function of the VAE consists of two terms, the negative log-likelihood or the reconstruction error $\mathcal{C}_{\mathrm{rec}}$ and the second term $\mathcal{C}_{\mathrm{KL}}$ serves as the regularizer.
+We will discuss both terms in detail below.
+
+\paragraph{Derivation of lower bound}
+\input{chapters/vae/derivation_loss}
+
+\paragraph{Regularization term $\mathcal{L}_{reg}$} encourages the model to learn simple representations in latent space, due to the negative Kullback-Leibler (KL) divergence between the learned variational distribution $q_\theta(z|x)$ and the latent space prior distribution $p(z)$.
+
+% move to architecture:
+%In the original VAE paper, the unit gaussian distribution with diagonal variance was proposed for $p(z)$ and although there have been multiple proposals (citations, multi-modal etc) for different distributions we will stick with $\mathcal{N}(0,I)$ for the sake of simplicity.
+% ---
+
+%For two probability distributions $P$ and $Q$, the KL divergence $\mathcal{D}_{\mathrm{KL}}(P||Q)$ can informally be described as the amount of information which is lost when using $Q$ to represent $P$.
+
+\paragraph{Reconstruction error $\mathcal{L}_{rec}$} measures how well the decoder reconstructs the input data using the latent space $z$.
+This error is measures using the negative log-likelihood of the conditional probability distribution $p_\theta(x_i|z)$ where $z$ is sampled from $q_\varphi(z | x_i)$.
+$\mathcal{C}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent variables which can be used to reconstruct the input data well.
+
+
+
+
+
+
+
+
+\subsubsection{Reparameterization Trick}
+To be able to backpropagate the loss function through the VAE, it has to be differentiable and deterministic.
+Because we add noise to the encoding, the gradients can't be computed directly. In order to circumvent this restriction, the so-called "reparameterization trick" is applied.
+Instead of drawing $z ~ \mathcal{N}(\mu(x), \Sigma(x))$, we sample an auxiliary variable $\epsilon$ from $\mathcal{N}(0, I)$ which we then transform with equation \ref{eq:rep_trick} into $z$.
+\begin{equation}
+  \label{eq:rep_trick}
+  z = \mu(x) + \Sigma^{1/2}(x)*\epsilon
+\end{equation}
+This allows us to compute the gradient of the loss function and backpropagate through the entire model and only have the stochastic variable $\epsilon$ as input.\\\\
+
+The core idea of VAEs is to match a distribution $q(x)$ to the desired $p(x)$ by enforcing a lower variational bound on $q(x)$ in a way that it seeks to match $p(x)$.
+In contrast to other autoencoders, VAEs behave differently due to this lower bound but they resemble the architecture of traditional autoencoders (sparse, denoising).
+
+
+
+
+We use VAEs when we have a complicated distribution $p_\theta(x,z)$ with unknown latent variables $z$.
+The prior distribution $p_\theta(z)$ over the latent structure is a centered isotropic(?) multivariate Gaussian denoted by $\mathcal{N}(z;0, I)$.
+The constructed architecture uses an probabilistic encoder $q_\theta(z|x)$ and a probabilistic decoder $p_\theta(x|z)$ in a form of neural networks, in the original paper MLP are used\cite{vae:2013} but there are various extensions (see \ref{sub:vae_extensions}, TODO).
+Because the posterior is intractable ($p_\theta(x)$), we instead approximately maximize the lower variational bound $L(\theta,\phi;x)$.\\
+\begin{equation}
+  \mathcal{L}(\theta,\phi;x) = -D_{KL}(q_\theta(z|x)||p_\theta(z)) + \mathbb{E}_{q_\theta(z|x)}[log_{p_\theta}(x|z)]
+\end{equation}
+
+
+
+
+\subsection{Learning}
+\label{sub:vae_learning}
+In practice, the usual choice for $q_\theta(z|x)$ is the multivariate gaussian distribution.
+$$
+q_\theta(z|x) = \mathcal{N}(z|\mu(X;\vartheta), \Sigma(X;\vartheta))
+$$
+Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the KL-divergence can now be computed in closed form as follows\cite{derivations:2007}.
+\begin{align*}
+  \mathcal{D}_{\mathrm{KL}}\big[Q(z) || P(z|x)\big] &= \mathbb{E}\big[\log \frac{p}{q}\big]\\
+  \mathcal{D}_{\mathrm{KL}}\big[\mathcal{N}(\mu_0,\Sigma_0) || \mathcal{N}(\mu_1,\Sigma_1)\big]
+  &= \frac{1}{2} \big(\mathrm{tr}\big(\Sigma_1^{-1}\Sigma_0\big) + \big(\big)\big)
+\end{align*}
+
+
+\subsection{Inference}
+\label{sub:vae_inference}
+\begin{figure}[htb]
+\centering
+%\resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
+\includegraphics{media/manifold.pdf}
+  \caption{MNIST 2-dimensional manifold}\label{fig:vae_manifold}
+\end{figure}
+
+\subsection{Performance}
+\label{sub:vae_performance}
+
+\subsection{Extensions}
+\label{sub:vae_extensions}
+
+\subsubsection{Deep Recurrent Attention Writer}
+\label{ssub:vae_deep_recurrent_attention_writer}
+
+\subsubsection{Importance Weighted Autoencoder}
+\label{ssub:vae_importance_weighted_autoencoder}
+
+\subsubsection{Conditional VAE}
+\label{ssub:vae_conditional_vae}
