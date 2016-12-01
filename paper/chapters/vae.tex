@@ -66,12 +66,12 @@ Similar to other autoencoder frameworks VAE provides an encoder as well as a dec
 The KL divergence does not obey the triangle inequality and is also not symmetrical, therefore it does not qualify as a metric.
 $\mathcal{D}_{\mathrm{KL}}(P||Q)$ can nevertheless be understood as a measure of the difference between $P$ and $Q$ and is as such used in the VAE to approximate the true posterior distribution.
 
-\subsection{Objective}
+\subsection{Objective Function}
 The objective function of the VAE consists of the reconstruction error and the regularizer.
 %$\mathcal{L}$ learns both the encoder as well as the decoder with their respective parameters $\phi$ and $\theta$.
 % probabilistic encoder $q_\phi(z|x)$ (produces z values from which x could've been generated)
 % probabilistic decoder $p_\theta(x|z)$
-We will discuss both terms in detail below.
+We will discuss both terms in detail below following the derivation of the lower variational bound $\mathcal{L}$ and the rewritten objective function.
 
 \paragraph{Derivation of lower bound}
 \input{chapters/vae/derivation_loss}
@@ -87,10 +87,6 @@ We will discuss both terms in detail below.
 \paragraph{Reconstruction error $\mathcal{L}_{rec}$} measures how well the decoder reconstructs the input data using the latent space $z$.
 This error is measures using the negative log-likelihood of the conditional probability distribution $p_\theta(x_i|z)$ where $z$ is sampled from $q_\phi(z | x_i)$.
 $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent variables which can be used to reconstruct the input data well.
-
-
-
-
 
 
 
