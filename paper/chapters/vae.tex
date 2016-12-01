@@ -55,6 +55,13 @@ But in contrast to other autoencoders (sparse, denoising), we enforce a specific
 This allows to sample from this distribution and generate output which will look similar to the data on which the VAE has been trained.
 \ref{fig:vae_architecture}.
 
+\paragraph{Relation to Auto-Encoders}
+The Variational autoencoder has the same overall architecture than other autoencoders, for example sparse or denoising autoencoders.
+Similar to other autoencoder frameworks VAE provides an encoder as well as a decoder model, but in contrast to other autoencoders both networks are probabilistic. This means that the model described by the VAE framework can be seen as a jointly trained probabilistic encoder and probabilistic decoder.
+%One of the main differences is that the VAE framework enforces a specific prior distribution on the latent space, most of the time simply an isotropic gaussian.
+
+
+
 \paragraph{The Kullback-Leibler Divergence} (KL divergence) is a measurement for the difference between two probability distributions. $\mathcal{D}_{\mathrm{KL}}(P \| Q)$ can informally described as the amount of information which is lost when using $Q$ to represent $P$.
 The KL divergence does not obey the triangle inequality and is also not symmetrical, therefore it does not qualify as a metric.
 $\mathcal{D}_{\mathrm{KL}}(P||Q)$ can nevertheless be understood as a measure of the difference between $P$ and $Q$ and is as such used in the VAE to approximate the true posterior distribution.
