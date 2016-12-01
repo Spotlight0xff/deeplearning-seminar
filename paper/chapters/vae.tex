@@ -2,6 +2,8 @@
 \label{sec:vae}
 Variational Autoencoders (VAE) have been introduced in 2014 by Kingma and Welling which uses variational inference to perform efficient inference and learning in deep latent models.
 % maybe extra section/sub?
+
+\paragraph{Latent Space}
 We assume that the high-dimensional input data $x$ can be explained using low-dimensional latent variables $z$.\\
 While this might be surprising at first, most high-dimensional data we encounter can be explained using far fewer dimensions.
 Let us take a look at different examples:\\
@@ -10,8 +12,10 @@ Let us take a look at different examples:\\
   \item \textbf{Speech} or more precisely the recording of it is high-dimensional, while the information it carries (the spoken words) can be represented in a low-dimensional space.
   \item \textbf{...}
 \end{itemize}
+
 Given this assumption, building a good representation in the latent space is crucial for minimal reconstruction error as well as good generative modelling (?).
 %The VAE framework provides a directed model which aims to infer low-dimensional latent variables $z$ from high-dimensional input data $x$ and reconstruct the input.
+\paragraph{Formal Setup}
 Formally, $p(x,z)$ is the joint probability distribution over both input and latent variables while $p(z|x)$ is the conditional probability of the latent variables given input data.
 Inferring the posterior distribution $p(z|x)$ is particularly interesting, because it means to enable learning parameters for good latent space representation.
 $p(z|x)$ can be expanded using bayes rule to $\frac{p(x|z) p(z)}{p(x)}$.
@@ -20,7 +24,7 @@ $p(x|z)$ is easy to compute as well, ...? (forward pass?).\\
 Meanwhile is the denominator difficult to evaluate, because it requires to consider all possible input combinations.
 What we do instead in the variational autoencoders is to derive a lower-bound on $p(z|x)$ using a auxiliary distribution called $q_\theta(z|x)$. The subscript $\theta$ indicates that the distribution is parametrized by an variational term, so that for one $\theta$, $q_\theta(z|x) \approxeq p(z|x)$ holds ($q(z|x)$ doesn't need to depend on $x$).
 %Performing statistical inference means computing $p(z|x)$ which is intractable in all but very simple cases (integrating over it, show calc).
- 
+
 %In this setup we have observed variables $x$ from which we would like to infer latent variables $z$
 
 
