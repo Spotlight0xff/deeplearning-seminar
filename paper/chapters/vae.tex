@@ -50,7 +50,7 @@ What we do instead in the variational autoencoders is to derive a lower-bound on
 \resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
   \caption{VAE architecture (source: VAE paper)}\label{fig:vae_architecture}
 \end{figure}
-VAE just like other autoencoders encode the input data into a smaller latent space similar to compression of data and is able to decode a vector of latent variables into output while trying to match the output to the input.
+VAE just like other autoencoders encode the input data into a latent space similar to compression of data and is able to decode a vector of latent variables into output while trying to match the output to the input.
 But in contrast to other autoencoders (sparse, denoising), we enforce a specific distribution on the latent space.
 This allows to sample from this distribution and generate output which will look similar to the data on which the VAE has been trained.
 \ref{fig:vae_architecture}.
