@@ -4,15 +4,27 @@ Sigmoid Belief Networks (SBN) have been proposed in 1992 by R.M. Neal \cite{neal
 They are one of the earliest neural networks used for generative modelling, predating all other presented models in this article.
 
 These random variables are interpreted in a bayesian way where each one may be observed, hidden (or latent) or unknown representing different states of knowledge or belief \cite{definetti:1974}.
-
 \begin{figure}[htb]
 \centering
-\input{media/sbn_node.tikz}
-  \caption{VAE architecture (source: VAE paper)}\label{fig:vae_architecture}
+\input{media/sbn_architecture}
+  \caption{SBN architecture}
+  \label{fig:sbn_arch}
+  \medskip
+  \small
+  Sigmoid Belief Network described as a acyclic directed graph where blue nodes indicate hidden variables while red nodes represent observed variables.
+  Arrows show stochastic dependency. The dashed arrow indicates that it is possible in the original definition (and in the formula below) to have inter-layer dependencies but they are usually not modelled to simplify the architecture.
+\end{figure}
+
+\subsection{Learning}
+\begin{figure}[htb]
+\centering
+\includestandalone[mode=buildnew]{media/sbn_node}
+  \caption{Sigmoid Belief Net  architecture}
+  \label{fig:sbn_node}
 \end{figure}
 In its most common form, SBNs are comprised by a number of layers where each node in a layer is a sigmoid function of its ancestors:
 $$
-p(s_i) = \sigma\bigg(\sum_{j<i}W_{j,i}s_j+b_i\bigg)
+p(s_i) = \sigma\bigg(\sum_{j<i}W_{i,j}s_j+b_i\bigg)
 $$
 
 While sampling from these networks is very efficient, computing the inference $p(z|x)$ over the hidden units is intractable.
