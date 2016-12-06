@@ -1,17 +1,30 @@
 \section{Introduction}
-\label{sec:motivation}
-Generative models have been proposed as one of the most promising approaches towards
-learning representations of real world data by some of the leading researches (YannLeCun, OpenAI blogpost).
+\label{sec:introduction}
+Generative models are one of the most promising ways to perform unsupervised learning (citation needed).
+More specifically, generative modelling assumes a hidden structure $z$ explaining the input data $x$.
+This assumption is reasonable given the following examples:\\
 
-In recent years supervised learning has yielded impressive results,
-however for these models to suceed huge amount of labelled data is needed.
-Unsupervised learning, that is learning from unlabelled data, has been expressed
-as one hurdles toward general articial intelligence (citation needed).
-Early approaches toward this problem however have shown that these problems are very hard to learn (intractable?).
+\begin{itemize}
+  \item \textbf{Images} often have multiple thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
+  \item \textbf{Speech} or more precisely the recording of it is high-dimensional, while the information it carries (the spoken words) can be represented in a low-dimensional space.
+  \item \textbf{...}
+\end{itemize}
 
-In generative models the approach is different in a way that
-we search for a good internal representation of the data.
-This resembles the way humans learn about the world where we incrementally build
-a model of the world.
+After a short overview of different approaches and methods and an introductory example with the sigmoid belief net (SBN), we will take a closer look at two promising frameworks, the variational autoencoder (VAE) and the generative adversarial network (GAN)
+
+
+%Generative models have been proposed as one of the most promising approaches towards
+%learning representations of real world data by some of the leading researchers (YannLeCun, OpenAI blogpost).
+
+%In recent years supervised learning has yielded impressive results,
+%however for these models to succeed huge amount of labelled data is needed.
+%Unsupervised learning, that is learning from unlabelled data, has been expressed
+%as one hurdles toward general articial intelligence (citation needed).
+%Early approaches toward this problem however have shown that these problems are very hard to learn (intractable?).
+
+%In generative models the approach is different in a way that
+%we search for a good internal representation of the data.
+%This resembles the way humans learn about the world where we incrementally build
+%a model of the world.
 
 
