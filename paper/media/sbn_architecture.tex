@@ -1,0 +1,81 @@
+%& /home/spotlight/.config/TikzEdtWForms/TikzEdtWForms/0.2.1.0/temp_header
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.12}
+
+\begin{document}
+\usetikzlibrary{arrows.meta,calc,fit}
+\usetikzlibrary{backgrounds}
+\tikzstyle{h_unit} = [circle, draw, fill=blue!20, node distance=3cm, text width=2.5em, text centered]
+\tikzstyle{h_text} = [rectangle, fill=blue!20, text centered]
+\tikzstyle{o_unit} = [circle, draw, fill=red!20, node distance=3cm, text width=2.5em, text centered]
+\tikzstyle{o_text} = [rectangle, fill=red!20, text centered]
+
+\tikzstyle{arr} = [thick,-{Latex[length=3mm,width=3mm]}]
+\begin{tikzpicture}
+
+
+% first hidden layer
+\node [h_unit] (hidden_l1_1) {};
+\node [h_unit] (hidden_l1_2) at ([shift={(2,0)}] hidden_l1_1) {};
+\node (hidden_l1_others) at ([shift={(1,0)}] hidden_l1_1) {\Large $\cdots$};
+
+% second hidden layer
+\node [h_unit] (hidden_l2_1) at ([shift={(-1.5,-2)}] hidden_l1_1){};
+\node [h_unit] (hidden_l2_2) at ([shift={(1,-2)}] hidden_l1_1) {};
+\node [h_unit] (hidden_l2_3) at ([shift={(3.5,-2)}] hidden_l1_1) {};
+\node (hidden_l2_others_1) at ([shift={(1.25,0)}] hidden_l2_1) {\Large $\cdots$};
+\node (hidden_l2_others_2) at ([shift={(1.25,0)}] hidden_l2_2) {\Large $\cdots$};
+
+% "stochastic hidden causes"
+\node [h_text] (text_hidden) at ([shift={(1,1)}] hidden_l1_1) {\Large hidden causes};
+
+% observable layer
+\node [o_unit] (observed_1) at ([shift={(-1,-4)}] hidden_l1_1){};
+\node [o_unit] (observed_2) at ([shift={(4,0)}] observed_1) {};
+\node (observed_others) at ([shift={(2,0)}] observed_1) {\Large $\cdots$};
+
+% "observed variables"
+\node [o_text] (text_observed) at ([shift={(1,-5)}] hidden_l1_1) {\Large observed variables};
+
+% layer backgrounds:
+% We are not showing the layer boundaries for now,
+% because in the initial sigmoid belief nets there was no
+% notion of layers (just ancestors)
+\begin{pgfonlayer}{background}
+  \node[] () {};
+% \node[
+%       fill=black!20,
+%       node distance=4cm,
+%       inner sep = 1em,
+%       fit=(hidden_l1_1) (hidden_l1_2)
+%       ] (layer_1){};
+% 
+% \node[
+%       fill=black!20,
+%       node distance=4cm,
+%       inner sep = 1em,
+%       fit=(hidden_l2_1) (hidden_l2_2) (hidden_l2_3)
+%       ] (layer_2){};
+\end{pgfonlayer}
+
+% arrows from first hidden unit in first "layer"
+\draw[arr] (hidden_l1_1) -- (hidden_l2_1);
+\draw[arr] (hidden_l1_1) -- (hidden_l2_2);
+\draw[arr,dashed] (hidden_l1_1) -- (observed_1);
+
+% arrows from second hidden unit in first "layer"
+\draw[arr] (hidden_l1_2) -- (hidden_l2_2);
+\draw[arr] (hidden_l1_2) -- (hidden_l2_3);
+
+% arrows from first hidden unit in second "layer"
+\draw[arr] (hidden_l2_1) -- (observed_1);
+
+% arrows from second hidden unit in second "layer"
+\draw[arr] (hidden_l2_2) -- (observed_1);
+\draw[arr] (hidden_l2_2) -- (observed_2);
+
+% arrows from third hidden unit in second "layer"
+\draw[arr] (hidden_l2_3) -- (observed_2);
+\end{tikzpicture}
+\end{document}
