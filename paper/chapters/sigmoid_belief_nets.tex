@@ -2,6 +2,14 @@
 \label{sec:sbn}
 Sigmoid Belief Networks (SBN) have been proposed in 1992 by R.M. Neal \cite{neal:1992} representing a a specific type of bayesian networks \cite{pearl:1985}.
 They are one of the earliest neural networks used for generative modelling, predating all other presented models in this article.
+
+These random variables are interpreted in a bayesian way where each one may be observed, hidden (or latent) or unknown representing different states of knowledge or belief \cite{definetti:1974}.
+
+\begin{figure}[htb]
+\centering
+\input{media/sbn_node.tikz}
+  \caption{VAE architecture (source: VAE paper)}\label{fig:vae_architecture}
+\end{figure}
 In its most common form, SBNs are comprised by a number of layers where each node in a layer is a sigmoid function of its ancestors:
 $$
 p(s_i) = \sigma\bigg(\sum_{j<i}W_{j,i}s_j+b_i\bigg)
