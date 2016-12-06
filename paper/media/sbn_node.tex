@@ -1,7 +1,11 @@
 %& /home/spotlight/.config/TikzEdtWForms/TikzEdtWForms/0.2.1.0/temp_header
-%\begin{document}
-%\usetikzlibrary{arrows}
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.14}
+\begin{document}
 \usetikzlibrary{arrows.meta,calc,fit,backgrounds}
+%\pgfdeclarelayer{background}
+%\pgfsetlayers{background}
 \tikzstyle{c} = [circle, draw, fill=blue!20, node distance=3cm, text width=2.5em, text centered]
 \tikzstyle{b} = [rectangle, draw, fill=blue!20, node distance=3cm, text width=2.5em, text centered]
 \tikzstyle{l} = [draw, -latex',thick]
@@ -19,7 +23,6 @@
 \node[
       fill=black!20,node distance=4cm,,inner sep = 1em,
       fit=(layer_n) (prior_1) (prior_2) (prior_n)] (layer_n_node){};
-
 %TODO: set width according to layer_n_node
 \node[
       fill=black!20] (layer_n_1) at ([shift={(0,2)}] layer_n_node){\Large Layer $n-1$};
@@ -36,8 +39,5 @@
 \draw[-{latex}] ($(prior_1)+(-1.5,1.5)$) -- (prior_1);
 \draw[-{latex}]($(prior_1)+(0,2)$) -- (prior_1);
 \draw[-{latex}]($(prior_1)+(1.5,1.5)$) -- (prior_1);
-
-
 \end{tikzpicture}
-
-%\end{document}
+\end{document}
