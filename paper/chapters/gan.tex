@@ -75,9 +75,29 @@ Note that the discriminator will ascend while the generator descend its gradient
 
 \subsection{Stability and Performance}
 \label{sub:gan_stability}
+In the practical case where both function approximators $G$ and $D$ are represented using a neural network,
+GANs have been shown to be difficult to train using gradient descent.
+These issues have been credited to the problem of finding the nash equilibrium in the minimax-game with continious, high-dimensional parameters whereas current gradient-based methods are [designed] to reach an minimum.
+Additionally to these hypothetical thoughts, \cite{gan_distinguish_crit:2014} have shown that these methods may fail to converge.
+Acknoledging these problems, Salimans et al \cite{improved_gan:2016} has studied the stability and performance of GAN in detail resulting in a number of practical methods improving sample generation and improved semi-supervised learning performance.
+We will take a look at a selection of these methods in the following, focussing on neural networks as approximators.
 
 \subsubsection{Freeze Learning}
 \label{ssub:gan_freeze_learning}
+One of the main issues prominent during early GAN research is the disparity between $G$ and $D$.
+Commonly during training one of these networks will outpace the other resulting in degraded gradients where the other player is unable to learn from.
+Freeze learning is one of the natural counter to this problem, just freezing either $G$ or $D$ until the other network has catched up (formulation!).
+In practice the generator is far slower to train than the discriminator in most cases (citation).
+
+
+\subsubsection{Label Smoothing}
+\label{ssub:gan_label_smoothing}
+Another basic idea to improve gradient flow is to replace the binary classification values $0/1$ with smoothed values $0.1/0.9$ or $\epsilon/1-\epsilon$.
+This guarantees to provide the generator with an informative gradient to improve learning performance
+Additionally, smoothed labels have been shown to reduce the attack surface of neural networks to adversarial examples \cite{adv_examples:2016}.
+% TODO replace 0/1 with e/1 − e ??
+% TODO one-sided label smoothing
+
 
 \subsubsection{Feature Matching}
 \label{ssub:gan_feature_matching}
@@ -89,8 +109,6 @@ Note that the discriminator will ascend while the generator descend its gradient
 \label{ssub:gan_historical_averaging}
 
 
-\subsubsection{Label Smoothing}
-\label{ssub:gan_label_smoothing}
 
 
 \subsubsection{Normalizing Flows}
