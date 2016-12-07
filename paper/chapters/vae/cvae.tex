@@ -1,0 +1,11 @@
+Instead of randomly generated data, generation of output conditioned on some prior information is needed.
+A few examples would be super-resolution of images (citation!), prediction of subsequent frames of an video or other prediction tasks
+
+Conditional VAE is a modification of the original VAE framework to support conditioning on another variable $y$ in addition to the input data $x$.
+
+To support conditional distributions, the following relations have to be rewritten:
+\begin{itemize}
+\item \textbf{Sampling from data space}: $x \sim p_\theta(x|y,z)$ instead of $x \sim p_\theta(x|z)$.\\
+\item \textbf{Probabilistic encoder}: $q_\theta(z|x,y)$ instead of just $q_\theta(z|x)$.\\
+\item \textbf{Probabilistic decoder}: $p_\phi(x|y,z)$ instead of just $p_\phi(x|z)$.\\
+\end{itemize}

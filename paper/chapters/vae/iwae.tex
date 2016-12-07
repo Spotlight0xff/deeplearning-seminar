@@ -1,0 +1,12 @@
+Importance Weighted Autoencoders (IWAE) extends on the VAE framework using $k$-sample importance weighting of the log-likelihood.
+The authors of the papers argue that using more samples will only tighten the lower variational bound.
+$$
+\log p(x) \geq \mathcal{L}_{k+1}(x) \geq \mathcal{L}_{k}(x)
+$$
+
+Additionally, if $\frac{p(h,x)}{q(h|x)}$ is bounded, then the model is guaranteed to reach the optimimum:
+$$
+\lim_{k \rightarrow \infty} \mathcal{L}_{k}(x) = \log p(x)
+$$
+
+Of course, using more samples will result in higher computational cost.
