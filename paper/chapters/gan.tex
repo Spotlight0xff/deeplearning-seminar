@@ -112,6 +112,11 @@ Additionally, smoothed labels have been shown to reduce the attack surface of ne
 % TODO one-sided label smoothing
 
 
+\subsubsection{(Virtual) Batch normalization}
+\label{ssub:gan_batch_norm}
+Using batch normalization \cite{batch_norm:2015} helped stabilizing learning DCGAN \cite{dcgan:2015}.
+\cite{improved_gan:2016} introduced virtual batch normalization where each input $x$ is normalized on one reference batch chosen at the start of learning instead of the other inputs in the mini-batch.
+
 \subsubsection{Feature Matching}
 \label{ssub:gan_feature_matching}
 
@@ -127,13 +132,35 @@ Additionally, smoothed labels have been shown to reduce the attack surface of ne
 \subsection{Application}
 \label{sub:gan_application}
 GAN have been applied to many different areas which include generating images (GAN, DCGAN, LAPGAN), sequences (SeqGAN), videos (\cite{gan_video:2016}), 3D objects (\cite{gan_3d:2016}), text-to-image synthesis (\cite{gan_t2i:2016})
+
+
 \subsection{Extensions}
 \label{sub:gan_extensions}
 
-\subsubsection{LAPGAN}
-\label{ssub:lapgan}
-
-\subsubsection{DCGAN}
+\subsubsection{DCGAN \cite{dcgan:2015}}
 \label{ssub:dcgan}
+Early implementations of the GAN framework have been implemented using fully-connected layers,
+which have proven to be difficult and slow to train on real-world data (citation, original convnet papers?).
+Using deep convolutional networks has helped reach human-level performance in object recognition and classification problems on images (citations!).
+As the discriminator in the GAN model implements a binary classification task and the generator performance is heavily dependent on the discriminator, using convnets to train the model should improve performance of image generation immensely.
+\emph{Deep convolutional generative adversarial network} (DCGAN) has applied convolutional networks to both generator and discriminator, resulting in quantitively evualuated better results.
+DCGAN uses no fully connected or pooling layers, but instead fractionally strided convolutions (often wrongfully called deconvolutions).
+
+\subsubsection{LAPGAN \cite{lapgan:2015}}
+\label{ssub:lapgan}
+LAPGAN is an extension of GAN applied to images using laplacian pyramids \cite{laplacian:1983}.
+Instead of using a single generator network, LAPGAN uses a series of deep convolutional networks as generators.
+
+\paragraph{Training} is heavily modified from the regular GAN framework.
+In each iteration a training sample is drawn from the dataset and a downsamples version from it is computed.
+The discriminator receives now either the computed high-pass image (from the original image and the down-then-up sampled image) or an high-pass image from the generator.
+These steps are repeated for other steps, downscaling the image.
+In the last stage, a traditional generator and discriminator is used for the $8x8$ image.
+\paragraph{Sampling} uses a conditional GAN to produce high-resolution images through different stages of deep generator networks.
+
+\paragraph{Results}
+As GANs have no direct measurement of the quality of generations due to their lack of objective function, human evaluation of the authenticity of generated images is used for quantitive results.
+LAPGAN has pushed the state of the art significantly, with generated images which are high-resolution in comparison to earlier methods and arguebly high variety of generations.
+Furthermore, humans have evaluated the generated images for real images 40\% of the time.
 
 
