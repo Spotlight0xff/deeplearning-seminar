@@ -1,0 +1,38 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgf}
+%\pgfplotsset{compat=1.14}
+
+
+\begin{document}
+\usetikzlibrary{arrows.meta}
+% why does the figure seems to have lots of whitespace to the left when shapes[.symbols] is included??
+%\usetikzlibrary{shapes.symbols}
+%\tikzstyle{c} = [cloud, draw,cloud puffs=10,cloud puff arc=120, aspect=2, inner ysep=1,gb]
+\tikzstyle{gb} = [draw,outer sep=7,inner sep=7,minimum size=57,line width=1, very thick, draw=black!55, top color=white,bottom color=black!20]
+\tikzstyle{cloud} = [draw, circle, node distance=2.5cm, minimum height=2em, gb]
+\tikzstyle{arr} = [thick,-{Latex[length=3mm,width=2mm]}]
+\begin{tikzpicture}
+
+
+% latent space
+\node[circle,gb] (latent_space) {Latent space $z$};
+
+% nodes
+\node [gb] (generator) at ([shift={(5,0)}] latent_space) {Generator $G$};
+\node [cloud] (data) at ([shift={(0,4)}] generator) {data space};
+\node [gb] (discriminator) at ([shift={(5,2)}] generator) {Discriminator $D$};
+  \node[gb,dashed] (loss) at ([shift={(5,0)}] discriminator) {Loss $\mathcal{L}$};
+
+% flow
+\draw[arr] (latent_space) -- (generator) node[midway,label=below:sample] {};
+\draw[arr] (generator) -- (discriminator) node[midway,label=below:generate] {};
+\draw[arr] (data) -- (discriminator) node[midway,pos=0.4,label=below:sample] {};
+\draw[arr] (discriminator) -- (loss) node[midway,label=below:Real/Fake] {};
+
+% gradient flow
+\path[dashed,arr] (loss) edge[bend right] node [label=$\nabla \mathcal{L}$ with regard to $D$] {} (discriminator);
+\path[dashed,arr] (loss) edge[bend left] node [label=below:$\nabla \mathcal{L}$ with regard to $G$] {} (generator);
+
+\end{tikzpicture}
+\end{document}
