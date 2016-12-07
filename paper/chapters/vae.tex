@@ -129,6 +129,9 @@ Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the 
 %\resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
 \includegraphics{media/manifold.pdf}
   \caption{MNIST 2-dimensional manifold}\label{fig:vae_manifold}
+  \medskip
+  \small
+  Manifold learned by a VAE using a 2-dimensional latent space for $z \in [-3,3]^2$.
 \end{figure}
 
 \subsection{Performance}
@@ -137,11 +140,11 @@ Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the 
 \subsection{Extensions}
 \label{sub:vae_extensions}
 
-\subsubsection{Deep Recurrent Attention Writer}
-\label{ssub:vae_deep_recurrent_attention_writer}
-
 \subsubsection{Importance Weighted Autoencoder \cite{iwae:2015}}
 \label{ssub:vae_importance_weighted_autoencoder}
+
+\subsubsection{Deep Recurrent Attention Writer}
+\label{ssub:vae_deep_recurrent_attention_writer}
 
 \subsubsection{Conditional VAE}
 \label{ssub:vae_conditional_vae}

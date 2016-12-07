@@ -12,14 +12,14 @@ These random variables are interpreted in a bayesian way where each one may be o
   \medskip
   \small
   Sigmoid Belief Network described as a acyclic directed graph where blue nodes indicate hidden variables while red nodes represent observed variables.
-  Arrows show stochastic dependency. The dashed arrow indicates that it is possible in the original definition (and in the formula below) to have inter-layer dependencies but they are usually not modelled to simplify the architecture.
+  Arrows show stochastic dependency. The dashed arrow indicates that it is possible in the original definition, even though most commonly the hidden variables are divided into layers.
 \end{figure}
 
 \subsection{Learning}
 \begin{figure}[htb]
 \centering
 \includestandalone[mode=buildnew]{media/sbn_node}
-  \caption{Sigmoid Belief Net  architecture}
+  \caption{SBN node}
   \label{fig:sbn_node}
 \end{figure}
 In its most common form, SBNs are comprised by a number of layers where each node in a layer is a sigmoid function of its ancestors:
