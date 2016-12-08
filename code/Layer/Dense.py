@@ -22,7 +22,7 @@ class Dense():
 
     def __call__(self, x):
         """apply Dense layer
-        
+
         Args:
             x(tf.Tensor): input data
         Returns:
@@ -34,7 +34,7 @@ class Dense():
 
     def _init(self, x):
         """Initialize Dense layer with modified Xavier initialization for non-linear units.
-        See https://arxiv.org/pdf/1502.01852.pdf 
+        See https://arxiv.org/pdf/1502.01852.pdf
 
         Args:
             x(tf.Tensor): input tensor
@@ -61,3 +61,13 @@ def xavier_init(shape, dtype=dtypes.float32):
     w = tf.random_normal([shape[0], shape[1]], stddev = sd)
     return w
 
+# Linear
+def Linear(input_, output_size, scope=None, stddev=0.02, bias_start=0.0, with_w=False):
+    shape = input_.get_shape().as_list()
+
+    with tf.variable_scope(scope or "Linear"):
+        matrix = tf.get_variable("Matrix", [shape[1], output_size], tf.float32,
+                                 tf.random_normal_initializer(stddev=stddev))
+        bias = tf.get_variable("bias", [output_size],
+            initializer=tf.constant_initializer(bias_start))
+        return tf.matmul(input_, matrix) + bias
