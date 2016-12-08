@@ -1,0 +1,55 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.14}
+\usetikzlibrary{positioning, arrows.meta, calc, shapes.misc}
+
+\begin{document}
+
+\pgfmathdeclarefunction{gauss}{2}{%
+  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+}
+
+
+\tikzstyle{gb} = [draw,outer sep=3,inner sep=3,minimum size=10,line width=1, very thick, draw=black!55, top color=white,bottom color=black!20]
+\tikzstyle{arr} = [thick,-{Latex[length=3mm,width=2mm]}]
+\tikzstyle{cloud} = [draw, circle, node distance=2.5cm, minimum height=2em, gb]
+
+\begin{tikzpicture}
+
+\begin{scope}[xshift=5cm,on grid]
+
+% input space
+\node[gb] (input) at (0,0) {$x$};
+\node[fill=black!20] (lbl_input) at (0,1) {Input};
+
+% output / reconstruction
+\node[gb] (output) at ($(input) + (5.5cm,0)$) {$\tilde x$};
+\node[fill=black!20] (lbl_rec) at ($(output) + (0,1cm)$) {Reconstruction};
+
+% latent space
+\node[fill=black!20] (lbl_lat) at ($(input) + (2.7cm,1cm)$) {Latent space};
+
+% draw plot for normal dist
+\begin{axis}[
+  no markers,
+  domain=0:6,
+  samples=100,
+  ytick=\empty,
+  xtick=\empty,
+  xlabel={$(\mu,\sigma)$},
+  width=3cm,
+  at={($(input) + (2cm,-0.5cm)$)}
+  ]
+  \addplot [very thick,cyan!50!black, domain=0:6] {gauss(3,1)};
+\end{axis}
+
+% input -> latent
+\draw[arr] (input) -- node[label=above:$q_\phi(z|x)$] {}($(input) + (2cm,0)$) {};
+
+% latent -> output (reconstruction)
+\draw[arr] ($(input) + (3.5cm,0)$) -- node[label=above:$p_\theta(x|z)$] {}(output) {};
+
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

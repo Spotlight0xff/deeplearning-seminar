@@ -1,9 +1,15 @@
-\section{Variational Autoencoders}
+\section{Variational Autoencoders \cite{vae:2013}}
 \label{sec:vae}
 Variational Autoencoders (VAE) have been introduced in 2014 by Kingma and Welling which uses variational inference to perform efficient inference and learning in deep latent models.
 Deep latent models are based on the assumption that input data can be explained using non-linear transformations coming from simple distributions. \cite{rezende:2014} (check!?).
 
 Given this assumption, building a good representation in the latent space is crucial for minimal reconstruction error as well as good generative modelling in practice(?).
+
+\begin{figure}[htb]
+\centering
+\includestandalone[width=\linewidth,mode=buildnew]{media/vae_conceptual}
+  \caption{VAE architecture (source: VAE paper)}\label{fig:vae_architecture}
+\end{figure}
 
 \paragraph{Formal Setup}
 Formally, $p(x,z)$ is the joint probability distribution over both input and latent variables while $p(z|x)$ is the conditional probability of the latent variables given input data.
