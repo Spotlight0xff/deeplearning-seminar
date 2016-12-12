@@ -235,14 +235,21 @@ class VAE(object):
             plt.close('all')
         print("done")
 
-    def plot_manifold(self, range_x=(-4,4), range_y=(-4,4), num_rowdigits = 20, output="manifold.pdf"):
+    def plot_manifold(self, range_x=(-4,4), range_y=(-4,4), axis = (1,2), single_axis = False, num_rowdigits = 20, output="manifold.pdf"):
         x1 = np.linspace(range_x[0], range_x[1], num = num_rowdigits)
-        x2 = np.linspace(range_y[0], range_y[1], num = num_rowdigits)
+        if not single_axis:
+            x2 = np.linspace(range_y[0], range_y[1], num = num_rowdigits)
+        else:
+            x2 = np.zeros((1, num_rowdigits))
 
         manifold = np.zeros(shape=(len(x1)*28, len(x2)*28))
         for i_x, x in enumerate(x1):
             for i_y, y in enumerate(x2):
-                img = self.decode([[x,y]])
+                input = np.zeros(shape=(1, self.arch[-1]))
+                input[0][axis[0]] = x
+                if not single_axis:
+                    input[0][axis[1]] = y
+                img = self.decode(input)
                 manifold[i_x*28:(i_x+1)*28,i_y*28:(i_y+1)*28] = img.reshape(28,28)
         plt.imshow(manifold, cmap=plt.cm.gray)
         plt.axis('off')
@@ -251,11 +258,17 @@ class VAE(object):
     def plot_z_mean(self, data, num_samples = 5000):
         x, y = data.test.next_batch(num_samples)
         z_mean, _ = self.encode(x)
-        plt.scatter(z_mean[:,0], z_mean[:,1], c=np.argmax(y, 1), alpha=1, edgecolors='black')
-        plt.show()
+        if self.arch[-1] == 2:
+            plt.scatter(z_mean[:,0], z_mean[:,1], c=np.argmax(y, 1), alpha=1, edgecolors='black')
+            plt.show()
+        elif self.arch[-1] == 3:
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            ax.scatter(z_mean[:,0], z_mean[:,1], z_mean[:,2], c=np.argmax(y,1), s = 40, marker='.')
+            plt.show()
 
 
-    
+
     def train(self, X, num_epochs = 75, plot_manifold = False):
         avg_train_error = 0
         now = datetime.now().isoformat()[11:]
