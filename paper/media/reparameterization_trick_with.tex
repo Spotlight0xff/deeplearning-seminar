@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage{pgf}
+\usepackage{pgfplots}
+
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows.meta, positioning}
+
+
+\begin{document}
+\tikzstyle{common} = [draw,outer sep=7,inner sep=7,minimum size=57,line width=1, very thick, draw=black!55, top color=white,bottom color=black!20]
+\tikzstyle{b} = [common]
+\tikzstyle{c} = [common, circle]
+\tikzstyle{arr} = [thick,-{Latex[length=3mm,width=2mm]}]
+\begin{tikzpicture}
+
+%\draw[help lines,step=1,gray!20] (0,0) grid (4,8);
+% input
+%\draw[help lines,step=1,gray!20] (0,0) grid (8,8);
+\node[b] (x_) at (4,8) {\Huge $x$};
+\node[c] (eps_) at (8,8) {\Huge $\epsilon$};
+\node[b] (z_) at (4,4) {\Huge $z$};
+\node[b] (theta_) at (0,8) {\Huge $\theta$};
+\node[b] (f_) at (4,0) {\Huge $f$};
+\draw[arr] (x_) -- (z_);
+\draw[arr] (theta_) -- (z_);
+\draw[arr] (z_) -- (f_);
+\draw[arr] (eps_) -- (z_);
+
+% backpropagation
+
+\path[dashed,arr,very thick] (f_) edge[bend right] node [label=right:\Huge $\frac{\partial f}{\partial z}$] {} (z_);
+\path[dashed,arr,very thick] (z_) edge[bend left] node [label=below left:\Huge $\frac{\partial f}{\partial \theta}$] {} (theta_);
+%\draw[dashed,draw] node at (8,8) {}  node at (0,0) {};
+
+%\node[cloud] (z) at (shift={}){\Huge $z$};
+% 
+% % nodes
+% \node [gb] (generator) at ([shift={(5,0)}] latent_space) {Generator $G$};
+% \node [cloud] (data) at ([shift={(0,4)}] generator) {data space};
+% \node [gb] (discriminator) at ([shift={(5,2)}] generator) {Discriminator $D$};
+%   \node[gb,dashed] (loss) at ([shift={(5,0)}] discriminator) {Loss $\mathcal{L}$};
+% 
+% % flow
+% \draw[arr] (latent_space) -- (generator) node[midway,label=below:sample] {};
+% \draw[arr] (generator) -- (discriminator) node[midway,label=below:generate] {};
+% \draw[arr] (data) -- (discriminator) node[midway,pos=0.4,label=below:sample] {};
+% \draw[arr] (discriminator) -- (loss) node[midway,label=below:Real/Fake] {};
+% 
+% % gradient flow
+% \path[dashed,arr] (loss) edge[bend right] node [label=$\nabla \mathcal{L}$ with regard to $D$] {} (discriminator);
+% \path[dashed,arr] (loss) edge[bend left] node [label=below:$\nabla \mathcal{L}$ with regard to $G$] {} (generator);
+% 
+\end{tikzpicture}
+\end{document}

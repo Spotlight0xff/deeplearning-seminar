@@ -110,6 +110,26 @@ This allows us to compute the gradient of the loss function and backpropagate th
 The core idea of VAEs is to match a distribution $q(x)$ to the desired $p(x)$ by enforcing a lower variational bound on $q(x)$ in a way that it seeks to match $p(x)$.
 In contrast to other autoencoders, VAEs behave differently due to this lower bound but they resemble the architecture of traditional autoencoders (sparse, denoising).
 
+\begin{figure}
+  \centering
+  \begin{tabular}{c:c}
+    \subcaptionbox{without reparameterization}{\includestandalone[height=0.4\linewidth]{media/reparameterization_trick_without}}
+      \quad \quad
+    &
+      \quad
+
+    \subcaptionbox{with reparameterization applied}{\includestandalone[height=0.4\linewidth]{media/reparameterization_trick_with}}\\
+  \end{tabular}
+  \caption{reparameterization trick}
+  \medskip
+  \small
+  Function $f_\theta(x)$ with inputs $x$ and (variational) parameters $\theta$ shown as directed graphical model.\\
+  Left without and on the right with the reparameterization trick applied.\\
+  Solid arrows show the forward pass and dashed arrows the error backpropagation.
+  Rectangular nodes represent deterministic functions while circles indicate stochastic variables.
+  Note that backpropagation of gradients through stochastic nodes is problematic and adds bias (verify!)
+\end{figure}
+
 
 
 
