@@ -1,16 +1,29 @@
 \section{Generative Adversarial Networks}
 \label{sec:gan}
 
-Generative Adversarial Networks (GAN) is a framework recently proposed by Goodfellow et al which has gathered a lot of attention in the deep learning community and in the last few years many extensions have been [proposed] (citations).
-GANs can be understood as a two-player game where one player is called generator $G$ playing against the discriminator $D$.
-The goal of $G$ is to produce similar data to the given training set while $D$ is tasked with discriminating(?) the generated samples from the training data. Both $G$ and $D$ are learning function approximators, for example Multi-Layer Peceptron (MLP) networks as proposed in the original GAN paper.
+%%% when introduced, game theory approach
+Generative Adversarial Networks (GAN) is a framework recently proposed by Goodfellow et al based on a game theoretic approach to generative modelling.
+%which has gathered a lot of attention in the deep learning community and in the last few years many extensions have been [proposed] (citations).
+
+The idea is to have two neural networks playing against each other.
+A generator $G(z)$ and a discriminator $D$ where the generator tries to produce data similar to those encountered in a training set. $D$ receives samples from either the training set or the generated data, without knowing where it came from.
+Both $G$ and $D$ are usually implemented as neural networks with $G$ being trained to output samples fooling the discriminator and $D$ distinguishing generated samples from training examples.
+
+
+
+
+
+
+%GANs can be understood as a two-player game where one player is called generator $G$ playing against the discriminator $D$.
+%The goal of $G$ is to produce similar data to the given training set while $D$ is tasked with discriminating(?) the generated samples from the training data. Both $G$ and $D$ are learning function approximators, for example Multi-Layer Peceptron (MLP) networks as proposed in the original GAN paper.
 % --> declare distribution p_data, p_model, x, z
-During learning, both networks are updated in parallel according to the gradient of their respective loss function which we will explore now.\\
-In the following $p_{data}$ is the true data generating distribution from which the training samples have been generated.
-We don't have access to that distribution.
+%During learning, both networks are updated in parallel according to the gradient of their respective loss function which we will explore now.\\
+%In the following $p_{data}$ is the true data generating distribution from which the training samples have been generated.
+%We don't have access to that distribution.
 
 \subsection{Architecture}
 \label{sub:gan_arch}
+Formalizing the setup in a probabilistic way, we have the unknown data distribution $p_{data}(x)$ from which the training examples have been drawn and the marginalized model distribution $p_{model}(x) = \int p(z)p(x|z) \textit{d}z$ over the noise space $z$ (also latent space).
 
 
 % http://www.slideshare.net/xavigiro/deep-learning-for-computer-vision-generative-models-and-adversarial-training-upc-2016
@@ -36,12 +49,18 @@ We don't have access to that distribution.
 
 
 \subsubsection{Generator Network}
-The generator network in the GAN framework tries to fool the discriminator $D$ by producing samples which are indistinguishable from the training data.
+The generator $G$ in the GAN framework tries to fool the discriminator $D$ by producing samples which are indistinguishable from the training data.
 This process can be formally written as minimizing the following cost function.
 $$
-\mathcal{C}_g = \log(1 - D(G(z)))
+\mathcal{L}_g = \min \log(1 - D(G(z)))
 $$
-$z$ is produced by sampling from the noise prior $p_g(z)$.\\
+Where $z$ is sampling from the noise prior $p(z)$.\\
+
+Another common form of the generator loss is $\mathcal{L'}_g$.
+$$
+\mathcal{L'}_g = \max \log D(G(z))
+$$
+This formulation has the benefit of the same optimum fixed point, but has a better gradient flow early in training when $G$ produces samples which can be distinguished easily from real data by $D$.
 
 Note that this loss function is fully differentiable which means it can be trained with backpropagation.
 
@@ -49,9 +68,9 @@ Note that this loss function is fully differentiable which means it can be train
 
 \subsubsection{Discriminator Network}
 The objective of the discriminator network $D$ is to distinguish the generated samples produced by $G$ from the training set samples.
-This process can be formalized to maximizing the cost function $\mathcal{C}_d$.
+This process can be formalized to maximizing the cost function $\mathcal{L}_d$.
 $$
-\mathcal{C}_d = \log\big(\log D(x) + \log (1 - D(G(z))\big)
+\mathcal{L}_d = \max \log\big(\log D(x) + \log (1 - D(G(z))\big)
 $$
 
 
@@ -60,7 +79,7 @@ $$
 \label{sub:gan_training}
 The GAN framework can be fully trained with stochastic backpropagation due to both $D$ and $G$ being differentiable.
 
-Combining the cost functions of generator and discriminator yield us the following objective with value function $V(G,D)$.
+Combining the loss functions of both generator and discriminator yields us the following objective with value function $V(G,D)$.
 $$
 \min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]
 $$
