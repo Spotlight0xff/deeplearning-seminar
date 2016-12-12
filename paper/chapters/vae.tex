@@ -98,6 +98,9 @@ $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent
 
 
 \subsubsection{Reparameterization Trick}
+
+% more math:
+% http://stats.stackexchange.com/questions/199605/how-does-the-reparameterization-trick-for-vaes-work-and-why-is-it-important
 To be able to backpropagate the loss function through the VAE, it has to be differentiable and deterministic.
 Because we add noise to the encoding, the gradients can't be computed directly. In order to circumvent this restriction, the so-called "reparameterization trick" is applied.
 Instead of drawing $z ~ \mathcal{N}(\mu(x), \Sigma(x))$, we sample an auxiliary variable $\epsilon$ from $\mathcal{N}(0, I)$ which we then transform with equation \ref{eq:rep_trick} into $z$.
@@ -146,15 +149,18 @@ Because the posterior is intractable ($p_\theta(x)$), we instead approximately m
 
 \subsection{Learning}
 \label{sub:vae_learning}
-In practice, the usual choice for $q_\theta(z|x)$ is the multivariate gaussian distribution.
-$$
-q_\theta(z|x) = \mathcal{N}(z|\mu(X;\vartheta), \Sigma(X;\vartheta))
-$$
-Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the KL-divergence can now be computed in closed form as follows\cite{derivations:2007}.
+The probabilistic encoder $q_\theta(z|x)$ is commonly implemented using a deep neural network which transforms the input data $x$ into a multivariate gaussian distribution with mean $\mu_0$ and diagonal variance $\Sigma_0$.
+To allow the computation of the KL divergence between $q_\theta(z|x)$ and the latent prior distribution $p(z)$ in closed form, the prior is an isotropic gaussian $\mathcal{N}(0, 1)$.
+
+% define X correctly or replace formula below!
+%$$
+%q_\theta(z|x) = \mathcal{N}(z|\mu(X;\theta), \Sigma(X;\theta))
+%$$
+
+%Because we assume that $p(z)$ is also a multivariate Gaussian distribution, the KL-divergence can now be computed in closed form as follows\cite{derivations:2007}.
 \begin{align*}
-  \mathcal{D}_{\mathrm{KL}}\big[Q(z) || P(z|x)\big] &= \mathbb{E}\big[\log \frac{p}{q}\big]\\
-  \mathcal{D}_{\mathrm{KL}}\big[\mathcal{N}(\mu_0,\Sigma_0) || \mathcal{N}(\mu_1,\Sigma_1)\big]
-  &= \frac{1}{2} \big(\mathrm{tr}\big(\Sigma_1^{-1}\Sigma_0\big) + \big(\big)\big)
+  \mathcal{D}_{\mathrm{KL}}\big[q_\theta(z|x) || p_\phi(z|x)\big] &= \mathcal{D}_{\mathrm{KL}}\big[\mathcal{N}(\mu_0,\Sigma_0) || \mathcal{N}(\mu_1,\Sigma_1)\big]\\
+  &= \frac{1}{2} \big(\mathrm{tr}\big(\Sigma_1^{-1}\Sigma_0\big) + \big(\big)\big)\\
 \end{align*}
 
 
@@ -168,7 +174,7 @@ In the case of VAE, variational inference is also used in order to backpropagate
 
 
 
-\begin{figure}[htb]
+\begin{figure}[h!]
 \centering
 %\resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
 \includegraphics{media/manifold.pdf}
