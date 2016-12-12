@@ -14,6 +14,7 @@ class GAN(object):
 
     Just for educational purposes, generator + discriminator implemented using MLP.
     """
+    count = 0
 
     HYPERPARAMS = {
             "batch_size": 128,
@@ -125,23 +126,17 @@ class GAN(object):
         normalized to [-1,1]
         """
         return random_sample((self.batch_size, self.z_dim))
-        # low = -2
-        # high = 4
-        # return uniform(low, high, (self.batch_size,self.z_dim))
 
     def decode(self, zs = None):
-        """Sample x ~ G(z)
-        """
+        """Sample x ~ G(z)"""
         prior = self._gen_prior() if zs is None else zs
         return self.sess.run(self.output_g, {self.noise_tensor: prior})
-    
 
 
     def train(self, X, num_epochs = 2000, modulo = 100, output = True):
         now = datetime.now().isoformat()[11:]
         if output:
             print("[**] Begin training: {}".format(now))
-        count = 0
         l_d = 0
         summary_d = None
         n_k = self.k
@@ -158,7 +153,7 @@ class GAN(object):
             # update generator once
             prior = self._gen_prior()
             l_g,summary_g, _ = self.sess.run([self.loss_g, self.merged_g, self.opt_g], {
-                self.noise_tensor: prior
+                    self.noise_tensor: prior
                 })
 
 
@@ -172,13 +167,13 @@ class GAN(object):
                             self.merged_g
                         ], {
                             self.data_tensor: X,
-                            self.noise_tensor: prior,
+                            # self.noise_tensor: prior,
                         })
-                self.writer.add_summary(summary_d, count)
-                self.writer.add_summary(summary_g, count)
+                self.writer.add_summary(summary_d, self.count)
+                self.writer.add_summary(summary_g, self.count)
                 if output:
-                    print('{:>5}@{:<2} loss_d: {:.3}\tloss_g: {:.3}'.format(count, n_k, l_d, l_g))
-                count += 1
+                    print('{:>5}@{:<2} loss_d: {:.3}\tloss_g: {:.3}'.format(self.count, n_k, l_d, l_g))
+                self.count += 1
 
 
         now = datetime.now().strftime("%y%m%d_%H%M")
