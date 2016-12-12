@@ -120,7 +120,7 @@ class GAN(object):
 
         normalized to [-1,1]
         """
-        return random_sample((self.batch_size, self.z_dim)) * 2 -1
+        return random_sample((self.batch_size, self.z_dim))
         # low = -2
         # high = 4
         # return uniform(low, high, (self.batch_size,self.z_dim))
