@@ -53,8 +53,8 @@ class GAN(object):
 
     def _build_summaries(self):
             summary_d = [
-                # tf.scalar_summary('loss_d_real', self.loss_d_real),
-                # tf.scalar_summary('loss_d_fake', self.loss_d_fake),
+                tf.scalar_summary('loss_d_real', self.loss_d_real),
+                tf.scalar_summary('loss_d_fake', self.loss_d_fake),
                 tf.scalar_summary('loss_d', self.loss_d),
                 ]
             summary_g = [
