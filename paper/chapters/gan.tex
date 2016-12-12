@@ -9,7 +9,13 @@ The idea is to have two neural networks playing against each other.
 A generator $G(z)$ and a discriminator $D$ where the generator tries to produce data similar to those encountered in a training set. $D$ receives samples from either the training set or the generated data, without knowing where it came from.
 Both $G$ and $D$ are usually implemented as neural networks with $G$ being trained to output samples fooling the discriminator and $D$ distinguishing generated samples from training examples.
 
+% use of words: forgery
+To understand the inuition behind the approach to GANs, it may be helpful to view(?) analogy of counterfeiters and the police.
+Counterfeiters try to produce fake money imitating legit money while the police tries to distinguish fake from real money.
+This procedure of generating and distinguishing will go back-and-forth as the counterfeiters will get better at producing authentic looking money and the police is hard-pressed to differentiate between fake and real.
+Eventually, this procedure will result in a nash equlibrium where the police or discriminator will have 50\% chance of seperating authentic from real.
 
+Ideally, we want to find this equilibrium for the GAN model as well.
 
 
 
@@ -77,33 +83,43 @@ $$
 
 \subsection{Training}
 \label{sub:gan_training}
-The GAN framework can be fully trained with stochastic backpropagation due to both $D$ and $G$ being differentiable.
-
 Combining the loss functions of both generator and discriminator yields us the following objective with value function $V(G,D)$.
 $$
 \min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]
 $$
-In the original GAN paper an minibatch-based algorithm for training GAN is proposed, but we will take a look at an the online learning version below:\\
-\begin{algorithm}
-  \caption{Online learning of generative adversarial networks $-$ simple version ($k=1$)}
-  \label{alg:gan_online}
-  \begin{algorithmic}[1]
-    \Let{$\eta_d, \eta_g$}{Learning rate of discriminator and generator networks, respectively}
-    \Let{$\theta_d, \theta_g$}{Parameters of function approximators}
-    \For{number of training iterations}
-      \Let{$z_d$}{sample from noise prior $p_g(z)$}
-      \Let{$z_g$}{sample from noise prior $p_g(z)$}
-      \Let{$x$}{example from training set}
-      \Let{$\theta_d$}{$\theta_d + \eta_d \nabla_{\theta_d} \bigg[\log D(x) + \log \big(1 - D(G(z_d))\big)\bigg]$}
-      \Let{$\theta_g$}{$\theta_g - \eta_g \nabla_{\theta_g} \bigg[\log\big(1 - D(G(z_d))\big)\bigg]$}
-    \EndFor
-  \end{algorithmic}
-\end{algorithm}
 
-In algorithm \ref{alg:gan_online} the original algorithm has been modified for single pass (online) learning.
-Sampling minibatches from the noise prior and $p_{data}(x)$ result in the minibatch version.
-Additionally, it is often required for practical reasons to let the discriminator run multiple backward passes while updating the generator once (why?).
-Note that the discriminator will ascend while the generator descend its gradient due to maximizing $\mathcal{C}_d$ but minimizing $\mathcal{C}_g$ (correct?).
+The GAN framework can be fully trained with stochastic backpropagation due to $V(G,D)$ being differentiable.
+Training will oscillate between training the generator and discriminator, where the other party is fixed respectively.
+In order to avoid a too strong discriminator (or generator), the ratio of learning steps will vary even though there are no hard rules for this.
+
+\paragraph{Theoretical Foundation}
+Using a model with infinite training time and capacity in both generator and discriminator allows theoretical analysis of the GAN framework \cite{gan:2013}.
+For any given generator $G$, the optimal discriminator $D$ is given by $D_G^*(x)$:
+$$
+D_G^*(x) = \frac{p_{data}(x)}{p_{data}(x) + p_{model}(x)}
+$$
+
+%In the original GAN paper an minibatch-based algorithm for training GAN is proposed, but we will take a look at an the online learning version below:\\
+%\begin{algorithm}
+  %\caption{Online learning of generative adversarial networks $-$ simple version ($k=1$)}
+  %\label{alg:gan_online}
+  %\begin{algorithmic}[1]
+    %\Let{$\eta_d, \eta_g$}{Learning rate of discriminator and generator networks, respectively}
+    %\Let{$\theta_d, \theta_g$}{Parameters of function approximators}
+    %\For{number of training iterations}
+      %\Let{$z_d$}{sample from noise prior $p_g(z)$}
+      %\Let{$z_g$}{sample from noise prior $p_g(z)$}
+      %\Let{$x$}{example from training set}
+      %\Let{$\theta_d$}{$\theta_d + \eta_d \nabla_{\theta_d} \bigg[\log D(x) + \log \big(1 - D(G(z_d))\big)\bigg]$}
+      %\Let{$\theta_g$}{$\theta_g - \eta_g \nabla_{\theta_g} \bigg[\log\big(1 - D(G(z_d))\big)\bigg]$}
+    %\EndFor
+  %\end{algorithmic}
+%\end{algorithm}
+
+%In algorithm \ref{alg:gan_online} the original algorithm has been modified for single pass (online) learning.
+%Sampling minibatches from the noise prior and $p_{data}(x)$ result in the minibatch version.
+%Additionally, it is often required for practical reasons to let the discriminator run multiple backward passes while updating the generator once (why?).
+%Note that the discriminator will ascend while the generator descend its gradient due to maximizing $\mathcal{L}_d$ but minimizing $\mathcal{L}_g$ (correct?).
 
 \subsection{Stability and Performance}
 \label{sub:gan_stability}
