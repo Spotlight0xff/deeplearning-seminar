@@ -134,11 +134,11 @@ In contrast to other autoencoders, VAEs behave differently due to this lower bou
 
 
 We use VAEs when we have a complicated distribution $p_\theta(x,z)$ with unknown latent variables $z$.
-The prior distribution $p_\theta(z)$ over the latent structure is a centered isotropic(?) multivariate Gaussian denoted by $\mathcal{N}(z;0, I)$.
+The prior distribution $p(z)$ over the latent structure is a centered isotropic(?) multivariate Gaussian denoted by $\mathcal{N}(z;0, I)$.
 The constructed architecture uses an probabilistic encoder $q_\theta(z|x)$ and a probabilistic decoder $p_\theta(x|z)$ in a form of neural networks, in the original paper MLP are used\cite{vae:2013} but there are various extensions (see \ref{sub:vae_extensions}, TODO).
 Because the posterior is intractable ($p_\theta(x)$), we instead approximately maximize the lower variational bound $L(\theta,\phi;x)$.\\
 \begin{equation}
-  \mathcal{L}(\theta,\phi;x) = -D_{KL}(q_\theta(z|x)||p_\theta(z)) + \mathbb{E}_{q_\theta(z|x)}[log_{p_\theta}(x|z)]
+  \mathcal{L}(\theta,\phi;x) = -D_{KL}(q_\theta(z|x)||p(z)) + \mathbb{E}_{q_\theta(z|x)}[log_{p_\theta}(x|z)]
 \end{equation}
 
 

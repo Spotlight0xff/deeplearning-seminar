@@ -15,10 +15,10 @@ In order to get the loss function for individual data points or minibatches we r
 \begin{align*}
   \mathcal{L}
   &= \int_z q_\phi(z|x) \log\frac{p_\theta(z,x)}{q_\phi(z|x)}\\
-  &= \int_z q_\phi(z|x) \log\frac{p_\theta(z) p_\theta(x|z)}{q_\phi(z|x)} \tag{we assume that x is conditionally dependent on z}\\
-  &= \int_z q_\phi(z|x) \bigg(\log\frac{p_\theta(z)}{q_\phi(z|x)} + \log p_\theta(x|z)\bigg)\\
-  &= -\int_z q_\phi(z|x) \log\frac{q_\phi(z|x)}{p_\theta(z)} + \int_z q_\phi(z|x) \log p_\theta(x|z)\\
-  &= -\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p_\theta(z)\big) + \int_z q_\phi(z|x) \log p_\theta(x|z)\\
-  &= \underbrace{-\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p_\theta(z)\big)}_{\mathcal{L}_{reg}} + \underbrace{\mathbb{E}_{z \sim q_\phi(z|x)}\big[ \log p_\theta(x|z)\big]}_{\mathcal{L}_{rec}}\\
+  &= \int_z q_\phi(z|x) \log\frac{p(z) p_\theta(x|z)}{q_\phi(z|x)} \tag{we assume that x is conditionally dependent on z}\\
+  &= \int_z q_\phi(z|x) \bigg(\log\frac{p(z)}{q_\phi(z|x)} + \log p_\theta(x|z)\bigg)\\
+  &= -\int_z q_\phi(z|x) \log\frac{q_\phi(z|x)}{p(z)} + \int_z q_\phi(z|x) \log p_\theta(x|z)\\
+  &= -\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p(z)\big) + \int_z q_\phi(z|x) \log p_\theta(x|z)\\
+  &= \underbrace{-\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p(z)\big)}_{\mathcal{L}_{reg}} + \underbrace{\mathbb{E}_{z \sim q_\phi(z|x)}\big[ \log p_\theta(x|z)\big]}_{\mathcal{L}_{rec}}\\
   &= \mathcal{L}_{reg} + \mathcal{L}_{rec}
 \end{align*}
