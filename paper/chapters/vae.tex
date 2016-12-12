@@ -3,7 +3,7 @@
 Variational Autoencoders (VAE) have been introduced in 2014 by Kingma and Welling which uses variational inference to perform efficient inference and learning in deep latent models.
 Deep latent models are based on the assumption that input data can be explained using non-linear transformations coming from simple distributions. \cite{rezende:2014} (check!?).
 
-\paragraph{Variational Inference} is a method for approximating intractable posterior distributions over a set of hidden varibales given observations.
+\paragraph{Variational Inference (VI)} is a method for approximating intractable posterior distributions over a set of hidden varibales given observations.
 More specifically, VI turns the inference problem of computing $p(z|x)$ where $z$ are hidden and $x$ observed variables into an optimization problem.
 The term \emph{variational} derives from the calculus of variations, which is a field in mathematical analysis dealing with choosing the best function $q$ from a set of functions $Q$. In the case of variational inference, this $Q$ denotes a class of distributions and the variational parameters are the parameters which are used to define $q \in Q$.
 VI is a alternative to markov chain monte carlo (MCMC) methods like gibbs sampling, due to lower computational cost.
@@ -59,8 +59,10 @@ This allows to sample from this distribution and generate output which will look
 \ref{fig:vae_architecture}.
 
 \paragraph{Relation to Auto-Encoders}
-The Variational autoencoder has the same overall architecture than other autoencoders, for example sparse or denoising autoencoders.
-Similar to other autoencoder frameworks VAE provides an encoder as well as a decoder model, but in contrast to other autoencoders both networks are probabilistic. This means that the model described by the VAE framework can be seen as a jointly trained probabilistic encoder and probabilistic decoder.
+The variational autoencoder has the same encoding-decoding architecture as other autoencoders, for example sparse or denoising autoencoders.
+But in contrast to these autoencoders, the VAE enforces a probability distribution on the learned latent space $z$.
+In particular, the framework encourages the model to learn a representation that is close to $p(z)$ (which usually is an isotropic multivariate gaussian distribution) by including the KL divergence in the objective function.
+%Similar to other autoencoder frameworks VAE provides an encoder as well as a decoder model, but in contrast to other autoencoders both networks are probabilistic. This means that the model described by the VAE framework can be seen as a jointly trained probabilistic encoder and probabilistic decoder.
 %One of the main differences is that the VAE framework enforces a specific prior distribution on the latent space, most of the time simply an isotropic gaussian.
 
 
