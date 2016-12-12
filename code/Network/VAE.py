@@ -2,6 +2,7 @@
 from datetime import datetime
 import numpy as np
 import tensorflow as tf
+import prettytensor as pt
 import sys
 import os
 import logging
@@ -14,14 +15,12 @@ from progressbar import ETA, Bar, Percentage, ProgressBar
 import matplotlib.pyplot as plt
 from IPython import display
 
-
 class VAE(object):
     """ Variational Autoencoder implementation in TensorFlow"""
 
     HYPERPARAMS = {
             "batch_size": 128,
             "learning_rate": 1e-3,
-            "dropout": 1.0,
             "nonlin": tf.nn.relu, # TODO relu
             "squash": tf.nn.sigmoid, # TODO explore (softplus?)
             }
@@ -29,121 +28,116 @@ class VAE(object):
     def __init__(self,
             network_architecture = [], # list of nodes per layer
             hyper_params = {}, # update to HYPERPARAMS
-            models_dir = "models/"
+            models_dir = "models/",
+            k = 1, # number of forward passes
+            **kwargs
             ):
+        self.k_passes = k
+        self.arch = network_architecture
         if not os.path.isdir(models_dir):
             os.makedirs(models_dir)
         self.models_dir = models_dir
         # insert updated hyper parameters into class
         tf.reset_default_graph()
-        self.__dict__.update(VAE.HYPERPARAMS, **hyper_params)
+        self.__dict__.update(VAE.HYPERPARAMS, **kwargs)
         self.sess = tf.Session()
 
-        print('Building tensorflow graph')
+        print('Building tensorflow graph with the following hyper parameters:')
+        for k in VAE.HYPERPARAMS:
+            print('\t{}: {}'. format(k, self.__dict__[k]))
+        print('With the following network architecture: [{}]'.format(",".join(map(str,self.arch))))
 
-        # build tf graph according to network_architecture and hyperparams
-        handles = self._build_graph(network_architecture)
+
+        # build tf graph according to hyperparams
+        self._build_graph()
 
         self.constructed = datetime.now().strftime("%y%m%d_%H%M")
         logs_path = os.path.join("logs", "run_"+self.constructed)
-        self.summary_writer = tf.train.SummaryWriter(logs_path, self.sess.graph)
-        self.writer = tf.merge_all_summaries()
+        self.summary_writer = tf.summary.FileWriter(logs_path, self.sess.graph)
+        self.writer = tf.summary.merge_all()
         self.saver = tf.train.Saver()
 
-        self.sess.run(tf.initialize_all_variables())
-        (self.x_in, self.dropout_, self.z_mean, self.z_log_sigma,
-         self.x_reconstructed, self.z_, self.x_reconstructed_,
-         self.cost, self.train_op) = handles
+        self.sess.run(tf.global_variables_initializer())
 
         print('Done constructing network')
 
-    def _build_recognition_graph(self, architecture):
+    def _build_recognition_graph(self):
         # Graph input
-        x_in = tf.placeholder(tf.float32, shape=[None, architecture[0]], name="x")
+        self.x_in = tf.placeholder(tf.float32, shape=[None, self.arch[0]], name="x")
+
+        layer = pt.wrap(self.x_in).sequential()
+        layer.flatten()
+        for i in self.arch[1:-1]:
+            layer.fully_connected(i, activation_fn = self.nonlin, weights = tf.contrib.layers.xavier_initializer())
+
+        self.z_mean = layer.as_layer().fully_connected(self.arch[-1], name = 'z_mean', weights = tf.contrib.layers.xavier_initializer(), activation_fn = None).tensor
+        self.z_log_sigma = layer.as_layer().fully_connected(self.arch[-1], name = 'z_log_sigma', weights = tf.contrib.layers.xavier_initializer(), activation_fn = None).tensor
+
+    def _build_decoding_layers(self):
+        dec_layer = pt.template('input').sequential()
+        dec_layer.flatten()
+        for count, i in enumerate(reversed(self.arch[1:-1])):
+            dec_layer.fully_connected(i, activation_fn = self.nonlin, weights = tf.contrib.layers.xavier_initializer())
+        dec_layer.fully_connected(self.arch[0], activation_fn=self.squash, weights = tf.contrib.layers.xavier_initializer())
+        return dec_layer
 
 
-        # setup dropout placeholder for dense layers
-        dropout = tf.placeholder_with_default(self.dropout, shape=[], name = "dropout")
-
-        # encoding (q(z|x)), build latent space
-        encoding = [Dense("encoding", hidden_size, dropout, self.nonlin) for hidden_size in reversed(architecture[1:-1])]
-
-        # compose all dense layers
-        h_encoded = compose_all(encoding)(x_in)
-
-        # latent dist: z ~ N(z_mean, np.exp(z_log_sigma)**2)
-        z_mean = Dense("z_mean", architecture[-1], dropout)(h_encoded)
-        z_log_sigma = Dense("z_log_sigma", architecture[-1], dropout)(h_encoded)
-        return (x_in, dropout, z_mean, z_log_sigma)
-
-    def _build_decoding_graph(self, architecture, dropout, vars):
-        (x_in, z_mean, z_log_sigma) = vars
-        # sample from gaussian
-        z = self.sample_gaussian(z_mean, z_log_sigma)
+    def _build_decoding_graph(self):
+        self.z = self.sample_gaussian(self.z_mean, self.z_log_sigma)
+        self.x_reconstructed = self.dec_layers.construct(input = self.z)
 
 
-        decoding = [Dense("decoding", hidden_size, dropout, self.nonlin) for hidden_size in architecture[1:-1]]
-
-        # prepend squashing func for reconstructed x
-        decoding.insert(0, Dense("x_decoding", architecture[0], dropout, self.squash))
-
-        x_reconstructed = tf.identity(compose_all(decoding)(z), name = "x_reconstructed")
-
-        tf.image_summary('x_reconstructed', tf.reshape(x_reconstructed,[self.batch_size, 28, 28, 1]))
-
-
-
-        # aux. ops to explore latent space, prior z ~ N(0,I)
-        z_ = tf.placeholder_with_default(tf.random_normal([1, architecture[-1]]),
-                shape = [None, architecture[-1]],
-                name = "latent_in")
-        x_reconstructed_ = compose_all(decoding)(z_)
-
+    def _build_loss_graph(self):
         # reconstruction loss, mismatch between input and reconstructed
-        rec_loss = VAE.rec_error(x_reconstructed, x_in)
+        self.rec_loss = VAE.rec_error(self.x_reconstructed, self.x_in)
 
         # determine kullback-leibler divergence (approx. to true posterior)
-        kl_loss = VAE.kl_divergence(z_mean, z_log_sigma)
+        self.kl_loss = VAE.kl_divergence(self.z_mean, self.z_log_sigma)
 
-        return (decoding, x_reconstructed, z_, x_reconstructed_, rec_loss, kl_loss)
+        self.cost = tf.reduce_mean(self.rec_loss + self.kl_loss, name = "vae_cost")
 
 
-    def _build_graph(self, architecture):
+    def _build_generator_graph(self):
+        """Build the decoupled generator network
+        for latent space exploration, manifold plotting etc.
+        """
+        self.z_ = tf.placeholder_with_default(tf.random_normal([1, self.arch[-1]]),
+                shape = [None, self.arch[-1]],
+                name = "latent_in")
+        self.x_reconstructed_ = self.dec_layers.construct(input = self.z_).tensor
+
+    def _build_graph(self):
         """
         Build tensorflow graph.
         First build (both reconstruction and generator network).
 
         Args:
-            architecture(list[int]): number of layers
+            self.arch(list[int]): number of layers
         """
-        
+
+        # Build first autoencoder graph
         # recognition graph
-        (x_in, dropout, z_mean, z_log_sigma) = \
-                self._build_recognition_graph(architecture)
+        self._build_recognition_graph()
+
+
+        # build template for the decoding network (in autoencoder)
+        # and generator network (decoupled for explicit latent prior exploration)
+        self.dec_layers = self._build_decoding_layers()
 
         # decoding graph
-        (decoding, x_reconstructed, z_, x_reconstructed_, rec_loss, kl_loss) = \
-                self._build_decoding_graph(architecture, dropout, (x_in, z_mean, z_log_sigma))
+        self._build_decoding_graph()
 
+        self._build_loss_graph()
 
-        tf.histogram_summary('rec_loss', rec_loss)
-        tf.histogram_summary('kl_loss', kl_loss)
-        # loss for this graph
-        with tf.name_scope("cost"):
-            cost = tf.reduce_mean(rec_loss + kl_loss, name = "vae_cost")
-        tf.scalar_summary('vae_cost', cost)
 
         # optimizer
+        tf.summary.scalar('vae_cost', self.cost)
         with tf.name_scope("Adam_optimizer"):
-            train_op = tf.train.AdamOptimizer(self.learning_rate).minimize(cost)
+            self.train_op = tf.train.AdamOptimizer(self.learning_rate).minimize(self.cost)
 
-        with tf.name_scope("latent_in"):
-             z_ = tf.placeholder_with_default(tf.random_normal([1, architecture[-1]]),
-                     shape = [None, architecture[-1]],
-                     name = "latent_in")
-             x_reconstructed_ = compose_all(decoding)(z_)
-        return (x_in, dropout, z_mean, z_log_sigma, x_reconstructed, z_, x_reconstructed_,
-                cost, train_op)
+        # decoupled generator network for latent space exploration
+        self._build_generator_graph()
+
 
     def sample_gaussian(self,mu, log_sigma):
         """Sample from normal distribution using reparameterization trick.
@@ -154,7 +148,7 @@ class VAE(object):
             mu: mean of distribution
             log_sigma: log(sigma) for distribution
         Returns:
-            sample from provided gaussian
+            sample from provided gaussian (shape (1,k))
         """
         with tf.name_scope("sample_gaussian"):
             # reparameterization trick
@@ -179,7 +173,7 @@ class VAE(object):
     @staticmethod
     def kl_divergence(mu, log_sigma):
         with tf.name_scope("KL_divergence"):
-            return -0.5 * tf.reduce_sum(1 + 2* log_sigma - mu**2 - 
+            return -0.5 * tf.reduce_sum(1 + 2* log_sigma - mu**2 -
                                       tf.exp(2*log_sigma), 1)
 
     def encode(self, x):
@@ -197,7 +191,7 @@ class VAE(object):
     def end_to_end(self, x):
         """End-to-end pass for the VAE"""
         return self.decode(self.sample_gaussian(*self.encode(x)))
-    
+
     def plot_reconstruction(self, data, save_dir = False):
         """Try to reconstruct input data using the VAE Network
 
@@ -278,7 +272,7 @@ class VAE(object):
                 # get mini-batch
                 x, _ = X.train.next_batch(self.batch_size)
 
-                feed_dict = {self.x_in: x, self.dropout_: self.dropout}
+                feed_dict = {self.x_in: x}
                 x_reconstructed, cost, summary, _ = self.sess.run([
                     self.x_reconstructed,
                     self.cost,
@@ -286,7 +280,6 @@ class VAE(object):
                     self.train_op,],
                     {
                         self.x_in: x,
-                        self.dropout_: self.dropout,
                     })
                 avg_error_train += cost / num_samples * self.batch_size
 
