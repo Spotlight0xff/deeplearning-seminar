@@ -119,6 +119,16 @@ Using batch normalization \cite{batch_norm:2015} helped stabilizing learning DCG
 
 \subsubsection{Feature Matching}
 \label{ssub:gan_feature_matching}
+In computer vision, features are often used to identify relevant pieces of information in images for recognition and classification.
+They may refer to a set of points or edges in an image, which exactly is not clearly defined.
+With the recent advances in classification tasks performed by deep convolutional networks, automatically learned features have been a large part of that success. (citation!)
+Feature matching is an technique designed to improve the learning procedure of GANs where not directly $\mathcal{L}_g$ is maximized but instead also learn the discriminator on intermediate layer activation outputs.
+Using this modified procedure the modified objective function aids the generator to output data matching the statistics of the input data.
+With $f(x)$ denoting an intermediate layer in $D$, the new objective function becomes:
+$$
+|| \mathbb{E}_{x \sim p_{data}}f(x) - \mathbb{E}_{z \sim p(z)}f(G(z)) || ^{2}_{2}
+$$
+
 
 \subsubsection{Minibatch discrimination}
 \label{ssub:gan_minibatch_discrimination}
