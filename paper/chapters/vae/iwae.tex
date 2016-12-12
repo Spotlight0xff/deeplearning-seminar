@@ -1,4 +1,27 @@
+% write about multiple stochastic layers
+Until now, the presented model includes only one stochastic layer.
+\cite{dlgm:2014} have presented a model for learning through multiple stochastic layers which can be easily applied to the VAE framework as shown in \ref{fig:vae_multiple_layers}.
+
+\begin{figure}[htb]
+\centering
+\includestandalone[width=\linewidth,mode=buildnew]{media/vae_multiple_layers}
+  \caption{VAE with multiple stochastic layers }\label{fig:vae_multiple_layers}
+  \medskip
+  \small
+  The left upward arrows indicate the recognition networks $q(h_1|x)$ and $q(h_2|h_1)$.
+  Note that the recognition networks can have multiple deterministic layers (including non-linearities).\\
+
+  $p(h_2)$ denotes the probability distribution over the highest(?) latent space.\\
+
+  On the right, the two conditional distributions $p(h_1|h_2)$ and $p(x|h_2)$ are representing two networks used for the generative process.
+\end{figure}
+% write about k passes (just averages)
+
+% write about IWAE, extends these k passes with importance weights
 Importance Weighted Autoencoders (IWAE) extends on the VAE framework using $k$-sample importance weighting of the log-likelihood.
+% add intuition for IWAE, ruslan explained it very well during his DL summer school talk! (talk_Montreal_2016_Salakhutdinov.pdf)
+Using importance weighting can be informally interpreted as putting more weight on data with high likelihood.
+
 The authors of the papers argue that using more samples will only tighten the lower variational bound.
 $$
 \log p(x) \geq \mathcal{L}_{k+1}(x) \geq \mathcal{L}_{k}(x)

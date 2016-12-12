@@ -160,6 +160,14 @@ Because we assume that $P(z)$ is also a multivariate Gaussian distribution, the 
 
 \subsection{Inference}
 \label{sub:vae_inference}
+In bayesian analysis, statistical inference is the process of evaluating $p(z|x)$ for a given conditional probability $p(x|z)$.
+% more info on marginal distribution, posterior inference etc!
+There are two approaches to performing this task, Markov chain Monte Carlo (MCMC) methods using Gibbs sampling and variational inference.
+MCMC methods have the advantage of being asympotically exact and unbiased while variational methods are computationally faster but biased and not guaranteed to approaching the distribution.
+In the case of VAE, variational inference is also used in order to backpropagate through the layers (using the reparameterization trick).
+
+
+
 \begin{figure}[htb]
 \centering
 %\resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
