@@ -3,8 +3,15 @@
 Variational Autoencoders (VAE) have been introduced in 2014 by Kingma and Welling which uses variational inference to perform efficient inference and learning in deep latent models.
 Deep latent models are based on the assumption that input data can be explained using non-linear transformations coming from simple distributions. \cite{rezende:2014} (check!?).
 
+\paragraph{Variational Inference} is a method for approximating intractable posterior distributions over a set of hidden varibales given observations.
+More specifically, VI turns the inference problem of computing $p(z|x)$ where $z$ are hidden and $x$ observed variables into an optimization problem.
+The term \emph{variational} derives from the calculus of variations, which is a field in mathematical analysis dealing with choosing the best function $q$ from a set of functions $Q$. In the case of variational inference, this $Q$ denotes a class of distributions and the variational parameters are the parameters which are used to define $q \in Q$.
+VI is a alternative to markov chain monte carlo (MCMC) methods like gibbs sampling, due to lower computational cost.
+However, there is no guarantee that VI methods will asymptotically reach the optimimum in contrast to MCMC.
+
 Given this assumption, building a good representation in the latent space is crucial for minimal reconstruction error as well as good generative modelling in practice(?).
 
+% TODO: add clarification that q/p are deep nets!
 \begin{figure}[htb]
 \centering
 \includestandalone[width=\linewidth,mode=buildnew]{media/vae_conceptual}

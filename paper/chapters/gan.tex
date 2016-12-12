@@ -133,7 +133,13 @@ Additionally, smoothed labels have been shown to reduce the attack surface of ne
 
 \subsubsection{(Virtual) Batch normalization}
 \label{ssub:gan_batch_norm}
-Using batch normalization \cite{batch_norm:2015} helped stabilizing learning DCGAN \cite{dcgan:2015}.
+% TODO explain internal covariate shift?
+Batch normalization (BN) \cite{batch_norm:2015} is a recent technique to boost performance in deep neural networks addressing the \emph{internal covariate shift} by normalizing minibatches.
+Essentially, BN works by normalizing each sample from a minibatch to the statistics of the whole batch.
+In a paper \cite{improved_gan:2016} by Salimans et al on improving stability of the GAN training procedure, a variant of BN has been proposed called virtual batch normalization.
+
+
+%Using batch normalization \cite{batch_norm:2015} helped stabilizing learning DCGAN \cite{dcgan:2015}.
 \cite{improved_gan:2016} introduced virtual batch normalization where each input $x$ is normalized on one reference batch chosen at the start of learning instead of the other inputs in the mini-batch.
 
 \subsubsection{Feature Matching}
