@@ -66,7 +66,11 @@ class GAN(object):
     def _build_graph(self):
         """Build tensorflow graph (discriminator + generator)"""
         self.data_tensor = tf.placeholder(np.float32, shape=(self.batch_size, self.data_dim))
-        self.noise_tensor = tf.placeholder(np.float32, shape=(self.batch_size, self.z_dim))
+        minval = -1
+        maxval = 1
+        self.noise_tensor = tf.get_variable("z", (self.batch_size, self.data_dim),
+                                initializer=tf.random_uniform_initializer(minval, maxval),
+                                trainable=False)
 
 
         self.output_g = self._build_generator(self.noise_tensor)
