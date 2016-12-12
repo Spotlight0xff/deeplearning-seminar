@@ -1,16 +1,40 @@
 \section{Introduction}
 \label{sec:introduction}
-Generative models are one of the most promising ways to perform unsupervised learning (citation needed).
-More specifically, generative modelling assumes a hidden structure $z$ explaining the input data $x$.
-This assumption is reasonable given the following examples:\\
 
+"What I cannot create, I do not understand." -- Richard Feynman \\\\\\
+
+% on building reasonable representations
+One of the key motivations to generative modelling is the assumption that having a interpretable representation of the real world is important to building intelligent agents.
+Real world data is often high-dimensional and noise and transforming this data into an compact representation is therefore an important and also challenging task to perform.
+Generative models are ideal for this task since it has to understand the underlying structure to generate similar data.
+Building this structure is called \textbf{representation learning} and is key to many generative models and how they perform.\\
+
+With this assumption in mind we can take a look at some examples of input data.
 \begin{itemize}
-  \item \textbf{Images} often have multiple thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
+  \item \textbf{Images} commonly have thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
   \item \textbf{Speech} or more precisely the recording of it is high-dimensional, while the information it carries (the spoken words) can be represented in a low-dimensional space.
   \item \textbf{...}
 \end{itemize}
 
-After a short overview of different approaches and methods and an introductory example with the sigmoid belief net (SBN), we will take a closer look at two promising frameworks, the variational autoencoder (VAE) and the generative adversarial network (GAN)
+To formalize this setting, it is often beneficial to view the structure as a probability distribution $p$ on the input data $x$ we build the structure 
+%( another word!)
+from: $p(x)$.
+
+The assumption that $p(x)$ is dependent on some underlying structure can now be expressed as having the conditional probability $p(x|z)$ where $z$ are the causal factors.
+We call $z$ also the latent variables.\\
+
+%Inverting $p(x|z)$ yields $p(z|x)$ which is one of the main tasks of some generative models, for example the VAE \ref{sec:vae}.
+
+
+After a short overview of different approaches and methods and an introductory example with the sigmoid belief net (SBN), we will take a closer look at two recent promising frameworks, the variational autoencoder (VAE \ref{sec:vae}) and the generative adversarial network (GAN \ref{sec:gan}).
+
+
+
+%Generative models are one of the most promising ways to perform unsupervised learning (citation needed).
+%More specifically, generative modelling assumes a hidden structure $z$ explaining the input data $x$.
+%This assumption is reasonable given the following examples:\\
+
+
 
 
 %Generative models have been proposed as one of the most promising approaches towards
