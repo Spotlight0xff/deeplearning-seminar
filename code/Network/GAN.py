@@ -5,7 +5,7 @@ import tensorflow as tf
 import prettytensor as pt
 import sys
 import os
-from numpy.random import random,uniform
+from numpy.random import uniform,random_sample
 from progressbar import ETA, Bar, Percentage, ProgressBar
 
 
@@ -116,14 +116,19 @@ class GAN(object):
                    .fully_connected(self.data_dim)).tensor
 
     def _gen_prior(self):
-        low = -2
-        high = 4
-        return uniform(low, high, (self.batch_size,self.z_dim))
+        """return z ~ prior
 
-    def decode(self):
+        normalized to [-1,1]
+        """
+        return random_sample((self.batch_size, self.z_dim)) * 2 -1
+        # low = -2
+        # high = 4
+        # return uniform(low, high, (self.batch_size,self.z_dim))
+
+    def decode(self, zs = None):
         """Sample x ~ G(z)
         """
-        prior = self._gen_prior()
+        prior = self._gen_prior() if zs is None else zs
         return self.sess.run(self.output_g, {self.noise_tensor: prior})
     
 
