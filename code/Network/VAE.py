@@ -16,7 +16,13 @@ import matplotlib.pyplot as plt
 from IPython import display
 
 class VAE(object):
-    """ Variational Autoencoder implementation in TensorFlow"""
+    """Variational Autoencoder implementation in TensorFlow using PrettyTensor
+
+    TODO:
+    - batch normalization
+    - convolutional network
+    - inverse flow stuff
+    """
 
     HYPERPARAMS = {
             "batch_size": 128,
