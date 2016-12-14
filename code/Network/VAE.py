@@ -21,7 +21,8 @@ class VAE(object):
     TODO:
     - batch normalization
     - convolutional network
-    - inverse flow stuff
+    - inverse normalizing flow stuff
+    - dropout
     """
 
     HYPERPARAMS = {
@@ -61,7 +62,7 @@ class VAE(object):
         logs_path = os.path.join("logs", "run_"+self.constructed)
         self.summary_writer = tf.summary.FileWriter(logs_path, self.sess.graph)
         self.writer = tf.summary.merge_all()
-        self.saver = tf.train.Saver()
+        # self.saver = tf.train.Saver()
 
         self.sess.run(tf.global_variables_initializer())
 
@@ -304,8 +305,8 @@ class VAE(object):
 
                 # write summary every batch
                 self.summary_writer.add_summary(summary, epoch)
-            model_path = os.path.join(self.models_dir, "model_{}_epoch_{:03d}.cpkt".format(self.constructed, epoch))
-            save_path = self.saver.save(self.sess, model_path)
+            # model_path = os.path.join(self.models_dir, "model_{}_epoch_{:03d}.cpkt".format(self.constructed, epoch))
+            # save_path = self.saver.save(self.sess, model_path)
             print("epoch {}: avg cost: {}".format(epoch, avg_error_train))
             if plot_manifold:
                 self.plot_manifold(range_x=20, range_y=20, output = "manifold_{}.pdf".format(epoch))
