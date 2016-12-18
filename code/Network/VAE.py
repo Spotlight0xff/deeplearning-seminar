@@ -242,7 +242,7 @@ class VAE(object):
             plt.close('all')
         print("done")
 
-    def plot_manifold(self, range_x=(-4,4), range_y=(-4,4), axis = (1,2), single_axis = False, num_rowdigits = 20, output="manifold.pdf"):
+    def plot_manifold(self, range_x=(-4,4), range_y=(-4,4), axis = (0,1), single_axis = False, num_rowdigits = 20, output="manifold.pdf"):
         x1 = np.linspace(range_x[0], range_x[1], num = num_rowdigits)
         if not single_axis:
             x2 = np.linspace(range_y[0], range_y[1], num = num_rowdigits)
@@ -309,7 +309,7 @@ class VAE(object):
             # save_path = self.saver.save(self.sess, model_path)
             print("epoch {}: avg cost: {}".format(epoch, avg_error_train))
             if plot_manifold:
-                self.plot_manifold(range_x=20, range_y=20, output = "manifold_{}.pdf".format(epoch))
+                self.plot_manifold(range_x=(-1,1), range_y=(-1,1), output = "manifold_{:03}.pdf".format(epoch))
                 print("done plotting manifold")
 
         now = datetime.now().strftime("%y%m%d_%H%M")
