@@ -5,12 +5,22 @@
 \label{par:overview_sbn}
 SBNs are one of the earliest generative models, using a simple architecture in which sampling from is easy, but learning and performing inference is not.
 
-\paragraph{Variational Autoencoders (VAE) \cite{vae:2013}\cite{rezende:2014}}
-\label{par:overview_vae}
-Variational Autoencoders (VAE) use two networks which are trained jointly using approximated learned inference.
-The objective function is aimed at building a reasonable simple latent space and approximating the intractable posterior distribution using variational inference.
-It consists of the recognition and inference network which can be understood in the autoencoder jargon as probabilistic encoder and decoder.
-Using variational bayesian methods the intractable posterior distribution can be approximated and learned using backpropagation and gradient-based methods.
+\paragraph{Differentiable Generator Networks}
+Due to the success of gradient-based methods for learning deep networks, a large part of recent models are using a differentiable generator network which allows for error backpropagation.\\
+Most prominent examples of models with differentiable generator nets are the variational autoencoder (VAE) \cite{vae:2014} and generative adversarial networks (GAN) \cite{gan:2014}.
+These models include a generator networks representing a family of parametrized non-linear functions $g$ implemented usually implemented as neural networks.\\
+Using $g$ as distribution transformation allows samples $z$ to be transformed into $x$ where the distribution over $x$ may be more complicated than $z$.
+The parameters of $g$ can be inferred using training data and an appropiate loss function.\\
+However, instead of maximizing the log-likelihood of $p(x)$ directly we choose $g$ to emit not samples of $x$ but parameters of a conditional distribution over $x$.
+
+\paragraph{Auto-regressive networks}
+
+%\paragraph{Variational Autoencoders (VAE) \cite{vae:2013}\cite{rezende:2014}}
+%\label{par:overview_vae}
+%Variational Autoencoders (VAE) use two networks which are trained jointly using approximated learned inference.
+%The objective function is aimed at building a reasonable simple latent space and approximating the intractable posterior distribution using variational inference.
+%It consists of the recognition and inference network which can be understood in the autoencoder jargon as probabilistic encoder and decoder.
+%Using variational bayesian methods the intractable posterior distribution can be approximated and learned using backpropagation and gradient-based methods.
 
 %But in addition to regular autoencoders encourages the VAE the latent space to match a specific probability distribution.
 %This encouragement is done using a variational lower bound on the distribution output by the encoder network.
@@ -29,20 +39,20 @@ Using variational bayesian methods the intractable posterior distribution can be
 
 
 
-\paragraph{Generative Adversarial Networks\cite{gan:2014}}
-\label{par:overview_gan}
-GANs are a game theoretic approach to generative modelling
-in which two networks compete against each other.
-The discriminator $D$ is trying to distinguish the generated samples
-by the generator $G$ from real world data.
-The goal for $G$ however is to produce data as realistic as possible.\\
-During the early phase of training, $G$ produces random noise which
-is easy to differentiate from groundtruth data.
-Both networks are trained in parallel, where both networks try to get better
-at their respective objective.
-In the best-case scenario is $G$ able to produce data indistinguishly from real world data in which
-case the discriminator will only be able to guess correctly with a 50\% chance.
-This plateau is called Nash equilibrium (citation needed).
+%\paragraph{Generative Adversarial Networks\cite{gan:2014}}
+%\label{par:overview_gan}
+%GANs are a game theoretic approach to generative modelling
+%in which two networks compete against each other.
+%The discriminator $D$ is trying to distinguish the generated samples
+%by the generator $G$ from real world data.
+%The goal for $G$ however is to produce data as realistic as possible.\\
+%During the early phase of training, $G$ produces random noise which
+%is easy to differentiate from groundtruth data.
+%Both networks are trained in parallel, where both networks try to get better
+%at their respective objective.
+%In the best-case scenario is $G$ able to produce data indistinguishly from real world data in which
+%case the discriminator will only be able to guess correctly with a 50\% chance.
+%This plateau is called Nash equilibrium (citation needed).
 
 
 
