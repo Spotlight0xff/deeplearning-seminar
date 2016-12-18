@@ -173,16 +173,21 @@ MCMC methods have the advantage of being asympotically exact and unbiased while 
 In the case of VAE, variational inference is also used in order to backpropagate through the layers (using the reparameterization trick).
 
 
-
-\begin{figure}[h!]
-\centering
-%\resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
-\includegraphics{media/manifold.pdf}
-  \caption{MNIST 2-dimensional manifold}\label{fig:vae_manifold}
-  \medskip
-  \small
-  Manifold learned by a VAE using a 2-dimensional latent space for $z \in [-3,3]^2$.
-\end{figure}
+\begin{figure*}[t!]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics[height=7cm]{media/vae_manifold-crop.pdf}
+        \caption{Learned manifold using 2-dimensional latent space}
+    \end{subfigure}%
+    ~
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics[height=7cm]{media/vae_samples-crop.pdf}
+        \caption{generated images by sampling from latent space and applying $p(x|z)$}
+    \end{subfigure}
+    \caption{Variational autoencoder learning performance}
+\end{figure*}
 
 \subsection{Performance}
 \label{sub:vae_performance}
