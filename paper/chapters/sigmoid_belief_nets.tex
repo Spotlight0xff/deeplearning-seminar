@@ -3,47 +3,60 @@
 \begin{figure}[htb]
 \centering
 \input{media/sbn_architecture}
-  \caption{Bayesian networks}
+  \caption{Conceptual architecture of belief nets}
   \label{fig:sbn_arch}
   \medskip
   \small
-  Bayesian networks or belief nets can be described as an acyclic directed graph where blue nodes indicate hidden variables while red nodes represent observed variables.
+  Bayesian networks, also called belief nets can be described as an acyclic directed graph where blue nodes indicate hidden variables while red nodes represent observed variables.
   Arrows show stochastic dependency. The dashed arrow indicates that it is possible in the original definition, even though most commonly the hidden variables are divided into layers.
 \end{figure}
 
 Sigmoid Belief Networks (SBN) have been proposed in 1992 by R.M. Neal \cite{neal:1992} representing a specific type of bayesian networks \cite{pearl:1985}.
-\ref{fig:sbn_arch} shows a bayesian network as a graphical model with each state influenced by its ancestors.
+Figure \ref{fig:sbn_arch} shows a bayesian network as a graphical model with each state influenced by its ancestors.
 In the case of SBNs however, the states are all binary and the activation function is the sigmoid function. They are one of the earliest neural networks used for generative modelling, predating all other presented models in this article.
 %As described in the overview above, SBNs contain a number of binary states $s$, most commonly divided into many layers.
-Each state $s_i$ is a random variables which may be observed, hidden or unknown representing different states of knowledge or belief. As such it can be interpreted with a probability distribution.
+Each state $s_i$ is a random variables in the bayesian framework which means it can be observed, hidden or unknown representing different states of knowledge. As such it can also be interpreted with a probability distribution.
 \begin{equation}
   \label{eq:sbn_node}
 p(s_i) = \sigma\bigg(\sum_{j<i}W_{i,j}s_j+b_i\bigg)
 \end{equation}
 In equation \ref{eq:sbn_node}, $\sigma$ denotes the sigmoid function $\frac{1}{1 + e^{-x}}$ and $W_{i,j}$ the connection weights from state $s_j$ to $s_i$.
 
-In probabilistic networks, we are mostly interested in the aspects: sampling, learning and inferring.
-Even though sampling can be done efficiently, the other operations are intractable in almost all cases.
-\paragraph{Sampling}
-can be done using ancestral sampling through the hidden layers evaluating \ref{eq:sbn_node}
+To draw samples from this network, it is possible to simply evaluate equation \ref{eq:sbn_node} for each visible node.
+However prior to that, the SBN first needs to learn how to generate good samples which includes the \emph{learning} and the \emph{inference} problem.\\
+Learning means in this context to adjust the weights and biases of the network to be more likely to generate previously observed input.
+Meanwhile statistical inference is tasked to infer the states of the hidden nodes based on the input.\\\\
+
+Due to each state being statistically depend on all ancestors, inference means to evaluate all possible configurations of every previous node.
+Especially in deep networks, this kind of computation is infeasible.\\
+
+% DONE
+
+%However in order to draw good samples from this network, the weights need to be adjusted to make it 
+%However most other operations involving this network are intractable for most cases, like learning and performing inference.
+
+%In probabilistic networks, we are mostly interested in the aspects: sampling, learning and inferring.
+%Even though sampling can be done efficiently, the other operations are intractable in almost all cases.
+%\paragraph{Sampling}
+%can be done using ancestral sampling through the hidden layers evaluating \ref{eq:sbn_node}
 
 %These random variables are interpreted in a bayesian way where each one may be observed, hidden (or latent) or unknown representing different states of knowledge or belief \cite{definetti:1974}.
 
-\newpage
-\subsection{Learning}
-\begin{figure}[htb]
-\centering
-\includestandalone[mode=buildnew]{media/sbn_node}
-  \caption{SBN node}
-  \label{fig:sbn_node}
-\end{figure}
+%\newpage
+%\subsection{Learning}
+%\begin{figure}[htb]
+%\centering
+%\includestandalone[mode=buildnew]{media/sbn_node}
+  %\caption{SBN node}
+  %\label{fig:sbn_node}
+%\end{figure}
 
 
-In its most common form, SBNs are comprised by a number of layers where each node in a layer is a sigmoid function of its ancestors:
+%In its most common form, SBNs are comprised by a number of layers where each node in a layer is a sigmoid function of its ancestors:
 
-While sampling from these networks is very efficient, computing the inference $p(z|x)$ over the hidden units is intractable.
-% show why?
+%While sampling from these networks is very efficient, computing the inference $p(z|x)$ over the hidden units is intractable.
+%% show why?
 
-There have been several attempts on solving the inference problem, using inference networks which have shown promising results.
+%There have been several attempts on solving the inference problem, using inference networks which have shown promising results.
 
 \newpage

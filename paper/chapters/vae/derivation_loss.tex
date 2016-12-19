@@ -1,11 +1,11 @@
 \begin{align*}
   \log p(x)\\
-  &= \int_z q_\phi(z|x) \log p(x)\\
-  &= \int_z q_\phi(z|x) \log \frac{p_\theta(x,z)}{p_\theta(z|x)} \tag{Bayes' rule}\\
-  &= \int_z q_\phi(z|x) \log\bigg(\frac{p_\theta(z,x)}{q_\phi(z|x)} \frac{q_\phi(z|x)}{p_\theta(z|x)}\bigg) \tag{Chain rule}\\
-  &= \int_z q_\phi(z|x) \bigg(\log\frac{p_\theta(z,x)}{q_\phi(z|x)} + \log\frac{q_\phi(z|x)}{p_\theta(z|x)}\bigg)\\
-  &= \int_z q_\phi(z|x) \log \frac{p_\theta(z,x)}{q_\phi(z|x)} + \int_z q_\phi(z|x) \log\frac{q_\phi(z|x)}{p_\theta(z|x)}\\
-  &= \underbrace{\int_z q_\phi(z|x) \log \frac{p_\theta(z,x)}{q_\phi(z|x)}}_{= \mathcal{L}}+ \underbrace{\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p_\theta(z|x)\big)}_{\geq 0}\\
+  &= \int_z q_\phi(z|x) \log p(x) dz\\
+  &= \int_z q_\phi(z|x) \log \frac{p_\theta(x,z)}{p_\theta(z|x)} dz \tag{Bayes' rule}\\
+  &= \int_z q_\phi(z|x) \log\bigg(\frac{p_\theta(z,x)}{q_\phi(z|x)} \frac{q_\phi(z|x)}{p_\theta(z|x)}\bigg) dz \tag{Chain rule}\\
+  &= \int_z q_\phi(z|x) \bigg(\log\frac{p_\theta(z,x)}{q_\phi(z|x)} + \log\frac{q_\phi(z|x)}{p_\theta(z|x)}\bigg) dz\\
+  &= \int_z q_\phi(z|x) \log \frac{p_\theta(z,x)}{q_\phi(z|x)} dz + \int_z q_\phi(z|x) \log\frac{q_\phi(z|x)}{p_\theta(z|x)} dz\\
+  &= \underbrace{\int_z q_\phi(z|x) \log \frac{p_\theta(z,x)}{q_\phi(z|x)} dz}_{= \mathcal{L}}+ \underbrace{\mathcal{D}_{\mathrm{KL}}\big(q_\phi(z|x) \| p_\theta(z|x)\big) dz}_{\geq 0}\\
   &\geq \mathcal{L}\\
 \end{align*}
 

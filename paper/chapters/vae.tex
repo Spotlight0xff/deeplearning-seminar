@@ -1,36 +1,75 @@
 \section{Variational Autoencoders}
 \label{sec:vae}
-Variational Autoencoders (VAE) have been developed concurrently in 2014 by Kingma and Welling \cite{vae:2014} and Rezende et al\cite{dlgm:2014}.
-VAEs couple a generator network with an inference network in which efficient inference and learning can be performed, thus allowing the model to be trained purely using gradient-based methods.
+Variational Autoencoders (VAE) have been developed concurrently in 2014 by Kingma et al. \cite{vae:2014} and Rezende et al. \cite{dlgm:2014}.
+The proposed framework includes in addition to an differentiable generator network an inference network in order to perform efficient inference.
+
+Using an inference network allows the model to be trained fully using gradient-based methods and error backpropagation.
+
+The relation to other autoencoders becomes appearant when the inference networks gets renamed to \emph{probabilistic encoder} $q_\theta(z|x)$ and the generator to \emph{probabilistic decoder} $p_\phi(x|z)$ whereas the encoder maps samples $x$ from the data space to latent space $z$, or more precisely parameters of the distribution $q_\theta(z|x)$.
+Meanwhile does the decoder maps variables from the latent space $z$ back into the data space as shown in figure \ref{fig:vae_architecture}.\\
+
+However it is not appearent how this model would provide sufficiently good results. In order to understand how well the variational autoencoder performs, it is important to understand the variational methods used to build the model.
+
+\begin{figure}[htb]
+\centering
+\resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
+  \caption{Graphical model of the variational autoencoder \cite{vae:2014}}
+  \label{fig:vae_architecture}
+\end{figure}
+
+
+%VAEs couple a generator network with an inference network in which efficient inference and learning can be performed, thus allowing the model to be trained purely using gradient-based methods.
 
 %which uses variational inference to perform efficient inference and learning in deep latent models.
 %Deep latent models are based on the assumption that input data can be explained using non-linear transformations coming from simple distributions. \cite{rezende:2014} (check!?).
 
-\paragraph{Variational Inference (VI)} is a method for approximating intractable posterior distributions over a set of hidden varibales given observations.
-More specifically, VI turns the inference problem of computing $p(z|x)$ where $z$ are hidden and $x$ observed variables into an optimization problem.
-The term \emph{variational} derives from the calculus of variations, which is a field in mathematical analysis dealing with choosing the best function $q$ from a set of functions $Q$. In the case of variational inference, this $Q$ denotes a class of distributions and the variational parameters are the parameters which are used to define $q \in Q$.
-VI is a alternative to markov chain monte carlo (MCMC) methods like gibbs sampling, due to lower computational cost.
-However, there is no guarantee that VI methods will asymptotically reach the optimimum in contrast to MCMC.
+\subsection{Variational Inference}
+The calculus of variations is used to perform optimization on a family of functions.
+As such variational based methods have become a popular choice to deal with intractable posterior distributions occuring in inference problems.
 
-Given this assumption, building a good representation in the latent space is crucial for minimal reconstruction error as well as good generative modelling in practice(?).
+These intractable posteriors unfortunately arise in almost all interesting models and there are mostly two different approaches to approximate the posterior distribution.
+% MCMC
+Using Markov chain Monte Carlo (MCMC) methods, which construct a Markov chain with the desired attributes. The advantage of this approach is that is guaranteed to asympotically approach the desired posterior, however it is difficult to reason about the convergence rate. For deep neural networks, running MCMC in the inner loop of optimization techniques is impractical.\\
+% variational inference
+The other approach which is using variational inference which picks a specific distribution restricted to a family of distributions matching the posterior most closely.
+Advantages using this approach rather than MCMC is the greater speed at which the computation is performed.
+However it is not guaranteed to even approximate the posterior accurately, if the true posterior can not be expressed as a distribution the family.
+
+More specifically, VI turns the inference problem of computing $p(z|x)$ where $z$ are the hidden and $x$ the observed variables into an optimization problem, where we can use gradient-based methods.
+
+
+\subsubsection{Kullback-Leibler Divergence}
+In order to approximate one distribution $Q$ to another distribution $P$, a measurement of difference.
+One commonly used measurement is called Kullback-Leibler divergence (short KL-divergence) which enables the variational inference methods to choose appropiate distributions.
+%\paragraph{The Kullback-Leibler Divergence} (KL divergence) is a measurement for the difference between two probability distributions. $\mathcal{D}_{\mathrm{KL}}(P \| Q)$ can informally described as the amount of information which is lost when using $Q$ to represent $P$.
+For discrete probability distributions $P$ and $Q$, the KL divergence from $Q$ to $P$ is defined\cite{kl_div:1951} as:
+\begin{equation}
+  \mathcal{D}_{\mathrm{KL}}(P || Q) = \sum_{i} P(i) \log \frac{P(i)}{Q(i)}
+\end{equation}
+
+Note that divergence does not obey the triangle inequality and is also not symmetrical, therefore it does not qualify as a metric.
+$\mathcal{D}_{\mathrm{KL}}(P||Q)$ can nevertheless be understood as a measure of the difference between $P$ and $Q$ and is as such used in the variational inference.
+
+
+
+
+%The need for such optimizations techniques
+
+
+%is suited to approximate intractable posterior distributions over a set of hidden variables given observations.
+%Variational-based methods have become a popular choice for inference problems, 
+%Variational Inference (VI) is a method for approximating intractable posterior distributions over a set of hidden varibales given observations.
+
+%The term \emph{variational} derives from the calculus of variations, which is a field in mathematical analysis dealing with choosing the best function $q$ from a set of functions $Q$. In the case of variational inference, this $Q$ denotes a class of distributions and the variational parameters are the parameters which are used to define $q \in Q$.
+%VI is a alternative to markov chain monte carlo (MCMC) methods like gibbs sampling, due to lower computational cost.
+%However, there is no guarantee that VI methods will asymptotically reach the optimimum in contrast to MCMC.
+
+%Given this assumption, building a good representation in the latent space is crucial for minimal reconstruction error as well as good generative modelling in practice(?).
 
 % TODO: add clarification that q/p are deep nets!
-\begin{figure}[htb]
-\centering
-\includestandalone[width=\linewidth,mode=buildnew]{media/vae_conceptual}
-  \caption{VAE architecture (source: VAE paper)}\label{fig:vae_architecture}
-\end{figure}
 
-\newpage
+%\newpage
 
-\paragraph{Formal Setup}
-Formally, $p(x,z)$ is the joint probability distribution over both input and latent variables while $p(z|x)$ is the conditional probability of the latent variables given input data.
-Inferring the posterior distribution $p(z|x)$ is particularly interesting, because it means to enable learning parameters for good latent space representation.
-$p(z|x)$ can be expanded using bayes rule to $\frac{p(x|z) p(z)}{p(x)}$.
-Computing the nominator is straightforward, $p(z)$ is the probability distribution we chose for the latent space, oftenmost simply a gaussian.
-$p(x|z)$ is easy to compute as well, ...? (forward pass?).\\
-Meanwhile is the denominator difficult to evaluate, because it requires to consider all possible input combinations.
-What we do instead in the variational autoencoders is to derive a lower-bound on $p(z|x)$ using a auxiliary distribution called $q_\theta(z|x)$. The subscript $\theta$ indicates that the distribution is parametrized by an variational term, so that for one $\theta$, $q_\theta(z|x) \approxeq p(z|x)$ holds ($q(z|x)$ doesn't need to depend on $x$).
 %Performing statistical inference means computing $p(z|x)$ which is intractable in all but very simple cases (integrating over it, show calc).
 
 %In this setup we have observed variables $x$ from which we would like to infer latent variables $z$
@@ -53,11 +92,21 @@ What we do instead in the variational autoencoders is to derive a lower-bound on
 \subsection{Architecture}
 \label{sub:vae_architecture}
 
-\begin{figure}[htb]
-\centering
-\resizebox{5cm}{!}{\input{media/vae_architecture.tikz}}
-  \caption{VAE architecture (source: VAE paper)}\label{fig:vae_architecture}
+\begin{figure}[t]
+  \centering
+  \includestandalone[width=\linewidth,mode=buildnew]{media/vae_conceptual}
+  \caption{simplified VAE architecture}
+  \label{fig:vae_architecture}
 \end{figure}
+
+$p(x,z)$ is the joint probability distribution over both input and latent variables while $p(z|x)$ is the conditional probability of the latent variables given input data.
+Inferring the posterior distribution $p(z|x)$ is particularly interesting, because it means to enable learning parameters for good latent space representation.
+$p(z|x)$ can be expanded using bayes rule to $\frac{p(x|z) p(z)}{p(x)}$.
+Computing the nominator is straightforward, $p(z)$ is the probability distribution we chose for the latent space, oftenmost simply a gaussian.
+$p(x|z)$ is easy to compute as well, ...? (forward pass?).\\
+Meanwhile is the denominator difficult to evaluate, because it requires to consider all possible input combinations.
+What we do instead in the variational autoencoders is to derive a lower-bound on $p(z|x)$ using a auxiliary distribution called $q_\theta(z|x)$. The subscript $\theta$ indicates that the distribution is parametrized by an variational term, so that for one $\theta$, $q_\theta(z|x) \approxeq p(z|x)$ holds ($q(z|x)$ doesn't need to depend on $x$).
+
 VAE just like other autoencoders encode the input data into a latent space similar to compression of data and is able to decode a vector of latent variables into output while trying to match the output to the input.
 But in contrast to other autoencoders (sparse, denoising), we enforce a specific distribution on the latent space.
 This allows to sample from this distribution and generate output which will look similar to the data on which the VAE has been trained.
@@ -72,10 +121,6 @@ In particular, the framework encourages the model to learn a representation that
 
 
 
-\paragraph{The Kullback-Leibler Divergence} (KL divergence) is a measurement for the difference between two probability distributions. $\mathcal{D}_{\mathrm{KL}}(P \| Q)$ can informally described as the amount of information which is lost when using $Q$ to represent $P$.
-The KL divergence does not obey the triangle inequality and is also not symmetrical, therefore it does not qualify as a metric.
-$\mathcal{D}_{\mathrm{KL}}(P||Q)$ can nevertheless be understood as a measure of the difference between $P$ and $Q$ and is as such used in the VAE to approximate the true posterior distribution.
-
 \subsection{Objective Function}
 The objective function of the VAE consists of the reconstruction error and the regularizer.
 %$\mathcal{L}$ learns both the encoder as well as the decoder with their respective parameters $\phi$ and $\theta$.
@@ -89,7 +134,7 @@ We will discuss both terms in detail below following the derivation of the lower
 \paragraph{Regularization term $\mathcal{L}_{reg}$} encourages the model to learn simple representations in latent space, due to the negative Kullback-Leibler (KL) divergence between the learned variational distribution $q_\theta(z|x)$ and the latent space prior distribution $p(z)$.
 The regularizer also prevents the model from collapsing into a single point.
 
-\vspace{10cm}
+%\vspace{10cm}
 % move to architecture:
 %In the original VAE paper, the unit gaussian distribution with diagonal variance was proposed for $p(z)$ and although there have been multiple proposals (citations, multi-modal etc) for different distributions we will stick with $\mathcal{N}(0,I)$ for the sake of simplicity.
 % ---
@@ -116,7 +161,6 @@ $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent
 %\end{figure}
 
 
-\newpage
 
 \subsubsection{Reparameterization Trick}
 
@@ -175,16 +219,32 @@ Because the posterior is intractable ($p_\theta(x)$), we instead approximately m
 The probabilistic encoder $q_\theta(z|x)$ is commonly implemented using a deep neural network which transforms the input data $x$ into a multivariate gaussian distribution with mean $\mu_0$ and diagonal variance $\Sigma_0$.
 To allow the computation of the KL divergence between $q_\theta(z|x)$ and the latent prior distribution $p(z)$ in closed form, the prior is an isotropic gaussian $\mathcal{N}(0, 1)$.
 
+
+\begin{algorithm}
+  \caption{Learning in the VAE model}
+  \label{alg:vae}
+  \begin{algorithmic}[1]
+    %\Let{$\eta_d, \eta_g$}{Learning rate of discriminator and generator networks, respectively}
+    %\Let{$\theta_d, \theta_g$}{Parameters of function approximators}
+    \For{Until convergence}
+      \Let{$x$}{sample from $p_{data}(x)$}
+      \Let{$\epsilon$}{Random samples from noise prior $p(\epsilon)$}
+      \Let{$g$}{Compute gradients $\nabla_{\theta,\phi}\mathcal{L}(\theta, \phi; x, \epsilon)$}
+      \Let{$\theta, \phi$}{Update according to gradients $g$}
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
 % define X correctly or replace formula below!
 %$$
 %q_\theta(z|x) = \mathcal{N}(z|\mu(X;\theta), \Sigma(X;\theta))
 %$$
 
 %Because we assume that $p(z)$ is also a multivariate Gaussian distribution, the KL-divergence can now be computed in closed form as follows\cite{derivations:2007}.
-\begin{align*}
-  \mathcal{D}_{\mathrm{KL}}\big[q_\theta(z|x) || p_\phi(z|x)\big] &= \mathcal{D}_{\mathrm{KL}}\big[\mathcal{N}(\mu_0,\Sigma_0) || \mathcal{N}(\mu_1,\Sigma_1)\big]\\
-  &= \frac{1}{2} \big(\mathrm{tr}\big(\Sigma_1^{-1}\Sigma_0\big) + \big(\big)\big)\\
-\end{align*}
+%\begin{align*}
+  %\mathcal{D}_{\mathrm{KL}}\big[q_\theta(z|x) || p_\phi(z|x)\big] &= \mathcal{D}_{\mathrm{KL}}\big[\mathcal{N}(\mu_0,\Sigma_0) || \mathcal{N}(\mu_1,\Sigma_1)\big]\\
+  %&= \frac{1}{2} \big(\mathrm{tr}\big(\Sigma_1^{-1}\Sigma_0\big) + \big(\big)\big)\\
+%\end{align*}
 
 
 \subsection{Inference}
