@@ -1,7 +1,10 @@
-\section{Variational Autoencoders \cite{vae:2013}}
+\section{Variational Autoencoders}
 \label{sec:vae}
-Variational Autoencoders (VAE) have been introduced in 2014 by Kingma and Welling which uses variational inference to perform efficient inference and learning in deep latent models.
-Deep latent models are based on the assumption that input data can be explained using non-linear transformations coming from simple distributions. \cite{rezende:2014} (check!?).
+Variational Autoencoders (VAE) have been developed concurrently in 2014 by Kingma and Welling \cite{vae:2014} and Rezende et al\cite{dlgm:2014}.
+VAEs couple a generator network with an inference network in which efficient inference and learning can be performed, thus allowing the model to be trained purely using gradient-based methods.
+
+%which uses variational inference to perform efficient inference and learning in deep latent models.
+%Deep latent models are based on the assumption that input data can be explained using non-linear transformations coming from simple distributions. \cite{rezende:2014} (check!?).
 
 \paragraph{Variational Inference (VI)} is a method for approximating intractable posterior distributions over a set of hidden varibales given observations.
 More specifically, VI turns the inference problem of computing $p(z|x)$ where $z$ are hidden and $x$ observed variables into an optimization problem.
@@ -17,6 +20,8 @@ Given this assumption, building a good representation in the latent space is cru
 \includestandalone[width=\linewidth,mode=buildnew]{media/vae_conceptual}
   \caption{VAE architecture (source: VAE paper)}\label{fig:vae_architecture}
 \end{figure}
+
+\newpage
 
 \paragraph{Formal Setup}
 Formally, $p(x,z)$ is the joint probability distribution over both input and latent variables while $p(z|x)$ is the conditional probability of the latent variables given input data.
@@ -84,6 +89,7 @@ We will discuss both terms in detail below following the derivation of the lower
 \paragraph{Regularization term $\mathcal{L}_{reg}$} encourages the model to learn simple representations in latent space, due to the negative Kullback-Leibler (KL) divergence between the learned variational distribution $q_\theta(z|x)$ and the latent space prior distribution $p(z)$.
 The regularizer also prevents the model from collapsing into a single point.
 
+\vspace{10cm}
 % move to architecture:
 %In the original VAE paper, the unit gaussian distribution with diagonal variance was proposed for $p(z)$ and although there have been multiple proposals (citations, multi-modal etc) for different distributions we will stick with $\mathcal{N}(0,I)$ for the sake of simplicity.
 % ---
@@ -95,7 +101,22 @@ This error is measures using the negative log-likelihood of the conditional prob
 $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent variables which can be used to reconstruct the input data well.
 
 
+%\begin{figure}[htb]
+%\centering
+%\includestandalone[width=\linewidth,mode=buildnew]{media/vae_multiple_layers}
+  %\caption{VAE with multiple stochastic layers }\label{fig:vae_multiple_layers}
+  %\medskip
+  %\small
+  %The left upward arrows indicate the recognition networks $q(h_1|x)$ and $q(h_2|h_1)$.
+  %Note that the recognition networks can have multiple deterministic layers (including non-linearities).\\
 
+  %$p(h_2)$ denotes the probability distribution over the highest(?) latent space.\\
+
+  %On the right, the two conditional distributions $p(h_1|h_2)$ and $p(x|h_2)$ are representing two networks used for the generative process.
+%\end{figure}
+
+
+\newpage
 
 \subsubsection{Reparameterization Trick}
 
@@ -138,7 +159,7 @@ In contrast to other autoencoders, VAEs behave differently due to this lower bou
 
 We use VAEs when we have a complicated distribution $p_\theta(x,z)$ with unknown latent variables $z$.
 The prior distribution $p(z)$ over the latent structure is a centered isotropic(?) multivariate Gaussian denoted by $\mathcal{N}(z;0, I)$.
-The constructed architecture uses an probabilistic encoder $q_\theta(z|x)$ and a probabilistic decoder $p_\theta(x|z)$ in a form of neural networks, in the original paper MLP are used\cite{vae:2013} but there are various extensions (see \ref{sub:vae_extensions}, TODO).
+The constructed architecture uses an probabilistic encoder $q_\theta(z|x)$ and a probabilistic decoder $p_\theta(x|z)$ in a form of neural networks, in the original paper MLP are used\cite{vae:2014} but there are various extensions (see \ref{sub:vae_extensions}, TODO).
 Because the posterior is intractable ($p_\theta(x)$), we instead approximately maximize the lower variational bound $L(\theta,\phi;x)$.\\
 \begin{equation}
   \mathcal{L}(\theta,\phi;x) = -D_{KL}(q_\theta(z|x)||p(z)) + \mathbb{E}_{q_\theta(z|x)}[log_{p_\theta}(x|z)]
@@ -146,6 +167,8 @@ Because the posterior is intractable ($p_\theta(x)$), we instead approximately m
 
 
 
+
+\newpage
 
 \subsection{Learning}
 \label{sub:vae_learning}
@@ -189,8 +212,10 @@ In the case of VAE, variational inference is also used in order to backpropagate
     \caption{Variational autoencoder learning performance}
 \end{figure*}
 
-\subsection{Performance}
-\label{sub:vae_performance}
+%\subsection{Performance}
+%\label{sub:vae_performance}
+
+\newpage
 
 \subsection{Extensions}
 \label{sub:vae_extensions}
@@ -198,6 +223,8 @@ In the case of VAE, variational inference is also used in order to backpropagate
 \subsubsection{Conditional VAE \cite{cvae:2015}}
 \label{ssub:vae_conditional_vae}
 \input{chapters/vae/cvae}
+
+\newpage
 
 \subsubsection{Importance Weighted Autoencoder \cite{iwae:2015}}
 \label{ssub:vae_importance_weighted_autoencoder}
@@ -207,3 +234,4 @@ In the case of VAE, variational inference is also used in order to backpropagate
 \label{ssub:vae_deep_recurrent_attention_writer}
 \input{chapters/vae/draw}
 
+\newpage

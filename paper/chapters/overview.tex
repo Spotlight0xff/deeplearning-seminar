@@ -1,19 +1,49 @@
+
+\newpage
+
 \section{Overview of Directed Generative Models}
 \label{sec:overview}
 
-\paragraph{Sigmoid Belief Nets (SBN)}
+\subsection{Sigmoid Belief Nets}
 \label{par:overview_sbn}
-SBNs are one of the earliest generative models, using a simple architecture in which sampling from is easy, but learning and performing inference is not.
+Sigmoid Belief Nets (SBN) are a specific type of bayesian networks consisting of an set of binary states with each state depending on activations of preceeding nodes.
 
-\paragraph{Differentiable Generator Networks}
-Due to the success of gradient-based methods for learning deep networks, a large part of recent models are using a differentiable generator network which allows for error backpropagation.\\
-Most prominent examples of models with differentiable generator nets are the variational autoencoder (VAE) \cite{vae:2014} and generative adversarial networks (GAN) \cite{gan:2014}.
-These models include a generator networks representing a family of parametrized non-linear functions $g$ implemented usually implemented as neural networks.\\
-Using $g$ as distribution transformation allows samples $z$ to be transformed into $x$ where the distribution over $x$ may be more complicated than $z$.
-The parameters of $g$ can be inferred using training data and an appropiate loss function.\\
-However, instead of maximizing the log-likelihood of $p(x)$ directly we choose $g$ to emit not samples of $x$ but parameters of a conditional distribution over $x$.
 
-\paragraph{Auto-regressive networks}
+Bayesian networks or belief networks are an probabilistic interpretation of an directed acyclic graphical model with a set of states $s$.
+As usual in the bayesian framework, each state can be interpreted as a random variable with their conditional probabilities.
+%SBNs are one of the earliest deep directed generative models, consisting of binary states $s$ most commonly divided into many layers.
+
+%where in the most common form the architecture consists of several layers where each layer $h_i$ is connected from the previous layer $h_{i-1}$.
+%Sampling is an easy task in this model, however inferring good structure for the first layer is a difficult task.
+%Usually, in the context of probabilistic generative models we are mostly interested in three different aspects.
+%First, sampling from the network. This means given 
+%We are mostly interested in three different things involving
+
+%\vspace{3cm}
+%using a simple architecture in which sampling from is easy, but learning and performing inference is not.
+
+\subsection{Differentiable Generator Networks}
+Most of recent success in deep learning can be attributed to the backpropagation algorithm, including several useful extensions like dropout (citation), or piecewise-linear activation units providing a well-behaving gradient.
+Most prominent examples of recent directed generative models leverage these powerful gradient-based optimization techniques by including a generator network.
+
+Most prominent examples of models with differentiable generator nets are the variational autoencoder (VAE) \cite{vae:2014} and generative adversarial networks (GAN) \cite{gan:2014}, which we will discuss in detail later in \ref{sec:vae} and \ref{sec:gan} respectively.
+
+
+%Due to the success of gradient-based methods for learning deep neural networks, a large part of recent models are using a differentiable generator network allowing error backpropagation.\\
+
+%Both of these models contain a generator network coupled with another network which enables the models to be learned end-to-end.
+Both models include generator networks representing a family of parametrized non-linear functions $g_\varphi$ parametrized by $\varphi$ where these parameters can be learned by gradient-based techniques.\\
+As neural networks are basically powerful function approximators, they can also be understood as a distribution transformation.
+Given samples $z$ from one distribution $p(z)$, applying $g$ is equivalent to sampling from the posterior distribution $p(x|z)$ which is generally more complicated than the prior $p(z)$.\\
+
+
+%which transforms samples $z$ from a distribution $p(z)$ into $x$ values from a different, possible more complicated distribution $p(x|z)$.
+The advantage of this approach is that powerful gradient-based optimization techniques can be used to learn the transformation $g$ without modifying the prior distribution $p(z)$.
+The parameters of $g$ can be learned using training data and an appropiate loss function.\\
+\newpage
+%However, instead of maximizing the log-likelihood of $p(x)$ directly we choose $g$ to emit not samples of $x$ but parameters of a conditional distribution over $x$.
+
+%\subsection{Auto-regressive networks}
 
 %\paragraph{Variational Autoencoders (VAE) \cite{vae:2013}\cite{rezende:2014}}
 %\label{par:overview_vae}

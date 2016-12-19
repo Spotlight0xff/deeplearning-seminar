@@ -18,6 +18,7 @@ Eventually, this procedure will result in a nash equlibrium where the police or 
 Ideally, we want to find this equilibrium for the GAN model as well.
 
 
+\newpage
 
 
 %GANs can be understood as a two-player game where one player is called generator $G$ playing against the discriminator $D$.
@@ -27,13 +28,6 @@ Ideally, we want to find this equilibrium for the GAN model as well.
 %In the following $p_{data}$ is the true data generating distribution from which the training samples have been generated.
 %We don't have access to that distribution.
 
-\subsection{Architecture}
-\label{sub:gan_arch}
-Formalizing the setup in a probabilistic way, we have the unknown data distribution $p_{data}(x)$ from which the training examples have been drawn and the marginalized model distribution $p_{model}(x) = \int p(z)p(x|z) \textit{d}z$ over the noise space $z$ (also latent space).
-
-
-% http://www.slideshare.net/xavigiro/deep-learning-for-computer-vision-generative-models-and-adversarial-training-upc-2016
-% TODO: recreate in tikz
 
 \begin{figure}[htb]
 \centering
@@ -47,6 +41,17 @@ Formalizing the setup in a probabilistic way, we have the unknown data distribut
   Dashed arrows denote the gradient flow.
 \end{figure}
 
+\newpage
+
+\subsection{Architecture}
+\label{sub:gan_arch}
+Formalizing the setup in a probabilistic way, we have the unknown data distribution $p_{data}(x)$ from which the training examples have been drawn and the marginalized model distribution $p_{model}(x) = \int p(z)p(x|z) \textit{d}z$ over the noise space $z$ (also latent space).
+
+
+% http://www.slideshare.net/xavigiro/deep-learning-for-computer-vision-generative-models-and-adversarial-training-upc-2016
+% TODO: recreate in tikz
+
+
 %\begin{figure}[htb]
 %\centering
 %\includestandalone[mode=buildnew,width=\linewidth]{media/gan_conceptual}
@@ -57,13 +62,12 @@ Formalizing the setup in a probabilistic way, we have the unknown data distribut
 \subsubsection{Generator Network}
 The generator $G$ in the GAN framework tries to fool the discriminator $D$ by producing samples which are indistinguishable from the training data.
 This process can be formally written as minimizing the following cost function.
-$$
-\mathcal{L}_g = \min \log(1 - D(G(z)))
-$$
-Where $z$ is sampling from the noise prior $p(z)$.\\
+%Where $z$ is sampling from the noise prior $p(z)$.\\
 
-Another common form of the generator loss is $\mathcal{L'}_g$.
+%Another common form of the generator loss is $\mathcal{L'}_g$.
+%$$
 $$
+\mathcal{L}_g = \min \log(1 - D(G(z)))\\
 \mathcal{L'}_g = \max \log D(G(z))
 $$
 This formulation has the benefit of the same optimum fixed point, but has a better gradient flow early in training when $G$ produces samples which can be distinguished easily from real data by $D$.
@@ -80,6 +84,7 @@ $$
 $$
 
 
+\newpage
 
 \subsection{Training}
 \label{sub:gan_training}
@@ -92,8 +97,9 @@ The GAN framework can be fully trained with stochastic backpropagation due to $V
 Training will oscillate between training the generator and discriminator, where the other party is fixed respectively.
 In order to avoid a too strong discriminator (or generator), the ratio of learning steps will vary even though there are no hard rules for this.
 
+\vspace{5cm}
 \paragraph{Theoretical Foundation}
-Using a model with infinite training time and capacity in both generator and discriminator allows theoretical analysis of the GAN framework \cite{gan:2013}.
+Using a model with infinite training time and capacity in both generator and discriminator allows theoretical analysis of the GAN framework \cite{gan:2014}.
 For any given generator $G$, the optimal discriminator $D$ is given by $D_G^*(x)$:
 $$
 D_G^*(x) = \frac{p_{data}(x)}{p_{data}(x) + p_{model}(x)}
@@ -120,6 +126,8 @@ $$
 %Sampling minibatches from the noise prior and $p_{data}(x)$ result in the minibatch version.
 %Additionally, it is often required for practical reasons to let the discriminator run multiple backward passes while updating the generator once (why?).
 %Note that the discriminator will ascend while the generator descend its gradient due to maximizing $\mathcal{L}_d$ but minimizing $\mathcal{L}_g$ (correct?).
+
+\newpage
 
 \subsection{Stability and Performance}
 \label{sub:gan_stability}
@@ -174,15 +182,19 @@ $$
 \subsubsection{Minibatch discrimination}
 \label{ssub:gan_minibatch_discrimination}
 
+\vspace{10cm}
+
 \subsubsection{Historical Averaging}
 \label{ssub:gan_historical_averaging}
 
+\newpage
 
 
 
-\subsection{Application}
-\label{sub:gan_application}
-GAN have been applied to many different areas which include generating images (GAN, DCGAN, LAPGAN), sequences (SeqGAN), videos (\cite{gan_video:2016}), 3D objects (\cite{gan_3d:2016}), text-to-image synthesis (\cite{gan_t2i:2016})
+
+%\subsection{Application}
+%\label{sub:gan_application}
+%GAN have been applied to many different areas which include generating images (GAN, DCGAN, LAPGAN), sequences (SeqGAN), videos (\cite{gan_video:2016}), 3D objects (\cite{gan_3d:2016}), text-to-image synthesis (\cite{gan_t2i:2016})
 
 
 \subsection{Extensions}

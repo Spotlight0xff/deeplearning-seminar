@@ -3,30 +3,87 @@
 
 "What I cannot create, I do not understand." -- Richard Feynman \\\\\\
 
-% on building reasonable representations
-One of the key motivations to generative modelling is the assumption that having a interpretable representation of the real world is important to building intelligent agents.
-Real world data is often high-dimensional and noise and transforming this data into an compact representation is therefore an important and also challenging task to perform.
-Generative models are ideal for this task since it has to understand the underlying structure to generate similar data.
-Building this structure is called \textbf{representation learning} and is key to many generative models and how they perform.\\
 
-With this assumption in mind we can take a look at some examples of input data.
+
+Directed generative models are a wide class of models used for generating samples from an unknown distribution.
+Lets denote $p_{data}(x)$ as the real-world data distribution which is unknown, however we have access to samples from it: $x \sim p_{data}(x)$.
+In order to do so, we define an approximated distribution $p_{model}$ from which we are able to sample.
+Under the assumption that $p_{model}$ approximates $p_{data}$ accurately, samples from the true data distribution should have high likelihood under the approximation as well.\\\\
+
+Generative modelling has several important application areas, which will be highlighted on below.\\
+Deep learning techniques have provided great success in applying gradient-based optimization methods to deep neural networks to achieve impressive results in discriminative models.
+These models require however large amounts of labelled data, which is often expensive or infeasible to obtain.
+Generative models can be used to learn \emph{representational} structures from rich, unlabelled data by having less parameters than the input data and are thus forced to capture only essential information.\\
+\newpage
+
+
+%Prior to discussion individual models, we need to declare a few assumptions and definitions.
+%Additionally we assume that samples $x$ are also conditionally dependent on some hidden structure $z$: $x \sim p(x|z)$. 
+%\begin{equation}
+  %z \sim p(z)\\
+  %x \sim p(x|z)
+%\end{equation}
+
+%\paragraph{Sampling}
+%means for any given $z$ to draw a sample $x$ from our model.
+%Most commonly, sampling is the easiest requirement to fulfil.
+
+%\paragraph{Learning}
+%of the model parameters through maximum likelihood estimation generally involves $p(x)$ or its gradient.\\
+%To get $p(x)$, we first need to marginalize our the latent variables.
+%\begin{equation}
+  %p(x) = \sum_h p(x|z)p(z)
+%\end{equation}
+%Unfortunately, in the case of deep learning with many layers this is intractable, as we need to evaluate all model configurations.
+%via maximum likelihood generally involves the gradients of $p(x)$
+%\paragraph{Inference}
+% motivation / what we want exactly and why
+%Building intelligent systems requires having accurate and generalized information about the environment in order to perform actions or reason about the world.
+%Inferring structured and meaning information from unlabelled data, a process called unsupervised learning, remains a challenging task.
+
+%However, due to the massive increases in availability of data emerging from the web as well as the ongoing progress in computational power there has been significant progress using this data.
+
+%Generative modelling aims to generate new data similar to previously seen input, in a way which is sound with the internal structure of the data.
+
+%% on building reasonable representations
+The assumption that data can be explained using an underlying, simpler structure than the raw input data is important to handle the high-dimensional nature of most data source.
+In order to understand how these statistical models help us to discover the data structure, we will take a look at a few examples of high-dimensional real world data.
 \begin{itemize}
-  \item \textbf{Images} commonly have thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
-  \item \textbf{Speech} or more precisely the recording of it is high-dimensional, while the information it carries (the spoken words) can be represented in a low-dimensional space.
+  \item \textbf{Images} consisting of millions of pixels can be interpreted as data where each pixel represents an own dimension.
+  However, these dimensions are high correlated and structured, for example nearby pixels have with high probability similar values.
+  Looking at images of handwritten digits, the data can be reduced to a handful variables which may include the digit number, stroke width, position or size.
+  Statistical models help us discover these relations and reduce them to representations in lower dimensional space.
+  %\item commonly have thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
+  \item \textbf{Audio data} is omni-present in the real world, however most data sources can be transformed from raw audio samples to spoken words or musical notes without losing too much information for reconstruction.
   \item \textbf{...}
 \end{itemize}
+% cope with
+%To develop systems learning from real world data we use statistical models which are able to infer the underlying structure from
+%Real world data is often high-dimensional and noise and transforming this data into an compact representation is therefore an important and also challenging task to perform.
+%Generative models are ideal for this task since it has to understand the underlying structure to generate similar data.
+%Building this structure is called \textbf{representation learning} and is key to many generative models and how they perform.\\
 
-To formalize this setting, it is often beneficial to view the structure as a probability distribution $p$ on the input data $x$ we build the structure 
-%( another word!)
-from: $p(x)$.
+%With this assumption in mind we can take a look at some examples of input data.
 
-The assumption that $p(x)$ is dependent on some underlying structure can now be expressed as having the conditional probability $p(x|z)$ where $z$ are the causal factors.
-We call $z$ also the latent variables.\\
+
+
+
+The assumption that $p(x)$ is dependent on some underlying structure can now be expressed as having the conditional probability $p(x|z)$ where the latent variables $z$ are the causal factors. This stochastic dependency can be represented in a graphical model shown in figure \ref{fig:dgm}.\\
+
+\begin{figure}[htb]
+\centering
+\includegraphics{media/directed_graphical_model}
+  \caption{Directed graphical model}
+  \label{fig:dgm}
+  \medskip
+  \small
+  Arrows show stochastic dependency.
+\end{figure}
 
 %Inverting $p(x|z)$ yields $p(z|x)$ which is one of the main tasks of some generative models, for example the VAE \ref{sec:vae}.
 
 
-After a short overview of different approaches and methods and an introductory example with the sigmoid belief net (SBN), we will take a closer look at two recent promising frameworks, the variational autoencoder (VAE \ref{sec:vae}) and the generative adversarial network (GAN \ref{sec:gan}).
+%After a short overview of different approaches and methods and an introductory example with the sigmoid belief net (SBN), we will take a closer look at two recent promising frameworks, the variational autoencoder (VAE \ref{sec:vae}) and the generative adversarial network (GAN \ref{sec:gan}).
 
 
 

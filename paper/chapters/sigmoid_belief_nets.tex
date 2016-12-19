@@ -1,20 +1,35 @@
 \section{Sigmoid Belief Networks}
 \label{sec:sbn}
-Sigmoid Belief Networks (SBN) have been proposed in 1992 by R.M. Neal \cite{neal:1992} representing a a specific type of bayesian networks \cite{pearl:1985}.
-They are one of the earliest neural networks used for generative modelling, predating all other presented models in this article.
-
-These random variables are interpreted in a bayesian way where each one may be observed, hidden (or latent) or unknown representing different states of knowledge or belief \cite{definetti:1974}.
 \begin{figure}[htb]
 \centering
 \input{media/sbn_architecture}
-  \caption{SBN architecture}
+  \caption{Bayesian networks}
   \label{fig:sbn_arch}
   \medskip
   \small
-  Sigmoid Belief Network described as a acyclic directed graph where blue nodes indicate hidden variables while red nodes represent observed variables.
+  Bayesian networks or belief nets can be described as an acyclic directed graph where blue nodes indicate hidden variables while red nodes represent observed variables.
   Arrows show stochastic dependency. The dashed arrow indicates that it is possible in the original definition, even though most commonly the hidden variables are divided into layers.
 \end{figure}
 
+Sigmoid Belief Networks (SBN) have been proposed in 1992 by R.M. Neal \cite{neal:1992} representing a specific type of bayesian networks \cite{pearl:1985}.
+\ref{fig:sbn_arch} shows a bayesian network as a graphical model with each state influenced by its ancestors.
+In the case of SBNs however, the states are all binary and the activation function is the sigmoid function. They are one of the earliest neural networks used for generative modelling, predating all other presented models in this article.
+%As described in the overview above, SBNs contain a number of binary states $s$, most commonly divided into many layers.
+Each state $s_i$ is a random variables which may be observed, hidden or unknown representing different states of knowledge or belief. As such it can be interpreted with a probability distribution.
+\begin{equation}
+  \label{eq:sbn_node}
+p(s_i) = \sigma\bigg(\sum_{j<i}W_{i,j}s_j+b_i\bigg)
+\end{equation}
+In equation \ref{eq:sbn_node}, $\sigma$ denotes the sigmoid function $\frac{1}{1 + e^{-x}}$ and $W_{i,j}$ the connection weights from state $s_j$ to $s_i$.
+
+In probabilistic networks, we are mostly interested in the aspects: sampling, learning and inferring.
+Even though sampling can be done efficiently, the other operations are intractable in almost all cases.
+\paragraph{Sampling}
+can be done using ancestral sampling through the hidden layers evaluating \ref{eq:sbn_node}
+
+%These random variables are interpreted in a bayesian way where each one may be observed, hidden (or latent) or unknown representing different states of knowledge or belief \cite{definetti:1974}.
+
+\newpage
 \subsection{Learning}
 \begin{figure}[htb]
 \centering
@@ -22,14 +37,13 @@ These random variables are interpreted in a bayesian way where each one may be o
   \caption{SBN node}
   \label{fig:sbn_node}
 \end{figure}
+
+
 In its most common form, SBNs are comprised by a number of layers where each node in a layer is a sigmoid function of its ancestors:
-$$
-p(s_i) = \sigma\bigg(\sum_{j<i}W_{i,j}s_j+b_i\bigg)
-$$
 
 While sampling from these networks is very efficient, computing the inference $p(z|x)$ over the hidden units is intractable.
 % show why?
 
 There have been several attempts on solving the inference problem, using inference networks which have shown promising results.
 
-
+\newpage
