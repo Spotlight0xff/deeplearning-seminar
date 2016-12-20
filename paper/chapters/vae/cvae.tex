@@ -1,11 +1,39 @@
-Instead of randomly generated data, generation of output conditioned on some prior information is needed.
-A few examples would be super-resolution of images (citation!), prediction of subsequent frames of an video or other prediction tasks
+Instead of using VAEs in a completely unsupervised manner, oftentimes learning from a dataset where a small subset of datapoints has corresponding labels.
+Techniques learning from such datasets are called semi-supervised learning and can improve performance significantly.\\
 
-Conditional VAE is a modification of the original VAE framework to support conditioning on another variable $y$ in addition to the input data $x$.
+To adjust the VAE model to the semi-supervised case, we have to add an random variable $y$ corresponding to the corresponding label if available.
+Thus we can extend the distributions as shown below.
 
-To support conditional distributions, the following relations have to be rewritten:
+%The modified setup of the semi-supervised case for the variational autoencoder can be formalized as follows.
+%Dataset $X$ of size $N$ with observations $x_i$ with $i<N$ where for some small subset of observations $x_i$ the corresponding labels $y_i$ are known.
+%We denote the labelled subset as $~p_l(x,y)$ and the unlabelled dataset as $~p_u(x,y)$.
+%\begin{equation}
+
+%\end{equation}
+%Instead of randomly generated data, generation of output conditioned on some prior information is needed.
+%A few examples would be super-resolution of images (citation!), prediction of subsequent frames of an video or other prediction tasks
+
+%Conditional VAE is a modification of the original VAE framework to support conditioning on another variable $y$ in addition to the input data $x$.
+
+%To support conditional distributions, the following relations have to be rewritten:
 \begin{itemize}
 \item \textbf{Sampling from data space}: $x \sim p_\theta(x|y,z)$ instead of $x \sim p_\theta(x|z)$.\\
 \item \textbf{Probabilistic encoder}: $q_\theta(z|x,y)$ instead of just $q_\theta(z|x)$.\\
 \item \textbf{Probabilistic decoder}: $p_\phi(x|y,z)$ instead of just $p_\phi(x|z)$.\\
 \end{itemize}
+
+These modifications allows us to formalize the new objective functionas shown in equations \ref{eq:cvae_labels} and \ref{eq:cvae_unknown}.
+
+For datapoints $x$ where labels $y$ are available.
+\begin{align}
+  \label{eq:cvae_labels}
+  \log p_\theta(x) &\geq \mathbb{E}_{q_\phi(z|x,y)} \bigg[log p_\theta(x|y,z) + \log p_\theta(y) + \log p(z) - \log q_\phi(z|x,y)\bigg]
+\end{align}
+
+And for the unsupervised case where the label $y$ corresponds to an unknown entity, we treat $y$ as an additional latent variable.
+\begin{align}
+  \label{eq:cvae_unknown}
+  \log p_\theta(x) &\geq \mathbb{E}_{q_\phi(y,z|x)} \bigg[\log p_\theta(x|y,z) + \log p_\theta(y) + \log p(z) - \log q_\phi(y,z|x)\bigg]
+\end{align}
+
+The final objective function for whole dataset is the summation between right-hand terms of equations \ref{eq:cvae_labels} for the labelled subset and \ref{eq:cvae_unknown} for the unlabelled subset.

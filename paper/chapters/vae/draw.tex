@@ -1,2 +1,10 @@
-The \emph{deep recurrent attention writer}, in short DRAW is an advanced model uses the selective attention mechanism in addition to a VAE with both recurrent encoder and recurrent decoder.
-DRAW allows to basically the pixels of an image sequentially very human-like.
+The \emph{deep recurrent attention writer}, in short DRAW \cite{draw:2015} is an advanced extension to the variational autoencoder.
+It uses recurrent neural networks as encoder as well as decoder and includes a selective attention mechanism.
+These advancements allow the model to observe an image through a series of \emph{glimpses} and draw to an output region determined by the attention mechanism.
+Without going into much detail, this allows the model to sequentially draw images in a way which resembles much of human-like drawing or sketching.
+
+
+%It includes recurrent neural networks and a selective attention mechanism to 
+
+%uses the selective attention mechanism in addition to a VAE with both recurrent encoder and recurrent decoder.
+%DRAW allows to basically the pixels of an image sequentially very human-like.

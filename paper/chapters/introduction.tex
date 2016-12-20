@@ -46,7 +46,8 @@ Generative models can be used to learn \emph{representational} structures from r
 %Generative modelling aims to generate new data similar to previously seen input, in a way which is sound with the internal structure of the data.
 
 %% on building reasonable representations
-The assumption that data can be explained using an underlying, simpler structure than the raw input data is important to handle the high-dimensional nature of most data source.
+%The assumption that data can be explained using an underlying, simpler structure than the raw input data is important to handle the high-dimensional nature of most data source.
+Models using deep learning often assume that observed data is stochastically dependent on some hidden structure which we wish to explain.
 In order to understand how these statistical models help us to discover the data structure, we will take a look at a few examples of high-dimensional real world data.
 \begin{itemize}
   \item \textbf{Images} consisting of millions of pixels can be interpreted as data where each pixel represents an own dimension.
@@ -55,7 +56,7 @@ In order to understand how these statistical models help us to discover the data
   Statistical models help us discover these relations and reduce them to representations in lower dimensional space.
   %\item commonly have thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
   \item \textbf{Audio data} is omni-present in the real world, however most data sources can be transformed from raw audio samples to spoken words or musical notes without losing too much information for reconstruction.
-  \item \textbf{...}
+  %\item \textbf{...}
 \end{itemize}
 % cope with
 %To develop systems learning from real world data we use statistical models which are able to infer the underlying structure from
@@ -68,7 +69,8 @@ In order to understand how these statistical models help us to discover the data
 
 
 
-The assumption that $p(x)$ is dependent on some underlying structure can now be expressed as having the conditional probability $p(x|z)$ where the latent variables $z$ are the causal factors. This stochastic dependency can be represented in a graphical model shown in figure \ref{fig:dgm}.\\
+The assumption that the observed variables $x$ can be explained using the causal factors $z$ can be expressed as graphical model shown in figure \ref{fig:dgm}.
+%as having the conditional probability $p(x|z)$ where the latent variables $z$ are the causal factors. This stochastic dependency can be represented in a graphical model shown in figure \ref{fig:dgm}.\\
 
 \begin{figure}[htb]
 \centering
@@ -80,6 +82,8 @@ The assumption that $p(x)$ is dependent on some underlying structure can now be 
   Arrows show stochastic dependency.
 \end{figure}
 
+
+\newpage
 %Inverting $p(x|z)$ yields $p(z|x)$ which is one of the main tasks of some generative models, for example the VAE \ref{sec:vae}.
 
 

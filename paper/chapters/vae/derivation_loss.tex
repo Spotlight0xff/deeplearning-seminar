@@ -9,8 +9,8 @@
   &\geq \mathcal{L}\\
 \end{align*}
 
-$\mathcal{L}$ is the lower bound to $\log p(x)$.\\
-In order to get the loss function for individual data points or minibatches we rewrite the lower bound.
+$\mathcal{L}$ is called the evidence lower bound with respect to $\log p(x)$.
+We further rewrite $\mathcal{L}$ in order decompose the term to two separate terms, the reconstruction error $\mathcal{L}_{rec}$ and the regularizer $\mathcal{L}_{reg}$.
 
 \begin{align*}
   \mathcal{L}
