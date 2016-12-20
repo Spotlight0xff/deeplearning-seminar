@@ -2,15 +2,15 @@
 \label{sec:gan}
 
 %%% when introduced, game theory approach
-Generative Adversarial Networks (GAN) is a framework recently proposed by Goodfellow et al. \cite{gan:2014} based on a game theoretic approach to generative modelling.
+Generative Adversarial Networks (GAN) is a framework proposed in 2014 by Goodfellow et al. \cite{gan:2014} based on a game theoretic approach to generative modelling.
 %which has gathered a lot of attention in the deep learning community and in the last few years many extensions have been [proposed] (citations).
- 
-The idea is to have two players playing a non-cooperative game against each other.
-One player is called the generator $G$ tries to produce authentic looking data samples while the other player, the discrimininator $D$ has to decide whether a received sample is generated or actually originating from a dataset.
+
+GANs circumvent the issues arising the inference problem by playing a two-player game. Both players play non-cooperatively against each other, which means they only try to maximize their respective success or profit.
+One player is called the generator $G$ which tries to produce authentic looking data samples while the other player, the discrimininator $D$ has to decide whether a received sample is generated or actually real data.
 It is important to note that the generator gets to know whether the discriminator accepted the generated output as \emph{real} or rejected it as \emph{fake}.
 
 Each player plays to maximize its own success, which means the discriminator maximizes the number of samples which got discriminated correctly.
-On the other side, $G$ tries to produce as many samples as possibly which got accepted as real by $D$.\\
+On the other side, $G$ tries to produce as many real-looking samples as possible to get accepted by $D$.\\
 
 As the game progresses, both parties will get better at their respective objective and the generated samples will look more and more like the training examples.\\
 
@@ -23,13 +23,13 @@ The game-theoretic solution to the emerging situation where neither counterfeite
 
 In the case of GANs, this situation means the generator produces samples which can only be rejected with probability $p=0.5$ by the discriminator, meaning it produces as good samples as there are in the dataset.\\\\
 
-To formalize the setting in which the game between $G$ and $D$ takes place, we define the true, however unknown data distribution $p_{data}(x)$ from which samples are available as dataset $X=\{x^{(1)}, x^{(2)}, \dots, x^{(N)}\}$.
-
-In the case of generative modelling, the goal is to approximate $p_{data}(x)$ with $p_{model}(x)$.
-GANs uses neural network as function approximator for $G$ as well as $D$.
-The generator network $G$ produces samples from $p_{model}(x)$ by transforming samples from random noise as $x = G_\xi(z)$,
-where $\xi$ denotes the parameters learned by the neural network.\\
-Competing with $G$ is the discriminator $D$ trained to distinguish samples $ \tilde{x} \sim p_{model}(x)$ from real data $x \sim p_{data}(x)$.
+Another formulation of the GAN framework is to define the zero-sum game between the generative model and its adversary.
+The payoff of the discriminator can be described as the value function $v(G,D)$ while the payoff of the generator is the negative payoff of $D$: $-v(G,D)$.\\
+This formulation allows us to define the convergence as equation \ref{zerosum_convergence}.
+\begin{equation}
+  \label{eq:zerosum_convergence}
+  g^* = \arg \min_{G} \max_{D} v(g,d)
+\end{equation}
 
 
 % use of words: forgery
@@ -53,21 +53,30 @@ Competing with $G$ is the discriminator $D$ trained to distinguish samples $ \ti
 
 \begin{figure}[htb]
 \centering
-\includestandalone[width=\linewidth,mode=buildnew]{media/gan_conceptual}
-  \caption{Conceptual figure of generative adversarial network}
+\includestandalone[width=\textwidth,mode=buildnew]{media/gan_conceptual}
+  \caption{Architecture used for generative adversarial networks}
   \label{fig:gan_a}
   \medskip
   \small
-  The above figure is illustrating the information and gradient flow in the GAN framework.\\
-  \emph{data space} denotes the real-world data sampled from $p_{data}$, which we aim to model.
-  Dashed arrows denote the gradient flow.
+  The above figure illustrates the computational graph and gradient flow in the GAN framework.\\
+  $X$ denotes the dataset containing real-world samples from $p_{data}$, which we aim to model.\\
+  Solid arrows indicate the forward pass in the model while dashed arrows denote the gradient flow during a backward pass.
 \end{figure}
 
 \newpage
 
 \subsection{Architecture}
 \label{sub:gan_arch}
-Formalizing the setup in a probabilistic way, we have the unknown data distribution $p_{data}(x)$ from which the training examples have been drawn and the marginalized model distribution $p_{model}(x) = \int p(z)p(x|z) \textit{d}z$ over the noise space $z$ (also latent space).
+To formalize the setting in which the game between $G$ and $D$ takes place, we define the true, however unknown data distribution $p_{data}(x)$ from which samples are available as dataset $X=\{x^{(1)}, x^{(2)}, \dots, x^{(N)}\}$.
+
+In the case of generative modelling, the goal is to approximate $p_{data}(x)$ with $p_{model}(x)$.
+GANs uses neural network as function approximator for $G$ as well as $D$.
+The generator network $G$ produces samples from $p_{model}(x)$ by transforming samples from random noise as $x = G_\xi(z)$,
+where $\xi$ denotes the parameters learned by the neural network representing $G$.\\
+Competing with $G$ is the discriminator $D$ trained to distinguish samples $ \tilde{x} \sim p_{model}(x)$ from real data $x \sim p_{data}(x)$.\\
+
+Figure \ref{fig:gan_a} summarizes the described architecture.\\
+%Formalizing the setup in a probabilistic way, we have the unknown data distribution $p_{data}(x)$ from which the training examples have been drawn and the marginalized model distribution $p_{model}(x) = \int p(z)p(x|z) \textit{d}z$ over the noise space $z$ (also latent space).
 
 
 % http://www.slideshare.net/xavigiro/deep-learning-for-computer-vision-generative-models-and-adversarial-training-upc-2016
@@ -88,11 +97,17 @@ This process can be formally written as minimizing the following cost function.
 
 %Another common form of the generator loss is $\mathcal{L'}_g$.
 %$$
-$$
-\mathcal{L}_g = \min \log(1 - D(G(z)))\\
-\mathcal{L'}_g = \max \log D(G(z))
-$$
-This formulation has the benefit of the same optimum fixed point, but has a better gradient flow early in training when $G$ produces samples which can be distinguished easily from real data by $D$.
+\begin{equation}
+  \label{eq:l_g_1}
+  \mathcal{L}_g = \min \log(1 - D(G(z)))
+\end{equation}
+
+However, for gradient-based learning $\mathcal{L}_g$ provides poor gradient during learning where the discriminator is able to reject samples from the generator with high confidence.\\
+Therefore is in practice often equation \ref{eq:l_g_2} instead of equation \ref{eq:l_g_1} to optimize its objective.\\
+\begin{equation}
+  \label{eq:l_g_2}
+  \mathcal{L'}_g = \max \log D(G(z))
+\end{equation}
 
 Note that this loss function is fully differentiable which means it can be trained with backpropagation.
 
@@ -106,11 +121,19 @@ $$
 $$
 
 
-\newpage
 
 \subsection{Training}
 \label{sub:gan_training}
-Combining the loss functions of both generator and discriminator yields us the following objective with value function $V(G,D)$.
+\begin{figure}[htb]
+\centering
+  \includegraphics[width=\linewidth]{media/gan_training-crop}
+  \caption{Architecture used for generative adversarial networks}
+  \label{fig:gan_training}
+  \medskip
+  \small
+\end{figure}
+
+Combining the objective functions of both generator and discriminator in equation \ref{eq:l_g_2} and \ref{eq:l_d}, respectively yields us the following objective with value function $V(G,D)$.
 $$
 \min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]
 $$

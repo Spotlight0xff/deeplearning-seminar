@@ -20,7 +20,8 @@
 
 % nodes
 \node [gb] (generator) at ([shift={(5,0)}] latent_space) {Generator $G$};
-\node [cloud] (data) at ([shift={(0,4)}] generator) {\Huge $X$};
+  \node [cloud] (data) at ([shift={(0,4)}] generator) {\Large $X$};
+   
 \node [gb] (discriminator) at ([shift={(5,2)}] generator) {Discriminator $D$};
   \node[gb,dashed] (loss) at ([shift={(5,0)}] discriminator) {Loss $\mathcal{L}$};
 
