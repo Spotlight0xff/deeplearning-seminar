@@ -25,10 +25,10 @@ In the case of GANs, this situation means the generator produces samples which c
 
 Another formulation of the GAN framework is to define the zero-sum game between the generative model and its adversary.
 The payoff of the discriminator can be described as the value function $v(G,D)$ while the payoff of the generator is the negative payoff of $D$: $-v(G,D)$.\\
-This formulation allows us to define the convergence as equation \ref{zerosum_convergence}.
+This formulation allows us to define the convergence as equation \ref{eq:zerosum_convergence}.
 \begin{equation}
   \label{eq:zerosum_convergence}
-  g^* = \arg \min_{G} \max_{D} v(g,d)
+  G^* = \arg \min_{G} \max_{D} V(G,D)
 \end{equation}
 
 
@@ -116,14 +116,16 @@ Note that this loss function is fully differentiable which means it can be train
 \subsubsection{Discriminator Network}
 The objective of the discriminator network $D$ is to distinguish the generated samples produced by $G$ from the training set samples.
 This process can be formalized to maximizing the cost function $\mathcal{L}_d$.
-$$
-\mathcal{L}_d = \max \log\big(\log D(x) + \log (1 - D(G(z))\big)
-$$
+\begin{equation}
+  \label{eq:l_d}
+  \mathcal{L}_d = \max \log\big(\log D(x) + \log (1 - D(G(z))\big)
+\end{equation}
 
 
 
 \subsection{Training}
 \label{sub:gan_training}
+
 \begin{figure}[htb]
 \centering
   \includegraphics[width=\linewidth]{media/gan_training-crop}
@@ -133,12 +135,15 @@ $$
   \small
 \end{figure}
 
-Combining the objective functions of both generator and discriminator in equation \ref{eq:l_g_2} and \ref{eq:l_d}, respectively yields us the following objective with value function $V(G,D)$.
-$$
-\min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]
-$$
 
-The GAN framework can be fully trained with stochastic backpropagation due to $V(G,D)$ being differentiable.
+Combining the two objectives into one value function yields equation \ref{eq:minimax_value}.
+\begin{equation}
+\label{eq:minimax_value}
+\min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]
+\end{equation}
+
+The GAN framework can be fully trained with stochastic backpropagation due to $V(G,D)$ being differentiable with $G$ and $D$ implemented as deep neural nets.
+Figure \ref{fig:gan_training} illustrates the ideal training procedure for learning of an 1D gaussian.
 Training will oscillate between training the generator and discriminator, where the other party is fixed respectively.
 In order to avoid a too strong discriminator (or generator), the ratio of learning steps will vary even though there are no hard rules for this.
 
