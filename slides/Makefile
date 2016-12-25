@@ -3,7 +3,7 @@
 #
 # $Id: Makefile,v 1.13 2007-11-15 07:58:53 dreuw Exp $
 #
-default: slides.pdf
+default: presentation.pdf
 
 overview: slides.pdf
 	pdfnup --nup 2x4 --column true $^
@@ -33,17 +33,17 @@ hacks: slides.tex
 	latex "\nonstopmode\input{$<}"''
 
 all: 
-	rm -f slides.pdf slides.ps slidesSection.pdf slidesSection.ps presentation_template.pdf presentation_template.ps
+	rm -f slides.pdf slides.ps slidesSection.pdf slidesSection.ps presentation.pdf presentation.ps
 	make slides.pdf
 	make slides.ps
 	make slidesSection.pdf
 	make slidesSection.ps
-	make presentation_template.pdf
-	make presentation_template.ps
+	make presentation.pdf
+	make presentation.ps
 
 
 clean:
 	rm -f *.aux *~ *.out *.log *.bbl *.blg *.brf *.dvi *.toc *.mtc*
 
 clean-all: clean
-	rm -f slides.pdf slides.ps slidesSection.pdf slidesSection.ps presentation_template.pdf presentation_template.ps
+	rm -f slides.pdf slides.ps slidesSection.pdf slidesSection.ps presentation.pdf presentation.ps
