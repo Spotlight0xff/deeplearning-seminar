@@ -1,18 +1,18 @@
 \documentclass[11pt, a4paper, landscape]{article}
 \usepackage[american, userlastpage, triangle, vertical,utf-8]{NeyDreuwSlides_Oct08}
  
-\renewcommand*{\title}{Title of Presentation}                               % main title of the work (used for \TitlePage)
-\renewcommand*{\titleshort}{Short Title of Presentation}                    % short title (used for \lfoot)
-\renewcommand*{\occasion}{Seminar Selected Topics in WS 2012/2013 --} % (used for \TitlePage)
-\renewcommand*{\occasionshort}{Selected Topics WS 2012/2013}  % short occasion title (used for \rfoot)
-\renewcommand*{\date}{Date of Presentation}
-\renewcommand*{\author}{First Name Last Name}                                     % all the authors of the work, can be long (used for \TitlePage)
-\renewcommand*{\authorshort}{Last Name}                                        % all the authors of the work, should be short (used for \lfoot)
-\renewcommand*{\email}{\url{firstname.lastname@rwth-aachen.de}}             % all email address(es) of the authors (used for \TitlePage)
-\renewcommand*{\mainauthor}{First Name Last Name}                                 % the author(s) who presented the work (used for \FinalPage)
+\renewcommand*{\title}{Deep Directed Generative Models}                               % main title of the work (used for \TitlePage)
+\renewcommand*{\titleshort}{Deep Directed Generative Models}                    % short title (used for \lfoot)
+\renewcommand*{\occasion}{Seminar Selected Topics in WS 2016/2017--} % (used for \TitlePage)
+\renewcommand*{\occasionshort}{Selected Topics WS 2016/2017}  % short occasion title (used for \rfoot)
+\renewcommand*{\date}{01.02.2017}
+\renewcommand*{\author}{André Merboldt}                                     % all the authors of the work, can be long (used for \TitlePage)
+\renewcommand*{\authorshort}{Merboldt}                                        % all the authors of the work, should be short (used for \lfoot)
+\renewcommand*{\email}{\url{andre.merboldt@rwth-aachen.de}}             % all email address(es) of the authors (used for \TitlePage)
+\renewcommand*{\mainauthor}{André Merboldt}                                 % the author(s) who presented the work (used for \FinalPage)
 \renewcommand*{\mainauthoremail}{\email}                                  % presenter mail address(es) (used for \FinalPage)
 \renewcommand*{\www}{http://www-i6.informatik.rwth-aachen.de/}            % web address (used for \TitlePage _and_ \FinalPage)
-\newcommand*{\keywords}{Title of Presentation, etc.}      % keywords for pdf summary
+\newcommand*{\keywords}{Generative Models, Deep Learning, Generative Adversarial Network, Variational autoencoder, sigmoid belief net}      % keywords for pdf summary
 
 
 % will be set into the PDF document summary
@@ -35,10 +35,13 @@
 \vfill
 \begin{itemize}
 \item[] \hyperlink{sli:introduction}{Introduction}
-\item[] \hyperlink{sli:literature}{Literature}
-\item[] ...
-\item[] \hyperlink{sli:results}{Results}
+  \item[] \hyperlink{sli:sbn}{Sigmoid Belief Nets}
+  \item[] \hyperlink{sli:vae}{Variational Autoencoders}
+  \item[] \hyperlink{sli:gan}{Generative Adversarial Nets}
+  \item[] \hyperlink{sli:more}{More Generative Models}
 \item[] \hyperlink{sli:summary}{Summary}
+\item[] \hyperlink{sli:references}{References}
+%\item[] \hyperlink{sli:results}{Results}
 \end{itemize}
 \vfill
 
@@ -52,40 +55,49 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Literature}
-\hypertarget{sli:literature}
+\NewPage\headline{Sigmoid Belief Nets}
+\hypertarget{sli:sbn}
 \vfill
 ...
 \vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Your Slides}
-\begin{block}
-... \etc
-\cite{loupias:_wavel_salien_point_image_retriev}
-\end{block}
+\NewPage\headline{Variational Autoencoders}
+\hypertarget{sli:vae}
+\vfill
+$\dots$
+\vfill
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage\headline{Results}
-\hypertarget{sli:results}{}
+\NewPage\headline{Generative Adversarial Nets}
+\hypertarget{sli:gan}
+\vfill
+...
+\vfill
 
-\begin{block}
-  \centering
-  \begin{tabular}{l l}
-    \hline
-    Method & Error Rate [\%] \\
-    \hline
-    Others & x\% \\
-    Yours  & x\% \\
-    \hline
-  \end{tabular}
-\end{block}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{More Directed Generative Models}
+\hypertarget{sli:more}
+\vfill
+...
+\vfill
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Summary}
 \hypertarget{sli:summary}
+\vfill
+...
+\vfill
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewPage\headline{References}
+\hypertarget{sli:references}
+%\cite{loupias:_wavel_salien_point_image_retriev}
 \vfill
 ...
 \vfill
