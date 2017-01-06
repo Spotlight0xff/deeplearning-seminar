@@ -7,13 +7,13 @@
   \label{fig:sbn_arch}
   \medskip
   \small
-  Bayesian networks, also called belief nets can be described as an acyclic directed graph where blue nodes indicate hidden variables while red nodes represent observed variables.
-  Arrows show stochastic dependency. The dashed arrow indicates that it is possible in the original definition, even though most commonly the hidden variables are divided into layers.
+  Bayesian networks, also called belief nets are an acyclic directed graph where blue nodes indicate hidden variables and red nodes represent observed variables.
+  Arrows indicate stochastic dependency.
+  Even though most belief nets are divided into many layers in the context of deep learning, the original definition does not specify that and thus indicates the dashed arrow the possibility of inter-layer dependencies.
 \end{figure}
 
-Sigmoid Belief Networks (SBN) have been proposed in 1992 by R.M. Neal \cite{neal:1992} representing a specific type of bayesian networks \cite{pearl:1985}.
-Figure \ref{fig:sbn_arch} shows a generic belief network as a graphical model with each state influenced by its ancestors.
-In the case of SBNs however, all states are binary and the activation function is the sigmoid function. They are one of the earliest neural networks used for generative modelling, predating all other presented models in this article.
+Sigmoid Belief Networks (SBN) were proposed in 1992 by R.M. Neal \cite{neal:1992} representing a specific type of bayesian networks \cite{pearl:1985} shown in figure \ref{fig:sbn_arch}
+In the case of SBNs however, all states are binary and the activation function is the sigmoid function. They are one of the earliest neural networks used for generative modeling, predating all other presented models in this article.
 %As described in the overview above, SBNs contain a number of binary states $s$, most commonly divided into many layers.
 Each state $s_i$ is a random variable in the bayesian framework which means it can be observed, hidden or unknown representing different states of knowledge. As such it can also be interpreted with a probability distribution.
 \begin{equation}
@@ -25,10 +25,10 @@ In equation \ref{eq:sbn_node}, $\sigma$ denotes the sigmoid function $\frac{1}{1
 To draw samples from this network, it is possible to simply evaluate equation \ref{eq:sbn_node} for each visible node.
 However prior to that, the SBN first needs to learn how to generate good samples which includes the \emph{learning} and the \emph{inference} problem.\\
 Learning means in this context to adjust the weights and biases of the network to be more likely to generate previously observed input.
-Meanwhile statistical inference is tasked to infer the states of the hidden nodes based on the input.\\
+Meanwhile statistical inference is tasked to infer the states of the hidden nodes based on the states in the visible layer.\\
 
 Due to each state being statistically depend on all ancestors, inference means to evaluate all possible configurations of every previous node.
-Especially in deep networks, this kind of computation is infeasible as it requires evaluating exponentially many configurations.\\
+Especially in deep networks, this kind of computation is infeasible as it requires computing exponentially many configurations.\\
 
 % DONE
 

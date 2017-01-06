@@ -1,20 +1,31 @@
 \section{Introduction}
 \label{sec:introduction}
 
-"What I cannot create, I do not understand." -- Richard Feynman \\\\\\
+"What I cannot create, I do not understand." -- Richard Feynman \\\\
 
 
 
-Directed generative models are a wide class of models used for generating samples from an unknown distribution.
-Lets denote $p_{data}$ as the unknown real-world data distribution from which samples in the given dataset are drawn.
-In order to do so, we define an approximated distribution $p_{model}$ from which we are able to sample.
+Directed generative models are a wide class of models used for generating samples from an unknown distribution $p_{data}$.
+%Lets denote $p_{data}$ as the unknown real-world data distribution from which samples in the given dataset are drawn.
+The presented models in this article will approximate $p_{data}$ with $p_{model}$ which enables us to draw samples from the model.
 Under the assumption that $p_{model}$ approximates $p_{data}$ accurately, samples from the true data distribution should have high likelihood under the approximation as well.\\\\
 
-Generative modelling has several important application areas, which will be highlighted on below.\\
-Deep learning techniques have provided great success in applying gradient-based optimization methods to deep neural networks to achieve impressive results in discriminative models.
-These models require however large amounts of labelled data, which is often expensive or infeasible to obtain.
-Generative models can be used to learn \emph{representational} structures from rich, unlabelled data by having less parameters than the input data and are thus forced to capture only essential information.\\
+
+\paragraph{Short-term applications}
+\begin{itemize}
+  \item \textbf{Data augmentation} is a technique to enrich an existing dataset by adding more derived information to provide more in-depth insight.
+  \item \textbf{Semi-supervised learning} on datasets with a small amount of unlabelled data and a large amount of labeled data to improve model performance. Examples include the conditional variational autoencoder discussed in \ref{ssub:cvae}.
+  \item \textbf{Data exploration and understanding} is often needed especially for high-dimensional and complex data. By using models which reduce the dimensions by selecting only important features for generative modeling can help to improve data understanding. Figure \ref{fig:vae_experiments} explores the two-dimensional manifold of a handwritten digit, which originally had 784 dimensions.
+\end{itemize}
+
+In addition to those short-term applications, there exist possibilities for more long-term aspects of generative modeling.
+For example with unsupervised representation learning, where statistical models are able to learn robust, accurate and generalized internal representations from high-dimensional sensory input can help power future agents to help understand real-world data, allowing these agents to take actions and reason about the real world.
+
 \newpage
+%Deep learning techniques have provided great success in applying gradient-based optimization methods to deep neural networks to achieve impressive results in discriminative models.
+%These models require however large amounts of labelled data, which is often expensive or infeasible to obtain.
+%Generative models can be used to learn \emph{representational} structures from rich, unlabelled data by having less parameters than the input data and are thus forced to capture only essential information.\\
+%\newpage
 
 
 %Prior to discussion individual models, we need to declare a few assumptions and definitions.
@@ -47,13 +58,14 @@ Generative models can be used to learn \emph{representational} structures from r
 
 %% on building reasonable representations
 %The assumption that data can be explained using an underlying, simpler structure than the raw input data is important to handle the high-dimensional nature of most data source.
-Models using deep learning often assume that observed data is stochastically dependent on some hidden structure which we wish to explain.
-In order to understand how these statistical models help us to discover the data structure, we will take a look at a few examples of high-dimensional real world data.
+Models using deep learning often assume that observed data $x$ is stochastically dependent on some hidden structure $z$.
+To understand how these statistical models help us to discover the data structure, we will take a look at a few examples of high-dimensional real-world data.
+
 \begin{itemize}
-  \item \textbf{Images} consisting of millions of pixels can be interpreted as data where each pixel represents an own dimension.
+  \item \textbf{Images} consisting of millions of pixels can be interpreted as data vectors with each pixel representing an own dimension.
   However, these dimensions are high correlated and structured, for example nearby pixels have with high probability similar values.
   Looking at images of handwritten digits, the data can be reduced to a handful variables which may include the digit number, stroke width, position or size.
-  Statistical models help us discover these relations and reduce them to representations in lower dimensional space.
+  Statistical models help us discover these relations and reduce them to representations in lower-dimensional space.
   %\item commonly have thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
   \item \textbf{Audio data} is omni-present in the real world, however most data sources can be transformed from raw audio samples to spoken words or musical notes without losing too much information for reconstruction.
   %\item \textbf{...}
@@ -79,7 +91,7 @@ The assumption that the observed variables $x$ can be explained using the causal
   \label{fig:dgm}
   \medskip
   \small
-  Arrows show stochastic dependency.
+  The latent variable $z$ is a stochastic dependency of the observed data $x$.
 \end{figure}
 
 

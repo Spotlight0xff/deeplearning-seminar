@@ -1,8 +1,8 @@
 \section{Variational Autoencoders}
 \label{sec:vae}
-Variational autoencoders (VAE) have been developed concurrently in 2014 by Kingma et al. \cite{vae:2014} and Rezende et al. \cite{dlgm:2014}.
+Variational autoencoders (VAE) have been developed concurrently in 2014 by Kingma et al.\cite{vae:2014} and Rezende et al.\cite{dlgm:2014}.
 %The proposed framework resembles the encoder-decoder architecture, using a probabilistic encoder and decoder.
-The general idea of VAEs is to have an encoder-decoder architecture where inputs $x$ gets mapped to latent variables $z$ and from there to the reconstruction $~x$.
+The general idea of VAEs is to have an encoder-decoder architecture where input $x$ gets mapped to a specific distribution defined in the latent space $z$ from which we sample in order to reconstruct the input.
 
 
 %\begin{figure}[htb]
@@ -13,19 +13,21 @@ The general idea of VAEs is to have an encoder-decoder architecture where inputs
 %\end{figure}
 
 
-However, in addition to this autoencoder structure an additional regularizer forces the latent space to have a specific simple form.
-To achieve this, variational-based methods are used to output a distribution on the latent space instead of directly emitting samples.
+%However, in addition to this autoencoder structure an additional regularizer forces the latent space to have a specific simple form.
+%To achieve this, variational-based methods are used to output a distribution on the latent space instead of directly emitting samples.
 
-The probabilistic encoder generally implemented as feed-forward network receives input from the dataset and outputs parameters of a distribution. For example the parameters for a gaussian distribution with diagonal covariance, in which case the networks emits $(\mu,\Sigma)$.\\
+The probabilistic encoder generally implemented as feed-forward network receives input from the dataset and outputs parameters of a distribution. For example the parameters for a gaussian distribution with diagonal covariance, in which case the networks emits the mean $\mu$ and $\sigma$ used to define the gaussian distribution $\mathcal{N}(\mu,\sigma \times I)$, where $I$ is the identity matrix.\\
 
-Using gradient-based optimization techniques enables the network to be trained to be similar to the true posterior $p(z|x)$.
+Using gradient-based optimization techniques enables the encoder network to be trained to output distributions similar to the true posterior $p(z|x)$.
 In addition to this inference network there is a generator network which transforms points $z$ in the latent space back to the data space while trying to minimize the reconstruction error.
 
 
 One useful aspect of this approach is the possibility to train both networks using error backpropagation due to the use of neural networks as function approximators.\\\\
 
-Formally, the described probabilitic encoder emits variational parameters $\phi$ used to define the probability distribution $q_\phi(z|x)$.
-Equally for the probabilistic decoder which constructs a distribution $p_\theta(x|z)$ with the parameters $\theta$.\\
+Properly defined emits the described probabilitic encoder variational parameters $\phi$ used to define the probability distribution $q_\phi(z|x)$.
+Equally for the probabilistic decoder which constructs a distribution $p_\theta(x|z)$ with the parameters $\theta$.
+This architecture is shown in figure \ref{fig:vae_architecture} with a one-dimensonal gaussian prior.
+\\
 
 
 \begin{figure}[h]
@@ -35,7 +37,7 @@ Equally for the probabilistic decoder which constructs a distribution $p_\theta(
   \label{fig:vae_architecture}
 \end{figure}
 
-The key insight on how the variational autoencoder is able to optimize $q_\phi(z|x)$ to approach the true data posterior distribution $p(z|x)$ is in defining a variational lower bound which is used to push the approximated $q_\phi(z|x)$ towards $p(z|x)$. We will discuss this lower bound $\mathcal{L}$ in the following section in detail.
+The key insight on how the variational autoencoder is able to optimize $q_\phi(z|x)$ to approach the true data posterior distribution $p(z|x)$ is in defining a variational lower bound which is used to push the approximated $q_\phi(z|x)$ towards $p(z|x)$. We will discuss this lower bound $\mathcal{L}$ and its derivation in detail in the following sections.
 
 \newpage
 
@@ -74,23 +76,30 @@ Variational inference (VI) can be used to turn the inference problem into an opt
 
 These intractable posteriors unfortunately arise in almost all interesting models and there are mostly two different approaches to approximate the posterior distribution.
 % MCMC
-Using Markov chain Monte Carlo (MCMC) methods, which construct a Markov chain with the desired attributes. The advantage of this approach is that is guaranteed to asympotically approach the desired posterior, however it is difficult to reason about the convergence rate. For deep neural networks, running MCMC in the inner loop of optimization techniques is impractical.\\
+Using Markov chain Monte Carlo (MCMC) methods, which construct a Markov chain with the desired attributes matching those of the posterior. The advantage of this approach is that is guaranteed to asympotically approach the desired posterior, however it is difficult to reason about the convergence rate. For deep neural networks, running MCMC in the inner loop of optimization techniques is impractical.\\
 % variational inference
-The other approach which is using variational inference which picks a specific distribution restricted to a family of distributions matching the posterior most closely.
+Using variational inference is the second approach, used in the variational autoencoder, which picks a specific distribution restricted to a family of distributions matching the posterior most closely.
 Advantages using this approach rather than MCMC is the greater speed at which the computation is performed.
-However it is not guaranteed to even approximate the posterior accurately, if the true posterior can not be expressed as a distribution the family.
+However it is not guaranteed to approximate the posterior accurately, if the true posterior can not be approximately expressed as a distribution of the family.
 
 More specifically, VI turns the inference problem of computing $p(z|x)$ where $z$ are the hidden and $x$ the observed variables into an optimization problem, where we can use gradient-based methods.
 
 
 \subsubsection{Kullback-Leibler Divergence}
-In order to approximate one distribution $Q$ to another distribution $P$, a measurement of difference.
-One commonly used measurement is called Kullback-Leibler divergence (short KL-divergence) which enables the variational inference methods to choose appropiate distributions.
+In order to approximate one distribution $Q$ to another distribution $P$, there needs to be a measurement how close $Q$ is to $P$.
+One commonly used measurement is called Kullback-Leibler divergence (short KL divergence) which enables the variational inference methods to choose appropiate distributions.
 %\paragraph{The Kullback-Leibler Divergence} (KL divergence) is a measurement for the difference between two probability distributions. $\mathcal{D}_{\mathrm{KL}}(P \| Q)$ can informally described as the amount of information which is lost when using $Q$ to represent $P$.
-For discrete probability distributions $P$ and $Q$, the KL divergence from $Q$ to $P$ is defined\cite{kl_div:1951} as:
+For discrete probability distributions $P$ and $Q$, the KL divergence from $Q$ to $P$ is defined\cite{kl_div:1951} in equation \ref{eq:kl_div_disc}:
 \begin{equation}
+  \label{eq:kl_div_disc}
   \mathcal{D}_{\mathrm{KL}}(P || Q) = \sum_{i} P(i) \log \frac{P(i)}{Q(i)}
 \end{equation}
+For continuous distributions $P$ and $Q$ the KL divergence is defined similarly in equation \ref{eq:kl_div_cont}.
+\begin{equation}
+  \label{eq:kl_div_cont}
+  \mathcal{D}_{\mathrm{KL}}(P || Q) = \int P(i) \log \frac{P(i)}{Q(i)} di
+\end{equation}
+
 
 Note that divergence does not obey the triangle inequality and is also not symmetrical, therefore it does not qualify as a metric.
 $\mathcal{D}_{\mathrm{KL}}(P||Q)$ can nevertheless be understood as a measure of the difference between $P$ and $Q$ and is as such used in the variational inference.
@@ -170,19 +179,20 @@ Following the thoughts earlier, we wish to derivate an objective function which 
 We construct the approximate posterior $q_\phi(z|x)$ which we want to approach the true data posterior $p(z|x)$.
 When using the KL divergence as measurement for difference between two distributions the goal for which we want to optimize becomes the following.
 \begin{equation}
+  \label{eq:vae_obj}
   q_\phi^{*}(z|x) = \arg\min_{\phi} \mathcal{D}_{\mathrm{KL}} \big(q_\phi(z|x) || p(z|x)\big)
 \end{equation}
 
-However we are not able to optimize for that goal directly, as the intractable evidence $p(x)$ appears during the expansion of the posterior $p(z|x)$ to $\frac{p(x|z)p(z)}{p(x)}$.\\
+However we are not able to optimize equation \ref{eq:vae_obj} directly, as the intractable evidence $p(x)$ appears during the expansion of the posterior $p(z|x)$ to $\frac{p(x|z)p(z)}{p(x)}$.\\
 The denominator $p(x)$ can be computed by marginalizing out the hidden variables $z$: 
 \begin{equation}
   \label{eq:integral}
 p(x) = \int p(x,z) p(z) dz
 \end{equation}
 
-Computing the integral in equation \ref{eq:integral} requires the evaluation of every possible configuration over the hidden variables $z$ and therefore intractable.\\\\
+Computing the integral in equation \ref{eq:integral} requires the evaluation of every possible configuration over the hidden variables $z$ and is therefore intractable.\\\\
 
-Instead of directly optimizing for the true posterior, we construct an evidence lower bound (ELBO) $\mathcal{L}$ which we can maximize which is equivalent to minimizing the KL divergence between $q_\phi(z|x)$ and $p(z|x)$.\\
+Instead of directly optimizing for the true posterior, we construct an evidence lower bound (ELBO) $\mathcal{L}$ which we can maximize which is equivalent to minimizing the KL divergence between $q_\phi(z|x)$ and $p(z|x)$ without explicity evaluating the evidence.\\
 
 
 
@@ -194,9 +204,9 @@ Instead of directly optimizing for the true posterior, we construct an evidence 
 
 %The regularizer is also important to the VAE as it ensures that the model learns generalized representations in latent space.
 
-With the example using handwritten digits it appears why this regularizer is important for the model to learn generalized representations in latent space.
+Using the example of handwritten digits it appears why this regularizer term $\mathcal{L}_{reg}$ is important for the model to learn generalized representations in latent space.
 Suppose we have two data points from the dataset which both represent the same handwritten digit.
-Ideally, our model would learn the representations in latent space to be fairly close to ensure the model has learned to generalize the semantics. Without $\mathcal{L}_{reg}$ the model would assign each data example a different representation in latent space with a distribution collapsing to that single point. This behaviour is undesired and is as such penalitized.
+Ideally, our model would learn representations in latent space to be fairly close to ensure the model has learned to generalize the semantics. Without $\mathcal{L}_{reg}$ the model would assign each data example a different representation in latent space with a distribution collapsing to that single point. This behaviour is undesired and is as such penalitized.
 
 %Suppose two data points with similar input
 %Without $\mathcal{L}_{reg}$ the encoder would encode data points we want to have similar representations, fo
@@ -206,7 +216,7 @@ Ideally, our model would learn the representations in latent space to be fairly 
 \vspace{2cm}
 
 \paragraph{Reconstruction error $\mathcal{L}_{rec}$} measures how well the decoder reconstructs the input data using the latent space $z$.
-This error is measures using the negative log-likelihood of the conditional probability distribution $p_\theta(x_i|z)$ where $z$ is sampled from $q_\phi(z | x_i)$.\\
+This error is measured using the negative log-likelihood of the conditional probability distribution $p_\theta(x|z)$ where $z$ is sampled from $q_\phi(z | x)$.\\
 $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent variables which can be used to reconstruct the input data well.
 
 \newpage
@@ -240,11 +250,12 @@ $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent
     \subcaptionbox{with reparameterization applied}{\includestandalone[height=0.4\linewidth]{media/reparameterization_trick_with}}\\
   \end{tabular}
   \caption{reparameterization trick}
+  \label{fig:rep_trick}
   \medskip
   \small
-  Function $f_\theta(x)$ with inputs $x$ and (variational) parameters $\theta$ shown as directed graphical model.\\
+  Function $f_\theta(x)$ with inputs $x$ and (variational) parameters $\theta$ as computational graph.
   Left without and on the right with the reparameterization trick applied.\\
-  Solid arrows show the forward pass and dashed arrows the error backpropagation.
+  Solid arrows show the forward pass and dashed arrows the error backpropagation using gradients.
   Rectangular nodes represent deterministic functions while circles indicate stochastic variables.
   %Note that backpropagation of gradients through stochastic nodes is problematic and adds bias (verify!)
 \end{figure}
@@ -252,27 +263,32 @@ $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent
 % more math:
 % http://stats.stackexchange.com/questions/199605/how-does-the-reparameterization-trick-for-vaes-work-and-why-is-it-important
 To be able to backpropagate the loss function through the VAE, it has to be differentiable and deterministic.
-Because we add noise to the encoding, the gradients can't be computed directly. In order to circumvent this restriction, the so-called "reparameterization trick" is applied.
-Instead of drawing $z ~ \mathcal{N}(\mu(x), \Sigma(x))$, we sample an auxiliary variable $\epsilon$ from $\mathcal{N}(0, I)$ which we then transform with equation \ref{eq:rep_trick} into $z$.
+However, because we only sample from the constructed distribution $q_\phi(z|x)$, we cannot backpropagate through the node due to the stochastic nature.
+In order to circumvent this restriction, the so-called "reparameterization trick" is applied.
+Instead of drawing $z$ directly from $q_\phi(z|x)$, we first sample first an auxiliary variable $\epsilon$ from the isotropic gaussian $\mathcal{N}(0, I)$. Then we apply equation \ref{eq:rep_trick} to transform $\epsilon$ into $z$.
 \begin{equation}
   \label{eq:rep_trick}
   z = \mu(x) + \Sigma^{1/2}(x)*\epsilon
 \end{equation}
-This allows us to compute the gradient of the loss function and backpropagate through the entire model and only have the stochastic variable $\epsilon$ as input.\\\\
+Note that this transformation is entirely deterministic and as such allows for backpropagation through the transformation into the variational parameters $\phi$.
 
-The core idea of VAEs is to match a distribution $q(x)$ to the desired $p(x)$ by enforcing a lower variational bound on $q(x)$ in a way that it seeks to match $p(x)$.
-In contrast to other autoencoders, VAEs behave differently due to this lower bound but they resemble the architecture of traditional autoencoders (sparse, denoising).
+Figure \ref{fig:rep_trick} expresses the reparameterization trick applied to an arbitrary function $f$ with the parameters $\theta$.\\
+Using this trick, the whole VAE model can be trained using gradient-based optimization techniques.\\\\
+
+Note further that in most common architectures, the distribution class enforced on the latent space is gaussian, there exists similar reparameterization techniques allowing different probability distributions on $z$.
+%The core idea of VAEs is to match a distribution $q(x)$ to the desired $p(x)$ by enforcing a lower variational bound on $q(x)$ in a way that it seeks to match $p(x)$.
+%In contrast to other autoencoders, VAEs behave differently due to this lower bound but they resemble the architecture of traditional autoencoders (sparse, denoising).
 
 
 
 
-We use VAEs when we have a complicated distribution $p_\theta(x,z)$ with unknown latent variables $z$.
-The prior distribution $p(z)$ over the latent structure is a centered isotropic(?) multivariate Gaussian denoted by $\mathcal{N}(z;0, I)$.
-The constructed architecture uses an probabilistic encoder $q_\theta(z|x)$ and a probabilistic decoder $p_\theta(x|z)$ in a form of neural networks, in the original paper MLP are used\cite{vae:2014} but there are various extensions (see \ref{sub:vae_extensions}, TODO).
-Because the posterior is intractable ($p_\theta(x)$), we instead approximately maximize the lower variational bound $L(\theta,\phi;x)$.\\
-\begin{equation}
-  \mathcal{L}(\theta,\phi;x) = -D_{KL}(q_\theta(z|x)||p(z)) + \mathbb{E}_{q_\theta(z|x)}[log_{p_\theta}(x|z)]
-\end{equation}
+%We use VAEs when we have a complicated distribution $p_\theta(x,z)$ with unknown latent variables $z$.
+%The prior distribution $p(z)$ over the latent structure is a centered isotropic(?) multivariate Gaussian denoted by $\mathcal{N}(z;0, I)$.
+%The constructed architecture uses an probabilistic encoder $q_\theta(z|x)$ and a probabilistic decoder $p_\theta(x|z)$ in a form of neural networks, in the original paper MLP are used\cite{vae:2014} but there are various extensions (see \ref{sub:vae_extensions}, TODO).
+%Because the posterior is intractable ($p_\theta(x)$), we instead approximately maximize the lower variational bound $L(\theta,\phi;x)$.\\
+%\begin{equation}
+  %\mathcal{L}(\theta,\phi;x) = -D_{KL}(q_\theta(z|x)||p(z)) + \mathbb{E}_{q_\theta(z|x)}[log_{p_\theta}(x|z)]
+%\end{equation}
 
 
 
@@ -281,8 +297,8 @@ Because the posterior is intractable ($p_\theta(x)$), we instead approximately m
 
 \subsection{Learning}
 \label{sub:vae_learning}
-The probabilistic encoder $q_\phi(z|x)$ and decoder $p_\theta(x|z)$ are commonly implemented using a deep neural network.
-To allows analytical computation of the ELBO, the prior on the latent space $z$ is often choosen to be the isotropic gaussian $p(z) = \mathcal{N}(0,1)$.
+The probabilistic encoder $q_\phi(z|x)$ and decoder $p_\theta(x|z)$ are commonly implemented using deep neural networks.
+To allow analytical computation of the ELBO, the prior on the latent space $z$ is often choosen to be the isotropic gaussian $p(z) = \mathcal{N}(0,1)$.
 
 %To allow the computation of the KL divergence between $q_\theta(z|x)$ and the latent prior distribution $p(z)$ in closed form, the prior is an isotropic gaussian $\mathcal{N}(0, 1)$.
 
@@ -360,7 +376,7 @@ In order to evaluate the inference performance and explore the learned latent sp
 \label{sub:vae_extensions}
 
 \subsubsection{Conditional VAE \cite{cvae:2014} \cite{cvae_2:2015}}
-\label{ssub:vae_conditional_vae}
+\label{ssub:cvae}
 \input{chapters/vae/cvae}
 
 \newpage
@@ -375,9 +391,10 @@ In order to evaluate the inference performance and explore the learned latent sp
     %\small
     %This figure shows the computational graph in a deep latent gaussian model. Red arrows indicate the forward pass and black arrows the backward pass. Meanwhile represent j
 %\end{figure*}
-Up until now the presented variational autoencoder only has one stochastic latent layer. However in the original paper by Rezende et al. \cite{dlgm:2014} the authors have shown a variational autoencoder using multiple stochastic layers with gaussian priors in each layer.
-Note that the deterministic non-linear transformations between each layer still can be represented using deep neural networks.
-This enables the model to learn richer, more hierarchical structures captured in each latent layer.
+Up until now the presented variational autoencoder framework has only considered one stochastic latent layer. However in the original paper by Rezende et al. \cite{dlgm:2014} the authors have shown a variational autoencoder using multiple stochastic layers with gaussian priors in each layer.
+They called this model the deep latent gaussian model (DLGM) which can be understood as a generalization of the variational autoencoder.
+Note that the deterministic non-linear transformations between each layer still can be represented using deep neural networks.\\
+Using multiple stochastic layers enables the model to learn more hierarchical structured dependencies from the dataset.
 
 
 %Up until now, the variational autoencoder has only included one stochastic layer. It is however possible to extend the architecture to support multiple latent spaces.
@@ -386,11 +403,11 @@ This enables the model to learn richer, more hierarchical structures captured in
 
 
 
-\subsubsection{Importance Weighted Autoencoder \cite{iwae:2015}}
+\subsubsection{Importance Weighted Autoencoder}
 \label{ssub:vae_importance_weighted_autoencoder}
 \input{chapters/vae/iwae}
 
-\subsubsection{Deep Recurrent Attention Writer \cite{draw:2015}}
+\subsubsection{Deep Recurrent Attention Writer}
 \label{ssub:vae_deep_recurrent_attention_writer}
 \input{chapters/vae/draw}
 

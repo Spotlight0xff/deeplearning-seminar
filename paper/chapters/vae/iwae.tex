@@ -3,20 +3,21 @@
 % write about k passes (just averages)
 
 % write about IWAE, extends these k passes with importance weights
-Importance Weighted Autoencoders (IWAE) extends on the VAE framework using $k$-sample importance weighting of the log-likelihood.
+Importance Weighted Autoencoders (IWAE\cite{iwae:2015}) extends on the VAE framework using $k$-sampled importance weighting of the log-likelihood.
 % add intuition for IWAE, ruslan explained it very well during his DL summer school talk! (talk_Montreal_2016_Salakhutdinov.pdf)
 Using importance weighting can be informally interpreted as putting more weight on data with high likelihood.
 
-The authors of the papers argue that using more samples will only tighten the lower variational bound.
-$$
+Improving on the theoretical results in the VAE framework, using IWAE with more samples will tighten the lower variational bound and therefore improve the overall performance of the model.
+\begin{equation*}
 \log p(x) \geq \mathcal{L}_{k+1}(x) \geq \mathcal{L}_{k}(x)
-$$
+\end{equation*}
 
-Additionally, if $\frac{p(h,x)}{q(h|x)}$ is bounded, then the model is guaranteed to reach the optimimum:
-$$
+Additionally, if $\frac{p(h,x)}{q(h|x)}$ is bounded, then the model is guaranteed to reach the optimimum as $k$ approaches infinity in equation \ref{eq:iwae}
+\begin{equation}
+\label{eq:iwae}
 \lim_{k \rightarrow \infty} \mathcal{L}_{k}(x) = \log p(x)
-$$
+\end{equation}
 
-Of course, using more samples will result in higher computational cost.
+However, using more samples will result in higher computational cost and thus should be carefully evaluated.
 
 %\vspace{5cm}
