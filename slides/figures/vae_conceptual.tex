@@ -1,0 +1,76 @@
+\documentclass{standalone}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.14}
+\usetikzlibrary{fit,backgrounds}
+
+
+
+\usetikzlibrary{positioning, arrows.meta, calc, shapes.misc}
+
+\begin{document}
+
+\pgfmathdeclarefunction{gauss}{2}{%
+  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+}
+
+
+\tikzstyle{gb} = [draw,outer sep=0.1cm,inner sep=0.3cm,minimum size=10,line width=0.5, draw=black!55, top color=white,bottom color=black!20]
+\tikzstyle{arr} = [thick,-{Latex[length=3mm,width=2mm]}]
+\tikzstyle{cloud} = [draw, circle, node distance=2.5cm, minimum height=2em, gb]
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+\begin{tikzpicture}
+
+%\begin{scope}[xshift=5cm,on grid]
+
+% input space
+\node[gb] (input) at (0cm,0cm) {$x$};
+\node[fill=black!20] (lbl_input) at (0,-1) {Input};
+
+% output / reconstruction
+\node[gb] (output) at ($(input) + (3.0cm,0.0cm)$) {$\tilde x$};
+\node[fill=black!20] (lbl_rec) at ($(output) + (0,-1cm)$) {Reconstruction};
+
+% latent space
+\node[fill=black!20] (lbl_lat) at ($(input) + (2.7cm,5.2cm)$) {$z \sim \mathcal{N}(\mu, \sigma^2 \odot I)$};
+
+    %\begin{pgfonlayer}{background}
+
+% draw plot for normal dist
+\begin{axis}[
+  no markers,
+  domain=0:6,
+  samples=100,
+  ytick=\empty,
+  width=3.5cm,
+  xtick=\empty,
+  xlabel={$(\mu,\sigma)$},
+  at={($(input) + (-0.95cm,4.5cm)$)}
+  ]
+  \addplot [thick,cyan!50!black, domain=0:6] {gauss(3,1)};
+  \node[] (left_bot) at (axis cs:0.0,-0.15) {};
+  \node[] (left_top_aux) at (axis cs:0.0,0.2) {};
+\end{axis}
+
+  \node [above right=of left_top_aux] (left_top) {Latent space};
+
+    %\end{pgfonlayer}
+\begin{scope}[on background layer]
+  \node (outer) [dashed,draw,fill=blue!10,fit=(left_bot) (left_top) (lbl_lat)] {};
+\end{scope}
+
+
+% input -> latent
+\draw[arr] (input) -- node[label=left:$q_\phi(z|x)$] {}($(input) + (0.0cm,3.8cm)$) {};
+
+% latent -> output (reconstruction)
+\draw[arr] ($(input) + (3.0cm,4.5cm)$) -- node[label=right:$p_\theta(x|z)$] {}(output) {};
+
+%\end{scope}
+
+\end{tikzpicture}
+\end{document}

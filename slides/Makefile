@@ -3,7 +3,16 @@
 #
 # $Id: Makefile,v 1.13 2007-11-15 07:58:53 dreuw Exp $
 #
-default: presentation.pdf
+FIGURES=$(wildcard figures/*.tex)
+
+.PHONY: $(FIGURES)
+
+default: presentation.pdf $(FIGURES)
+
+
+
+$(FIGURES):
+	pdflatex -interaction nonstopmode -output-directory figures/ $@
 
 overview: slides.pdf
 	pdfnup --nup 2x4 --column true $^
@@ -34,6 +43,7 @@ hacks: slides.tex
 
 all: 
 	rm -f slides.pdf slides.ps slidesSection.pdf slidesSection.ps presentation.pdf presentation.ps
+	#rm -f $(FIGURES:.tikz=.pdf)
 	make slides.pdf
 	make slides.ps
 	make slidesSection.pdf
@@ -44,6 +54,7 @@ all:
 
 clean:
 	rm -f *.aux *~ *.out *.log *.bbl *.blg *.brf *.dvi *.toc *.mtc*
+	rm -f $(FIGURES:.tex=.pdf)
 
 clean-all: clean
 	rm -f slides.pdf slides.ps slidesSection.pdf slidesSection.ps presentation.pdf presentation.ps

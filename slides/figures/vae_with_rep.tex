@@ -1,0 +1,92 @@
+\documentclass{standalone}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.14}
+\usetikzlibrary{fit,backgrounds}
+
+
+
+\usetikzlibrary{positioning, arrows.meta, calc, shapes.misc}
+
+\begin{document}
+
+\pgfmathdeclarefunction{gauss}{2}{%
+  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+}
+
+
+\tikzstyle{gb} = [draw,fill=blue!10,outer sep=0.1cm,minimum height=4em, minimum width=4em]
+\tikzstyle{arr} = [thick,-{Latex[length=3mm,width=2mm]}]
+\tikzstyle{cloud} = [draw, circle, node distance=2.5cm, minimum height=2em, gb]
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+\begin{tikzpicture}
+
+%\begin{scope}[xshift=5cm,on grid]
+
+% input space
+\node[gb] (input) at (0cm,0cm) {\Huge$x$};
+%\node[fill=black!20] (lbl_input) at (0,-1) {Input};
+
+
+    %\begin{pgfonlayer}{background}
+\node[above=3cm of input] (lat_start) {};
+\node[above right=1.25cm and 0.85cm of lat_start] (lat_dist) {};
+%\node[draw,right=3cm of lat_start] (lat_end) {};
+
+
+% latent space
+\node[] (lbl_lat) at ($(lat_dist) + (8.5cm,0.0cm)$) {\huge $z = \mu + \epsilon \odot \sigma$};
+
+
+
+\node[above=of lbl_lat] (lbl_eps) {\huge$\epsilon \sim \mathcal{N}(0, I)$};
+
+% output / reconstruction
+\node[gb] (output) at ($(lbl_lat) + (0.0cm,-5.43cm)$) {\huge$\tilde x$};
+%\node[fill=black!20] (lbl_rec) at ($(output) + (0,-1cm)$) {Reconstruction};
+
+% draw plot for normal dist
+\begin{axis}[
+  no markers,
+  domain=0:6,
+  samples=100,
+  ytick=\empty,
+  width=3.5cm,
+  xtick=\empty,
+  xlabel={\huge$(\mu,\sigma)$},
+  at={($(lat_start) + (-0.95cm,0.8cm)$)}
+  ]
+  \addplot [thick,cyan!50!black, domain=0:6] {gauss(3,1)};
+  %\node[] (left_bot) at (axis cs:0.0,-0.15) {};
+  %\node[] (left_top_aux) at (axis cs:0.0,0.2) {};
+\end{axis}
+
+  %\node [above right=of left_top_aux] (left_top) {Latent space};
+
+    %\end{pgfonlayer}
+%\begin{scope}[on background layer]
+%  \node (outer) [dashed,draw,fill=blue!10,fit=(left_bot) (left_top) (lbl_lat)] {};
+%\end{scope}
+
+
+% input -> latent
+\draw[arr] (input) -- node[label=left:\huge$q_\phi(z|x)$] {}(lat_start) {};
+
+% latent -> latent
+\draw[arr] (lat_dist) -- (lbl_lat) {};
+
+\draw[arr] (lbl_eps) -- (lbl_lat);
+
+%\node [label={[xshift=1.0cm, yshift=0.3cm]Label}] {Node};
+% latent -> output (reconstruction)
+\draw[arr] (lbl_lat) -- node[label=right:\huge$p_\theta(x|z)$] {}(output) {};
+
+%\end{scope}
+
+%\draw[dashed] (4.5,7.5) -- (4.5,-2);
+\end{tikzpicture}
+\end{document}
