@@ -1,11 +1,24 @@
 \documentclass{standalone}
-
+  \usepackage[utf8]{inputenc}
 \usepackage{tikz}
 \usepackage{xifthen}
 
 
+\RequirePackage[T1]{fontenc}
+\RequirePackage{times}
+
+\renewcommand*{\familydefault}{\sfdefault}
+\RequirePackage{amsmath,amsthm, amssymb, latexsym}
+
+
+
 \usetikzlibrary{fit,arrows.meta}
 \begin{document}
+
+\boldmath
+\bfseries
+\Large
+
 \tikzstyle{arr} = [-{Latex[length=2mm,width=2mm]}]
 \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
 \tikzstyle{hidden neuron}=[neuron, fill=blue!50]
