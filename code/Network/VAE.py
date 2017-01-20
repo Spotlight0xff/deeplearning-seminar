@@ -8,12 +8,8 @@ import os
 import logging
 from Layer.Dense import Dense
 from Utils import compose_all
-import matplotlib.gridspec as gridspec
+import pickle
 
-
-from progressbar import ETA, Bar, Percentage, ProgressBar
-import matplotlib.pyplot as plt
-from IPython import display
 
 class VAE(object):
     """Variational Autoencoder implementation in TensorFlow using PrettyTensor
@@ -30,17 +26,18 @@ class VAE(object):
             "learning_rate": 1e-3,
             "nonlin": tf.nn.relu, # TODO relu
             "squash": tf.nn.sigmoid, # TODO explore (softplus?)
+            "arch": [784,512,512,50],
             }
 
     def __init__(self,
-            network_architecture = [], # list of nodes per layer
             hyper_params = {}, # update to HYPERPARAMS
-            models_dir = "models/",
+            models_dir = "models",
             k = 1, # number of forward passes
+            name = None, # model name
             **kwargs
             ):
         self.k_passes = k
-        self.arch = network_architecture
+        # self.arch = network_architecture
         if not os.path.isdir(models_dir):
             os.makedirs(models_dir)
         self.models_dir = models_dir
@@ -48,21 +45,40 @@ class VAE(object):
         tf.reset_default_graph()
         self.__dict__.update(VAE.HYPERPARAMS, **kwargs)
         self.sess = tf.Session()
+        self.saver = None
+        self.name = name
+        
+
+        # Saves to $models_dir/$name/$name-.*.{meta,index,...}
+        # if name:
+            # self.meta_graph_path = os.path.join(self.models_dir, self.name, "{}.meta".format(name))
+            # if not os.path.isdir(os.path.join(models_dir, name)):
+                # os.makedirs(os.path.join(models_dir, name))
+            # else:
+                # print('Trying to restore model "{}"'.format(name))
+                # if os.path.isfile(self.meta_graph_path):
+                    # saver = tf.train.import_meta_graph(self.meta_graph_path)
+                    # saver.restore(self.sess, tf.train.latest_checkpoint('{}/{}/'))
+                    # restored_vars = tf.trainable_variables()
+                    # train_vars = tf.trainable_variables()
+                    # print('Restored {} trainable variables:'.format(len(train_vars)))
+                    # for v in train_vars:
+                        # print("\t{}".format(v.name))
+                    # return
 
         print('Building tensorflow graph with the following hyper parameters:')
         for k in VAE.HYPERPARAMS:
             print('\t{}: {}'. format(k, self.__dict__[k]))
         print('With the following network architecture: [{}]'.format(",".join(map(str,self.arch))))
-
-
         # build tf graph according to hyperparams
         self._build_graph()
+        self.saver = tf.train.Saver()
+
 
         self.constructed = datetime.now().strftime("%y%m%d_%H%M")
         logs_path = os.path.join("logs", "run_"+self.constructed)
         self.summary_writer = tf.summary.FileWriter(logs_path, self.sess.graph)
         self.writer = tf.summary.merge_all()
-        # self.saver = tf.train.Saver()
 
         self.sess.run(tf.global_variables_initializer())
 
@@ -199,100 +215,28 @@ class VAE(object):
         """End-to-end pass for the VAE"""
         return self.decode(self.sample_gaussian(*self.encode(x)))
 
-    def plot_reconstruction(self, data, save_dir = False):
-        """Try to reconstruct input data using the VAE Network
-
-        Args:
-            data(Dataset): input data, where we will get
-                           one batch (self.batch_size large) for reconstruction
-            save_dir(bool): If true, save all reconstructions (and originals)
-                            in the directory "out/run_"+self.constructed
-                            Otherwise, print one single image and its reconstruction
-        """
-        # setup plots
-        x,_ = data.validation.next_batch(self.batch_size)
-        fetches = [self.x_reconstructed, self.cost]
-        feed_dict = {self.x_in: x}
-        x_reconstructed, cost = self.sess.run(fetches, feed_dict)
-        print("cost for validation batch: {}".format(cost))
-        f, (plot_left, plot_right) = plt.subplots(1,2, sharey=True)
-        for plot in (plot_left, plot_right):
-            plot.set_yticks([])
-            plot.set_xticks([])
-        if save_dir == False:
-            img_orig = x[0]
-            img_rec = x_reconstructed[0]
-            plot_left.imshow(img_orig.reshape(28,28), cmap=plt.cm.gray)
-            plot_right.imshow(img_rec.reshape(28,28), cmap=plt.cm.gray)
-        else:
-            dir = os.path.join("out","run_" + self.constructed)
-            if not os.path.exists(dir):
-                os.makedirs(dir)
-            print("write images to " + dir)
-            pbar = ProgressBar(max_value = self.batch_size)
-            pbar.start()
-            for i in range(0,self.batch_size):
-                img_orig = x[i]
-                img_rec = x_reconstructed[i]
-                plot_left.imshow(img_orig.reshape(28,28), cmap=plt.cm.gray)
-                plot_right.imshow(img_rec.reshape(28,28), cmap=plt.cm.gray)
-                path = os.path.join(dir, "img_{}.png".format(i))
-                f.savefig(path)
-                pbar.update(i)
-            plt.close('all')
-        print("done")
-
-    def plot_manifold(self, range_x=(-4,4), range_y=(-4,4), axis = (0,1), single_axis = False, num_rowdigits = 20, output="manifold.pdf"):
-        x1 = np.linspace(range_x[0], range_x[1], num = num_rowdigits)
-        if not single_axis:
-            x2 = np.linspace(range_y[0], range_y[1], num = num_rowdigits)
-        else:
-            x2 = np.zeros((1, num_rowdigits))
-
-        manifold = np.zeros(shape=(len(x1)*28, len(x2)*28))
-        for i_x, x in enumerate(x1):
-            for i_y, y in enumerate(x2):
-                input = np.zeros(shape=(1, self.arch[-1]))
-                input[0][axis[0]] = x
-                if not single_axis:
-                    input[0][axis[1]] = y
-                img = self.decode(input)
-                manifold[i_x*28:(i_x+1)*28,i_y*28:(i_y+1)*28] = img.reshape(28,28)
-        plt.imshow(manifold, cmap=plt.cm.gray)
-        plt.axis('off')
-        plt.savefig(output)
-
-    def plot_z_mean(self, data, num_samples = 5000):
-        x, y = data.test.next_batch(num_samples)
-        z_mean, _ = self.encode(x)
-        if self.arch[-1] == 2:
-            plt.scatter(z_mean[:,0], z_mean[:,1], c=np.argmax(y, 1), alpha=1, edgecolors='black')
-            plt.show()
-        elif self.arch[-1] == 3:
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            ax.scatter(z_mean[:,0], z_mean[:,1], z_mean[:,2], c=np.argmax(y,1), s = 40, marker='.')
-            plt.show()
 
 
-
-    def train(self, X, num_epochs = 75, plot_manifold = False):
-        avg_train_error = 0
+    def train(self, X, num_epochs = 75):
         now = datetime.now().isoformat()[11:]
         print("[**] Begin training: {}".format(now))
-        cost_test = []
         i = 0
-        num_samples = X.train.num_examples
-        num_batches = int(num_samples / self.batch_size)
+        num_samples_train = X.train.num_examples
+        num_batches_train = int(num_samples_train / self.batch_size)
         avg_error_train = 0
 
+        num_samples_test = X.test.num_examples
+        num_batches_test = int(num_samples_test / self.batch_size)
+        avg_error_test = 0
+
         for epoch in range(num_epochs):
+
+            ### Training
             avg_error_train = 0
-            for i in range(num_batches):
+            for i in range(num_batches_train):
                 # get mini-batch
                 x, _ = X.train.next_batch(self.batch_size)
 
-                feed_dict = {self.x_in: x}
                 x_reconstructed, cost, summary, _ = self.sess.run([
                     self.x_reconstructed,
                     self.cost,
@@ -301,18 +245,56 @@ class VAE(object):
                     {
                         self.x_in: x,
                     })
-                avg_error_train += cost / num_samples * self.batch_size
+                avg_error_train += cost / num_samples_train * self.batch_size
 
-                # write summary every batch
-                self.summary_writer.add_summary(summary, epoch)
-            # model_path = os.path.join(self.models_dir, "model_{}_epoch_{:03d}.cpkt".format(self.constructed, epoch))
-            # save_path = self.saver.save(self.sess, model_path)
-            print("epoch {}: avg cost: {}".format(epoch, avg_error_train))
-            if plot_manifold:
-                self.plot_manifold(range_x=(-1,1), range_y=(-1,1), output = "manifold_{:03}.pdf".format(epoch))
-                print("done plotting manifold")
+            ### Testing
+            avg_error_test = 0
+            for i in range(num_batches_test):
+                test_set = X.test.next_batch(self.batch_size)
+                _, test_error = self.sess.run([
+                    self.x_reconstructed,
+                    self.cost],
+                    {
+                        self.x_in: x,
+                    })
+                avg_error_test += test_error / num_samples_test * self.batch_size
+
+
+
+            print("epoch {}: train cost: {} | test cost: {}".format(epoch, avg_error_train, avg_error_test))
+
+            yield [epoch, avg_error_train, avg_error_test]
 
         now = datetime.now().strftime("%y%m%d_%H%M")
         print("[***] Training end: {}".format(now))
-        print("average cost after {} epochs achieved: {}".format(num_epochs, avg_error_train))
+        print("After {} epochs of training:")
+        print("Train error: {}".format(avg_error_train))
+        print("Test error: {}".format(avg_error_test))
         return avg_error_train
+
+    def load_hyper(self, path):
+        new_hyper = pickle.load(open(path, 'rb'))
+        self.__dict__.update(new_hyper)
+
+    def save_hyper(self, path):
+        with open(path, 'wb') as output:
+            hyperparams = {k: self.__dict__[k] for k in self.HYPERPARAMS}
+            pickle.dump(hyperparams, output, pickle.HIGHEST_PROTOCOL)
+
+    def save(self,epoch):
+        if not self.name:
+            return
+            # self.name = "-".join(map(str,self.arch))
+
+        model_path = os.path.join(self.models_dir, self.name, "epoch_{:05d}".format(epoch))
+        self.saver.save(self.sess, model_path, write_meta_graph=True)
+        # if not os.path.isfile(self.meta_graph_path):
+            # tf.train.export_meta_graph(self.meta_graph_path)
+            # print('Save metagraph at ' + self.meta_graph_path)
+
+        instance = os.path.join(self.models_dir, self.name, "hyperparams.pkl")
+        if not os.path.isfile(instance):
+            self.save_hyper(instance)
+            print('Saved instance at ' + instance)
+
+        print('Saved model @ epoch {}: {}'.format(epoch, model_path))
