@@ -3,9 +3,9 @@
 \usepackage{pgf}
 %\pgfplotsset{compat=1.14}
 
+\usetikzlibrary{arrows.meta}
 
 \begin{document}
-\usetikzlibrary{arrows.meta}
 % why does the figure seems to have lots of whitespace to the left when shapes[.symbols] is included??
 %\usetikzlibrary{shapes.symbols}
 %\tikzstyle{c} = [cloud, draw,cloud puffs=10,cloud puff arc=120, aspect=2, inner ysep=1,gb]
@@ -16,24 +16,24 @@
 
 
 % latent space
-\node[circle,gb] (latent_space) {Random Noise};
+\node[circle,gb] (latent_space) {\large Random Noise};
 
 % nodes
-\node [gb] (generator) at ([shift={(5,0)}] latent_space) {Generator $G$};
+\node [gb] (generator) at ([shift={(5,0)}] latent_space) {\large Generator $G$};
   \node [cloud] (data) at ([shift={(0,4)}] generator) {\Large $X$};
    
-\node [gb] (discriminator) at ([shift={(5,2)}] generator) {Discriminator $D$};
-  \node[gb,dashed] (loss) at ([shift={(5,0)}] discriminator) {Loss $\mathcal{L}$};
+\node [gb] (discriminator) at ([shift={(5,2)}] generator) {\large Discriminator $D$};
+  \node[gb,dashed] (loss) at ([shift={(5,0)}] discriminator) {\large Loss $\mathcal{L}$};
 
 % flow
-\draw[arr] (latent_space) -- (generator) node[midway,label=below:sample] {};
-\draw[arr] (generator) -- (discriminator) node[midway,label=below:generate] {};
-\draw[arr] (data) -- (discriminator) node[midway,pos=0.4,label=below:sample] {};
-\draw[arr] (discriminator) -- (loss) node[midway,label=below:Real/Fake] {};
+\draw[arr] (latent_space) -- (generator) node[midway,label=below:\large sample] {};
+  \draw[arr] (generator) -- (discriminator) node[midway,pos=0.7,label=below:\large generate] {};
+\draw[arr] (data) -- (discriminator) node[midway,pos=0.4,label=below:\large sample] {};
+\draw[arr] (discriminator) -- (loss) node[midway,label=below:\large real/fake] {};
 
 % gradient flow
-\path[dashed,arr] (loss) edge[bend right] node [label=$\nabla \mathcal{L}$ with regard to $D$] {} (discriminator);
-\path[dashed,arr] (loss) edge[bend left] node [label=below:$\nabla \mathcal{L}$ with regard to $G$] {} (generator);
+\path[dashed,arr] (loss) edge[bend right] node [label=\large $\nabla \mathcal{L}$ with regard to $D$] {} (discriminator);
+\path[dashed,arr] (loss) edge[bend left] node [label=below:\large $\nabla \mathcal{L}$ with regard to $G$] {} (generator);
 
 \end{tikzpicture}
 \end{document}
