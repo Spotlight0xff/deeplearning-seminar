@@ -4,27 +4,22 @@
 # $Id: Makefile,v 1.13 2007-11-15 07:58:53 dreuw Exp $
 #
 FIGURES=$(wildcard figures/*.tex)
+MAINTEX=presentation
 
 .PHONY: $(FIGURES)
 
-default: presentation.pdf $(FIGURES)
+default: $(FIGURES) $(MAINTEX).pdf
 
 
 
 $(FIGURES):
 	pdflatex -interaction nonstopmode -output-directory figures/ $@
 
-overview: slides.pdf
-	pdfnup --nup 2x4 --column true $^
-
-handout: slides.pdf
-	pdfnup --nup 2x2 --column true $^
-
-hacks: slides.tex
-	pdflatex -shell-escape "\nonstopmode\input{slides}"''
-	bibtex slides
-	pdflatex -shell-escape "\nonstopmode\input{slides}"''
-	pdflatex -shell-escape "\nonstopmode\input{slides}"''
+$(MAINTEX).pdf: $(FIGURES) $(MAINTEX).tex
+	pdflatex "\nonstopmode\input{$(MAINTEX)}"''
+	bibtex $(MAINTEX)
+	pdflatex "\nonstopmode\input{$(MAINTEX)}"''
+	pdflatex "\nonstopmode\input{$(MAINTEX)}"''
 
 %.pdf: %.tex
 	pdflatex "\nonstopmode\input{$<}"''
