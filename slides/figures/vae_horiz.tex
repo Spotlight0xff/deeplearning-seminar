@@ -15,7 +15,8 @@
 }
 
 
-\tikzstyle{gb} = [draw,fill=blue!10,outer sep=0.1cm,minimum height=4em, minimum width=4em]
+\tikzstyle{gb} = [draw,outer sep=7,inner sep=7,minimum size=57,line width=1, very thick, draw=black!55, top color=white,bottom color=black!20]
+%\tikzstyle{gb} = [draw,fill=blue!10,outer sep=0.1cm,minimum height=4em, minimum width=4em]
 \tikzstyle{arr} = [thick,-{Latex[length=3mm,width=2mm]}]
 \tikzstyle{cloud} = [draw, circle, node distance=2.5cm, minimum height=2em, gb]
 
@@ -44,7 +45,8 @@
 
 
 % output / reconstruction
-\node[gb] (output) at ($(lbl_lat) + (0.0cm,-5.43cm)$) {\huge$\tilde x$};
+%\node[gb] (output) at ($(input) + (9.5cm,0cm)$) {\huge$\tilde x$};
+\node[gb] (output) at ($(lbl_lat) + (0.0cm,-5.87cm)$) {\huge$\tilde x$};
 %\node[fill=black!20] (lbl_rec) at ($(output) + (0,-1cm)$) {Reconstruction};
 
 % draw plot for normal dist

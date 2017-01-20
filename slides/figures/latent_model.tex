@@ -1,0 +1,17 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta,fit}
+\begin{document}
+\tikzstyle{hidden} = [draw,circle,outer sep=0.05cm,inner sep=0.3cm,line width=1, thick, draw=black!55]
+\tikzstyle{observed} = [draw,circle,outer sep=0.05cm,inner sep=0.3cm,line width=1, thick, draw=black!55, fill=black!20]
+\tikzstyle{arr} = [thick,-{Latex[length=5mm,width=3mm]}]
+
+\begin{tikzpicture}
+\node[observed] (node_observed) {\Huge $x$};
+\node[hidden,above=1.5cm of node_observed] (node_hidden) {\Huge $z$};
+
+\draw[arr] (node_hidden) -- (node_observed) {};
+
+\node[fit=(node_hidden)(node_observed), draw, rounded corners] {};
+\end{tikzpicture}
+\end{document}
