@@ -35,23 +35,24 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Outline}
-\include{outline}
 \vfill
 \begin{itemize}
-	\item \hyperlink{sli:introduction}{Introduction}
-	\item \hyperlink{sli:applications}{Applications}
-	\item \hyperlink{sli:graphicalmodel}{Deep Directed Graphical Model}
-	\item \hyperlink{sli:sbn}{Sigmoid Belief Nets}
-	\item \hyperlink{sli:vae}{Variational Autoencoders}
-	\begin{itemize}
-		\item \hyperlink{sli:reptrick}{Reparameterization Trick}
-	\end{itemize}
-	\item \hyperlink{sli:gan}{Generative Adversarial Networks}
-	\item \hyperlink{sli:more}{More Generative Models}
-	\item \hyperlink{sli:conclusion}{Conclusion}
-	\item \hyperlink{sli:references}{References}
+  \item \hyperlink{sli:introduction}{Introduction}
+  \item \hyperlink{sli:applications}{Applications}
+  \item \hyperlink{sli:graphicalmodel}{Deep Directed Graphical Model}
+  \item \hyperlink{sli:sbn}{Sigmoid Belief Nets}
+  \item \hyperlink{sli:vae}{Variational Autoencoders}
+  \begin{itemize}
+    \item \hyperlink{sli:reptrick}{Reparameterization Trick}
+  \end{itemize}
+  \item \hyperlink{sli:gan}{Generative Adversarial Networks}
+  \item \hyperlink{sli:more}{More Generative Models}
+  \item \hyperlink{sli:conclusion}{Conclusion}
+  \item \hyperlink{sli:references}{References}
 \end{itemize}
 \vfill
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,8 +68,6 @@
 %\end{itemize}
 %\ldots
 %\vfill
-
-\TitlePage
 
 \NewPage\headline{Literature}
 \vfill
@@ -91,16 +90,17 @@
 	\end{itemize}
 \end{description}
 \vfill
-%\begin{description}
-%\begin{itemize}
-%\item [R. Neal]: Connectionist learning of belief
-%networks. \em{Elsevier}.
-%\item[] \textbf{Sigmoid belief nets} \cite{neal:1992}
-%\item[] \textbf{Variational Autoencoder} \cite{vae:2014} \cite{dlgm:2014}
-%\item[] \textbf{Generative adversarial nets} \cite{gan:2014}
-%\end{itemize}
-%\end{description}
-%\vfill
+
+\NewPage\headline{Introduction}
+\vfill
+\begin{itemize}
+  \item Difficult task
+  \begin{itemize}
+    \item Generative model: learns $p(x,y)$
+    \item Discriminative model: learns $p(y|x)$
+  \end{itemize}
+\end{itemize}
+\vfill
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NewPage\headline{Why Generative Models: Applications}
@@ -224,11 +224,11 @@
 		\item Efficient sampling
 		\item Difficult to train
 		\begin{itemize}
-			\item Evaluation over all possible configurations
+			\item Evaluation over all possible\linebreak configurations
 		\end{itemize}
 	\end{itemize}
 \end{minipage}
-\begin{minipage}[t]{.4\linewidth}
+\begin{minipage}[t]{.5\linewidth}
 	%\begin{center}
 	\vfill
 		\hfill\includegraphics[height=14cm]{figures/belief_net}\\
@@ -270,7 +270,8 @@
 		\item Probabilistic Encoder $q_\phi(z|x)$
 		\begin{itemize}
 			\item Recognition model
-			\item Try to approximate $p(z|x)$
+			\item Tries to approximate $p(z|x)$
+      \item $\phi$: Parameters of encoder network
 			%\item Constructs a probability distribution approximating the true posterior
 		\end{itemize}
 	\end{itemize}
@@ -281,8 +282,9 @@
 			\item Probabilistic Decoder $p_\theta(x|z)$
 			\begin{itemize}
 				%\item Generative model
-				\item Transform $z$ back into input space
-				\item Reconstruct input
+				\item Latent $z$ $\Rightarrow$ Output $x$
+				\item Reconstructs input
+        \item $\theta$: Parameters of decoder network
 				%\item Learning: Transform $z \sim q_\phi(z|x)$
 				%\item Generation: Sample from $z$
 			\end{itemize}
@@ -296,7 +298,7 @@
 
 \NewOverlay\headline{Variational Autoencoders}
 \begin{center}
-	\includegraphics[height=9cm]{figures/vae_horiz}\\
+  \includegraphics[height=9cm]{figures/vae_horiz}\\
 \end{center}
 \vfill
 \begin{figure}
@@ -531,7 +533,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\NewPage{References}
+\NewPage{}
 \small
 \bibliographystyle{i6bibliostyle}
 \bibliography{presentation}
