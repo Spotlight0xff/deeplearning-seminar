@@ -55,20 +55,6 @@
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\NewPage\headline{Introduction}
-%\hypertarget{sli:introduction}
-%\vfill
-%\begin{itemize}
-%\item Challenging task
-%\begin{itemize}
-%\item Complex and expressive
-%\item Scalable and tractable
-%\end{itemize}
-%\end{itemize}
-%\ldots
-%\vfill
-
 \NewPage\headline{Literature}
 \vfill
 \begin{description}
@@ -95,12 +81,12 @@
 \vfill
 \begin{itemize}
   \item Describes how data is generated
-  \item In comparison to discriminative models:
+  \item Generate data similar to samples from a dataset
+  \item In comparison to discriminative models
   \begin{itemize}
-    \item Observations $x$, labels $y$
     \item Learn $p(x,y)$ instead of $p(y|x)$
   \end{itemize}
-  \item Maximum likelihood estimation commonly used
+  \item Maximum likelihood estimation commonly used to learn parameters
 \end{itemize}
 \vfill
 
@@ -109,18 +95,15 @@
 \hypertarget{sli:why}
 \vfill
 \begin{itemize}
-	\item Use of unlabeled datasets
-	\item Understand data better (dimensionality reduction)
-	\item Representation learning
-	\item Reinforcement learning
-	\begin{itemize}
-		\item Exploration
-	\end{itemize}
+  \item Unsupervised learning
+  \item Dimensionality reduction (representation learning)
+  \item Exploration in reinforcement learning
 	\item Generative image modeling
 	\begin{itemize}
 		\item Compression
 		\item Super-resolution
 	\end{itemize}
+  \item Text-to-Speech, Text-to-Image
 	\item Generate data
 \end{itemize}
 \vfill
@@ -336,7 +319,8 @@
 		\includegraphics[height=10cm]{figures/rep_without}\\
 		without trick
 		\begin{align*}
-			\medskip
+			%\medskip
+			\theta &= (\mu, \sigma)\\
 			z &\sim \mathcal{N}(\mu, \sigma^2 I)\\
 		\end{align*}
 	\end{center}
@@ -390,7 +374,13 @@
 	\end{center}
 	\vfill
 	\begin{itemize}
-		\item 50-dimensional latent space
+    \item Fully-connected network
+    \item Encoder network: 784 --- 512 --- 512 --- $(\mu, \sigma)$
+    \begin{itemize}
+      \item $\mu, \sigma$: 50-dimensional
+    \end{itemize}
+    \item Deocder network: 50 --- 512 -- 512 -- 784
+    \item $p(z) = \mathcal{N}(0, I)$
 	\end{itemize}
 \vfill
 
@@ -477,12 +467,11 @@
 \NewPage\headline{Generative Adversarial Nets: Latent Space Interpolation}
 	\begin{center}
     \vfill
-    \raggedright $z_1 \longrightarrow$
-		\vfill
     \centering
 		\includegraphics[width=0.95\linewidth]{images/bedroom_latent_interpolation}
     \vfill
-    \raggedleft \hspace{1cm}$\longrightarrow z_2$\\
+    $z_1$\hfill $\longrightarrow$ \hfill $\longrightarrow$ \hfill $z_2$\\
+    %\raggedleft \hspace{1cm}$\longrightarrow z_2$\\
 		\vfill
     \centering
 		Credit: \cite{dcgan:2015}\\
@@ -524,8 +513,7 @@
 	\end{itemize}
 	\item Generative adversarial nets
 	\begin{itemize}
-		\item Intuitive idea
-		\item Similar to human learning
+    \item Game-theoretic approach
 		\item Promising results
 	\end{itemize}
 	\item Long-term goals
@@ -557,10 +545,11 @@
 \NewPage\headline{\appendixname: VAE-Model for Experiments}
 \vfill
 \begin{itemize}
+  \item MNIST: Handwritten digits 28x28 pixels
 	\item \textbf{Inference network}: 784 --- 512 --- 512 --- z
 	\item \textbf{Generative network}: z --- 512 --- 512 --- 784
 	\item Learning rate: $10^{-3}$
-	\item Xavier initialization
+  \item Batch size: 128
 	\item Used rectified linear units (ReLU)
 	\item Sigmoid function for output layer
 \end{itemize}
