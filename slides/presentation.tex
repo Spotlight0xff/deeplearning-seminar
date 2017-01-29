@@ -435,11 +435,11 @@
 \vfill
 	Objective for discriminator $D$:
 	\begin{equation}
-		\mathcal{L}_d = \max \log\big(\log D(x) + \log (1 - D(G(z))\big)
+    \mathcal{L}_d = \max_{D} \log\big(\log D(x) + \log (1 - D(G(z))\big)
 	\end{equation}
 	Objective for generator $G$:\\
 	\begin{equation}
-		\mathcal{L}_g = \min \log\bigg(1 - D(G(z))\bigg)
+    \mathcal{L}_g = \min_{G} \log\bigg(1 - D(G(z))\bigg)
 	\end{equation}
 	\vfill
 	Combined value function as minimax function:\\
