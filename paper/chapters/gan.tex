@@ -259,7 +259,8 @@ The discriminator in the GAN model implements a binary classification task and t
 This leads to the suggestion that using deep convolutional networks helps boost the model performance. In fact is the deep convolution GAN proposed by Radford et al.\cite{dcgan:2015} one of the first GAN variants which results in visually pleasing results.
 
 In order to use convolutional networks in the generator and discriminator, fractionally strided convolutions have been used to basically upsample the image. The exact details of the architecture is beyond the scope of this article, however in addition to the impressive generative performance the authors have shown that the model has learned to produce representional structures in latent space.
-Furthermore, as shown in figure \ref{fig:dcgan_vector} they were able to perform vector artithmetic in the latent space with results indicating that their model was able to arrange the latent space in an useful way.
+Furthermore, as shown in Figure \ref{fig:dcgan_vector} they were able to perform vector artithmetic in the latent space with results indicating that their model was able to arrange the latent space in a useful way.
+\todo[inline]{Elaborate on how DCGAN arranges latent space}
 
 \begin{figure}[t]
 \centering
@@ -289,7 +290,7 @@ Furthermore, as shown in figure \ref{fig:dcgan_vector} they were able to perform
   \medskip
   \small
 \end{figure}
-Laplacian Generative Adversarial Networks (LAPGAN\cite{lapgan:2015}) is an extension to GANs applied to images using laplacian pyramids \cite{laplacian:1983}.
+Laplacian Generative Adversarial Networks (LAPGAN) \cite{lapgan:2015} are an extension to GANs applied to images using laplacian pyramids \cite{laplacian:1983}.
 Instead of using a single generator network, LAPGAN uses a series of deep convolutional networks as generators where each generator receives the output of the previous generator.
 
 
@@ -299,12 +300,12 @@ Instead of using a single generator network, LAPGAN uses a series of deep convol
 In each iteration a training sample is drawn from the dataset and a downsamples version from it is computed.
 The discriminator receives now either the computed high-pass image (from the original image and the down-then-up sampled image) or an high-pass image from the generator.
 These steps are repeated for other steps, downscaling the image.
-In the last stage, a traditional generator and discriminator is used for the $8x8$ image.
+In the last stage, a traditional generator and discriminator is used for the $8\times8$ image.
 \paragraph{Sampling} uses a conditional GAN to produce high-resolution images through different stages of deep generator networks.
 
 \paragraph{Results}
 As GANs have no direct measurement of the quality of generations due to their lack of unified objective function, human evaluation of the authenticity of generated images is often used for qualitively evaluation.
-LAPGAN has pushed the state of the art significantly, with generated images which are high-resolution in comparison to earlier methods and arguably high variety of generated images as shown in figure \ref{fig:lapgan}.
+LAPGAN has pushed the state of the art significantly, with generated images which are high-resolution in comparison to earlier methods and arguably high variety of generated images as shown in Figure \ref{fig:lapgan}.
 Furthermore, humans have mistaken the generated images for real images 40\% of the time.
 
 
