@@ -104,8 +104,8 @@ This process can formally be written as minimizing $\mathcal{L}_g$ in equation \
   \mathcal{L}_g = \min \log\bigg(1 - D(G(z))\bigg)
 \end{equation}
 
-However, for gradient-based learning $\mathcal{L}_g$ provides poor gradient during learning where the discriminator is able to reject samples from the generator with high confidence.\\
-Therefore is in practice often equation \ref{eq:l_g_2} instead of equation \ref{eq:l_g_1} used to optimize the generator.\\
+However, for gradient-based learning $\mathcal{L}_g$ provides poor gradient during learning \todo[inline]{early in training! show difference.} where the discriminator is able to reject samples from the generator with high confidence.\\
+Therefore is equation \ref{eq:l_g_2} more commonly used in practice \todo[inline]{citations! dcgan? improved gan?}.
 
 \begin{equation}
   \label{eq:l_g_2}
