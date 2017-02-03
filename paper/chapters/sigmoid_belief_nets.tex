@@ -20,9 +20,9 @@ Each state $s_i$ is a random variable in the bayesian framework which means it c
   \label{eq:sbn_node}
 p(s_i) = \sigma\bigg(\sum_{j<i}W_{i,j}s_j+b_i\bigg)
 \end{equation}
-In equation \ref{eq:sbn_node}, $\sigma$ denotes the sigmoid function $\frac{1}{1 + e^{-x}}$ and $W_{i,j}$ the connection weights from state $s_j$ to $s_i$.
+In Equation \ref{eq:sbn_node}, $\sigma$ denotes the sigmoid function $\frac{1}{1 + e^{-x}}$ and $W_{i,j}$ the connection weights from state $s_j$ to $s_i$.
 
-To draw samples from this network, it is possible to simply evaluate equation \ref{eq:sbn_node} for each visible node.
+To draw samples from this network, it is possible to simply evaluate Equation \ref{eq:sbn_node} for each visible node.
 However prior to that, the SBN first needs to learn how to generate good samples which includes the \emph{learning} and the \emph{inference} problem.\\
 Learning means in this context to adjust the weights and biases of the network to be more likely to generate previously observed input.
 Meanwhile statistical inference is tasked to infer the states of the hidden nodes based on the states in the visible layer.\\

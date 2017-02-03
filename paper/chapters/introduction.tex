@@ -63,8 +63,8 @@ To understand how these statistical models help us to discover the data structur
 
 \begin{itemize}
   \item \textbf{Images} consisting of millions of pixels can be interpreted as data vectors with each pixel representing an own dimension.
-  However, these dimensions are high correlated and structured, for example nearby pixels have with high probability similar values.
-  Looking at images of handwritten digits, the data can be reduced to a handful variables which may include the digit number, stroke width, position or size.
+  However, these dimensions are highly correlated and structured, for example nearby pixels have with high probability similar values.
+  Looking at images of handwritten digits, the data can be reduced to a handful of variables which may include the digit number, stroke width, position or size.
   Statistical models help us discover these relations and reduce them to representations in lower-dimensional space.
   %\item commonly have thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
   \item \textbf{Audio data} is omni-present in the real world, however most data sources can be transformed from raw audio samples to spoken words or musical notes without losing too much information for reconstruction.
@@ -81,7 +81,7 @@ To understand how these statistical models help us to discover the data structur
 
 
 
-The assumption that the observed variables $x$ can be explained using the causal factors $z$ can be expressed as graphical model shown in figure \ref{fig:dgm}.
+The assumption that the observed variables $x$ can be explained using the causal factors $z$ can be expressed as graphical model shown in Figure \ref{fig:dgm}.
 %as having the conditional probability $p(x|z)$ where the latent variables $z$ are the causal factors. This stochastic dependency can be represented in a graphical model shown in figure \ref{fig:dgm}.\\
 
 \begin{figure}[htb]

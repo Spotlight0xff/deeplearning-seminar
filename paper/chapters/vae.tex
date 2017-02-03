@@ -16,7 +16,7 @@ The general idea of VAEs is to have an encoder-decoder architecture where input 
 %However, in addition to this autoencoder structure an additional regularizer forces the latent space to have a specific simple form.
 %To achieve this, variational-based methods are used to output a distribution on the latent space instead of directly emitting samples.
 
-The probabilistic encoder generally implemented as feed-forward network receives input from the dataset and outputs parameters of a distribution. For example the parameters for a gaussian distribution with diagonal covariance, in which case the networks emits the mean $\mu$ and $\sigma$ used to define the gaussian distribution $\mathcal{N}(\mu,\sigma \times I)$, where $I$ is the identity matrix.\\
+The probabilistic encoder generally implemented as feed-forward network receives input from the dataset and outputs parameters of a distribution. For example the parameters for a gaussian distribution with diagonal covariance, in which case the network emits the mean $\mu$ and $\sigma$ used to define the gaussian distribution $\mathcal{N}(\mu,\sigma \times I)$, where $I$ is the identity matrix.\\
 
 Using gradient-based optimization techniques enables the encoder network to be trained to output distributions similar to the true posterior $p(z|x)$.
 In addition to this inference network there is a generator network which transforms points $z$ in the latent space back to the data space while trying to minimize the reconstruction error.
@@ -26,7 +26,7 @@ One useful aspect of this approach is the possibility to train both networks usi
 
 Properly defined emits the described probabilitic encoder variational parameters $\phi$ used to define the probability distribution $q_\phi(z|x)$.
 Equally for the probabilistic decoder which constructs a distribution $p_\theta(x|z)$ with the parameters $\theta$.
-This architecture is shown in figure \ref{fig:vae_architecture} with a one-dimensonal gaussian prior.
+This architecture is shown in Figure \ref{fig:vae_architecture} with a one-dimensonal gaussian prior.
 \\
 
 
@@ -76,7 +76,7 @@ Variational inference (VI) can be used to turn the inference problem into an opt
 
 These intractable posteriors unfortunately arise in almost all interesting models and there are mostly two different approaches to approximate the posterior distribution.
 % MCMC
-Using Markov chain Monte Carlo (MCMC) methods, which construct a Markov chain with the desired attributes matching those of the posterior. The advantage of this approach is that is guaranteed to asympotically approach the desired posterior, however it is difficult to reason about the convergence rate. For deep neural networks, running MCMC in the inner loop of optimization techniques is impractical.\\
+Using Markov chain Monte Carlo (MCMC) methods, which construct a Markov chain with the desired attributes matching those of the posterior. The advantage of this approach is that it is guaranteed to asympotically approach the desired posterior, however it is difficult to reason about the convergence rate. For deep neural networks, running MCMC in the inner loop of optimization techniques is impractical.\\
 % variational inference
 Using variational inference is the second approach, used in the variational autoencoder, which picks a specific distribution restricted to a family of distributions matching the posterior most closely.
 Advantages using this approach rather than MCMC is the greater speed at which the computation is performed.
@@ -86,10 +86,10 @@ More specifically, VI turns the inference problem of computing $p(z|x)$ where $z
 
 
 \subsubsection{Kullback-Leibler Divergence}
-In order to approximate one distribution $Q$ to another distribution $P$, there needs to be a measurement how close $Q$ is to $P$.
-One commonly used measurement is called Kullback-Leibler divergence (short KL divergence) which enables the variational inference methods to choose appropiate distributions.
+In order to approximate one distribution $Q$ to another distribution $P$, there needs to be a measurement of how close $Q$ is to $P$.
+One commonly used measurement is called Kullback-Leibler (KL) divergence\cite{kl_div:1951} which enables the variational inference methods to choose appropiate distributions.
 %\paragraph{The Kullback-Leibler Divergence} (KL divergence) is a measurement for the difference between two probability distributions. $\mathcal{D}_{\mathrm{KL}}(P \| Q)$ can informally described as the amount of information which is lost when using $Q$ to represent $P$.
-For discrete probability distributions $P$ and $Q$, the KL divergence from $Q$ to $P$ is defined\cite{kl_div:1951} in equation \ref{eq:kl_div_disc}:
+The KL divergence from $Q$ to $P$ is defined in Equation \ref{eq:kl_div}.
 \begin{equation}
   \label{eq:kl_div_disc}
   \mathcal{D}_{\mathrm{KL}}(P || Q) = \sum_{i} P(i) \log \frac{P(i)}{Q(i)}
@@ -183,14 +183,14 @@ When using the KL divergence as measurement for difference between two distribut
   q_\phi^{*}(z|x) = \arg\min_{\phi} \mathcal{D}_{\mathrm{KL}} \big(q_\phi(z|x) || p(z|x)\big)
 \end{equation}
 
-However we are not able to optimize equation \ref{eq:vae_obj} directly, as the intractable evidence $p(x)$ appears during the expansion of the posterior $p(z|x)$ to $\frac{p(x|z)p(z)}{p(x)}$.\\
+However we are not able to optimize Equation \ref{eq:vae_obj} directly, as the intractable evidence $p(x)$ appears during the expansion of the posterior $p(z|x)$ to $\frac{p(x|z)p(z)}{p(x)}$.\\
 The denominator $p(x)$ can be computed by marginalizing out the hidden variables $z$: 
 \begin{equation}
   \label{eq:integral}
 p(x) = \int p(x,z) p(z) dz
 \end{equation}
 
-Computing the integral in equation \ref{eq:integral} requires the evaluation of every possible configuration over the hidden variables $z$ and is therefore intractable.\\\\
+Computing the integral in Equation \ref{eq:integral} requires the evaluation of every possible configuration over the hidden variables $z$ and is therefore intractable.\\\\
 
 Instead of directly optimizing for the true posterior, we construct an evidence lower bound (ELBO) $\mathcal{L}$ which we can maximize which is equivalent to minimizing the KL divergence between $q_\phi(z|x)$ and $p(z|x)$ without explicity evaluating the evidence.\\
 
@@ -265,7 +265,7 @@ $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent
 To be able to backpropagate the loss function through the VAE, it has to be differentiable and deterministic.
 However, because we only sample from the constructed distribution $q_\phi(z|x)$, we cannot backpropagate through the node due to the stochastic nature.
 In order to circumvent this restriction, the so-called "reparameterization trick" is applied.
-Instead of drawing $z$ directly from $q_\phi(z|x)$, we first sample first an auxiliary variable $\epsilon$ from the isotropic gaussian $\mathcal{N}(0, I)$. Then we apply equation \ref{eq:rep_trick} to transform $\epsilon$ into $z$.
+Instead of drawing $z$ directly from $q_\phi(z|x)$, we first sample an auxiliary variable $\epsilon$ from the isotropic gaussian $\mathcal{N}(0, I)$. Then we apply Equation \ref{eq:rep_trick} to transform $\epsilon$ into $z$.
 \begin{equation}
   \label{eq:rep_trick}
   z = \mu(x) + \Sigma^{1/2}(x)*\epsilon
@@ -319,7 +319,7 @@ To allow analytical computation of the ELBO, the prior on the latent space $z$ i
 \end{algorithm}
 
 \subsection{Experiments}
-In order to evaluate the inference performance and explore the learned latent space, the VAE has been implemented and trained\footnote{The source code is available on GitHub: \url{https://github.com/Spotlight0xff/deeplearning-seminar}}. Results of this experiments are shown in fig. \ref{fig:vae_experiments}.
+In order to evaluate the inference performance and explore the learned latent space, the VAE has been implemented and trained\footnote{The source code is available on GitHub: \url{https://github.com/Spotlight0xff/deeplearning-seminar}}. Results of this experiments are shown in Figure \ref{fig:vae_experiments}.
 %The model has been trained on the MNIST dataset \cite{mnist} with satisfactory generative performance as shown in figure \ref{fig:vae_experiments}
 
 
