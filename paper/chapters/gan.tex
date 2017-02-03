@@ -10,18 +10,21 @@ One player is called the generator $G$ which tries to produce authentic looking 
 It is important to note that the generator gets to know whether the discriminator accepted the generated output as \emph{real} or rejected it as \emph{fake}.
 
 As each party plays to maximize its own success, the discriminator will try to maximize the number of samples which got discriminated correctly.
-On the other side, $G$ tries to produce samples which fool the $D$ often.
+On the other side, the generator tries to produce samples aiming to fool the discriminator.
 
 As the game progresses, both parties will get better at their respective objective and the generated samples will look more and more like the training examples which is the ultimative goal is generative modeling.\\
 
-Using the analogy of counterfeiters and police can help understand the intuition behind game between $G$ and $D$ better.
-Counterfeiters will try to produce fake money looking to fool the police into thinking it is real money.
-The police however is able to distinguish badly made fake money from real money easily and as such rejects the fake money with high confidence.
-This rejection in turn triggers the counterfeiters to improve their forgery process try to imitate real money even better. Thus they are able to improve the quality of the faked money. Improvements made to the fake money in this iteration will lead to lower confidence with which the police is able to reject forgeries.
+%Using the analogy of counterfeiters and police can help understand the intuition behind game between $G$ and $D$ better.
+%Counterfeiters will try to produce fake money looking to fool the police into thinking it is real money.
+%The police however is able to distinguish badly made fake money from real money easily and as such rejects the fake money with high confidence.
+%This rejection in turn triggers the counterfeiters to improve their forgery process try to imitate real money even better. Thus they are able to improve the quality of the faked money. Improvements made to the fake money in this iteration will lead to lower confidence with which the police is able to reject forgeries.
 
-The game-theoretic solution to the emerging situation where neither counterfeiters as generator nor police as discriminator can improve its own success with respect to the outcome of the game gets called \emph{Nash equilibrium}\cite{game_theory:1994}.
 
-In the case of GANs, this situation arises when the generator produces samples which get rejected with probability $p=0.5$ by the discriminator. In the case of such equilibrium, the generator produces good enough samples to fool the generator in about half cases.
+\paragraph{Solution}
+The game-theoretic solution to the emerging situation where neither $G$ nor $D$ can improve its own success with respect to the outcome of the game gets called \emph{Nash equilibrium}\cite{game_theory:1994}.
+In the case of GANs, this situation arises when the generator produces samples which get rejected with probability $p=0.5$ by the discriminator. In the case of such equilibrium, the generator produces good enough samples to fool the generator in about half cases.\\\\
+\todo[inline]{Add some text showing the theoretical foundation of GANs}
+
 
 
 Another formulation of the same game is to define the zero-sum game between the generative model and its adversary, the discriminator.
