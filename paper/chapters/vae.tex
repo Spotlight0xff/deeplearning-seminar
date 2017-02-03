@@ -91,15 +91,20 @@ One commonly used measurement is called Kullback-Leibler (KL) divergence\cite{kl
 %\paragraph{The Kullback-Leibler Divergence} (KL divergence) is a measurement for the difference between two probability distributions. $\mathcal{D}_{\mathrm{KL}}(P \| Q)$ can informally described as the amount of information which is lost when using $Q$ to represent $P$.
 The KL divergence from $Q$ to $P$ is defined in Equation \ref{eq:kl_div}.
 \begin{equation}
-  \label{eq:kl_div_disc}
-  \mathcal{D}_{\mathrm{KL}}(P || Q) = \sum_{i} P(i) \log \frac{P(i)}{Q(i)}
+  \label{eq:kl_div}
+  \mathcal{D}_{\mathrm{KL}}(P || Q) = \mathbb{E}_{x \sim P(x)}\bigg[log \frac{P(x)}{Q(x)}\bigg]
 \end{equation}
-For continuous distributions $P$ and $Q$ the KL divergence is defined similarly in equation \ref{eq:kl_div_cont}.
-\begin{equation}
-  \label{eq:kl_div_cont}
-  \mathcal{D}_{\mathrm{KL}}(P || Q) = \int P(i) \log \frac{P(i)}{Q(i)} di
-\end{equation}
-
+\todo[inline]{Add some description to the equation above, logarithmic difference between P and Q, bla bla expectation}
+%For discrete probability distributions $P$ and $Q$, the KL divergence from $Q$ to $P$ is defined\cite{kl_div:1951} in equation \ref{eq:kl_div_disc}:
+%\begin{equation}
+  %\label{eq:kl_div_disc}
+  %\mathcal{D}_{\mathrm{KL}}(P || Q) = \sum_{i} P(i) \log \frac{P(i)}{Q(i)}
+%\end{equation}
+%For continuous distributions $P$ and $Q$ the KL divergence is defined similarly in equation \ref{eq:kl_div_cont}.
+%\begin{equation}
+  %\label{eq:kl_div_cont}
+  %\mathcal{D}_{\mathrm{KL}}(P || Q) = \int P(i) \log \frac{P(i)}{Q(i)} di
+%\end{equation}
 
 Note that divergence does not obey the triangle inequality and is also not symmetrical, therefore it does not qualify as a metric.
 $\mathcal{D}_{\mathrm{KL}}(P||Q)$ can nevertheless be understood as a measure of the difference between $P$ and $Q$ and is as such used in the variational inference.
