@@ -77,7 +77,7 @@ In the case of generative modeling, the goal is to approximate $p_{data}(x)$ wit
 GANs uses neural network as function approximator for $G$ as well as $D$.
 The generator network $G$ produces samples from $p_{model}(x)$ by transforming samples $z$ from random noise as $x = G(z)$.\\
 Competing with $G$ is the discriminator $D$ trained to distinguish samples $ \tilde{x} \sim p_{model}(x)$ from real data $x \sim p_{data}(x)$.\\
-Figure \ref{fig:gan_a} summarizes the described architecture with the according gradient flow used to update $G$ and $D$.\\
+Figure \ref{fig:gan_a} summarizes the described architecture with the respective gradient flow used to update $G$ and $D$.\\
 %Formalizing the setup in a probabilistic way, we have the unknown data distribution $p_{data}(x)$ from which the training examples have been drawn and the marginalized model distribution $p_{model}(x) = \int p(z)p(x|z) \textit{d}z$ over the noise space $z$ (also latent space).
 
 
@@ -136,7 +136,7 @@ This process can be formalized to maximizing the cost function $\mathcal{L}_d$ i
   \label{fig:gan_training}
   \medskip
   \small
-  The line named $z$ denoted the noise prior, while the arrows to the line indicated by $x$ is the transformation learned by the generator network. Three different distributions are showed, the solid line represents the generated sample in each step, while the dots are sampled from the data distribution $p_{data}(x)$. The dashed line shows the decision boundary with which probability the discriminator can distinguish between real and fake data.\\
+  The line named $z$ denotes the noise prior, while the arrows to the line indicated by $x$ is the transformation learned by the generator network. Three different distributions are showed, the solid line represents the generated sample in each step, while the dots are sampled from the data distribution $p_{data}(x)$. The dashed line shows the decision boundary with which probability the discriminator can distinguish between real and fake data.\\
   (a) Prior to training when both $D$ and $G$ are poor and $p_{model}$ does not match $p_{data}$.\\
   (b) After a step of learning $D$ with fixed $G$, the discriminator is able to distinguish fake from real samples easily as indicated by the decision boundary.\\
   (c) After a step of learning $G$ with fixed $D$ has the generator learned to produce samples more similar to $p_{data}(x)$.\\
@@ -151,7 +151,7 @@ Combining the two objectives into one value function yields equation \ref{eq:min
 \end{equation}
 
 The GAN framework can be fully trained with stochastic backpropagation due to $V(G,D)$ being differentiable with $G$ and $D$ implemented as (deep) neural nets.
-Figure \ref{fig:gan_training} illustrates the ideal training procedure for learning of an 1D gaussian.
+Figure \ref{fig:gan_training} illustrates the ideal training procedure for learning of an one-dimensional distribution.
 Training will switch between training the generator and discriminator, where the other party is fixed respectively.
 
 %\paragraph{Theoretical Foundation}
