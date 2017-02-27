@@ -1,10 +1,27 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Directed generative models are a wide class of models used for generating samples from an unknown distribution $p_{data}$.
-%Lets denote $p_{data}$ as the unknown real-world data distribution from which samples in the given dataset are drawn.
-The presented models in this article will approximate $p_{data}$ with $p_{model}$ which enables us to draw samples from the model.
-Under the assumption that $p_{model}$ approximates $p_{data}$ accurately, samples from the true data distribution should have high likelihood under the approximation as well.\\\\
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{media/caption2img}
+  \caption[Caption to Image]{Images generated given a captioning text \cite{gan_t2i:2016}}
+  \label{fig:caption2img}
+\end{figure}
+While sampling from generative models has by itself interesting applications, such as producing images given a caption as seen in Figure \ref{fig:caption2img}, there are many applications covering various different areas.
+A subset of these applications include
+image denoising, % TODO: citation
+image impainting, % TODO: citation
+text-to-speech, % TODO: citation, e.g. WaveNet
+machine translation, % (neural?) TODO: e.g. NMT w/ VAE
+and semi-supervised learning, for example discussed in \ref{ssub:cvae}.
+\\\\
+
+%Directed generative models are a wide class of models used for generating samples from an unknown distribution $p_\mathrm{data}$.
+%The models presented in this article will approximate $p_\mathrm{data}$ with $p_\mathrm{model}$ which enables us to draw samples from the model.
+%Given this assumption, samples from a dataset following $p_\mathrm{data}$ should have high likelihood in $p_\mathrm{model}$ too.\\\\
+
+
+Generative models are in particular interesting as they 
+
 
 
 \paragraph{Short-term applications}
