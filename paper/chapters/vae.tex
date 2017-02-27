@@ -267,9 +267,10 @@ $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent
 
 % more math:
 % http://stats.stackexchange.com/questions/199605/how-does-the-reparameterization-trick-for-vaes-work-and-why-is-it-important
-To be able to backpropagate the loss function through the VAE, it has to be differentiable and deterministic.
-However, because we only sample from the constructed distribution $q_\phi(z|x)$, we cannot backpropagate through the node due to the stochastic nature.
-In order to circumvent this restriction, the so-called "reparameterization trick" is applied.
+To be able to apply the backpropagation\cite{backprop:1988} algorithm to the loss function of the VAE without any injected noise it has to be both differentiable and deterministic.
+However, as $z$ is sampled from the constructed probability distribution $q_\phi(z|x)$ it is stochastic.
+This poses a problem, because the gradient can not be computed accurately due to the added noise.\\
+In order to circumvent this restriction, the so-called ``reparameterization trick'' (as proposed by \cite{vae:2014} and \cite{dlgm:2014}) is applied.
 Instead of drawing $z$ directly from $q_\phi(z|x)$, we first sample an auxiliary variable $\epsilon$ from the isotropic gaussian $\mathcal{N}(0, I)$. Then we apply Equation \ref{eq:rep_trick} to transform $\epsilon$ into $z$.
 \begin{equation}
   \label{eq:rep_trick}
@@ -280,7 +281,7 @@ Note that this transformation is entirely deterministic and as such allows for b
 Figure \ref{fig:rep_trick} expresses the reparameterization trick applied to an arbitrary function $f$ with the parameters $\theta$.\\
 Using this trick, the whole VAE model can be trained using gradient-based optimization techniques.\\\\
 
-Note further that in most common architectures, the distribution class enforced on the latent space is gaussian, there exists similar reparameterization techniques allowing different probability distributions on $z$.
+Note further that in most common architectures, the distribution class enforced on the latent space is gaussian, there exists similar reparameterization techniques allowing different prior probability distributions on $z$.
 %The core idea of VAEs is to match a distribution $q(x)$ to the desired $p(x)$ by enforcing a lower variational bound on $q(x)$ in a way that it seeks to match $p(x)$.
 %In contrast to other autoencoders, VAEs behave differently due to this lower bound but they resemble the architecture of traditional autoencoders (sparse, denoising).
 
