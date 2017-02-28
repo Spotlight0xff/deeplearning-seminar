@@ -1,34 +1,70 @@
 \section{Introduction}
 \label{sec:introduction}
 
+%%%
+%%% intuition // generative vs discriminative
+%%%
+Intuitively, generative modeling is based on the idea that in order to produce data similar to previously seen data it helps to understand the data first~\cite{salakhutdinov:2009}.
+The case of deep learning suggests the use of deep, hierarchical architectures to capture dependencies within the data and reduce the high-dimensional input~\cite{reducing_dim:2006}.
+
+In contrast to discriminative models which handle the conditional distribution $p(y|x)$ of the labels $y$ given observations $x$, generative models use the joint distribution $p(x,y)$ over both labels and observations to describe the data~\cite{learning_dbn:2006}.\\\\
+
+%TODO more:
+% motivation
+
+
+%%%
+%%% applications
+%%%
+
 \begin{figure}[h]
   \includegraphics[width=\linewidth]{media/caption2img}
-  \caption[Caption-to-Image Samples]{Image Synthesis given a caption \cite{gan_t2i:2016}}
-  \label{fig:caption2img}
+  \caption[Caption-to-Image Samples]{Image Synthesis from provided caption~\cite{gan_t2i:2016}}
+\label{fig:caption2img}
 \end{figure}
-While sampling from generative models has by itself interesting applications, such as producing images given a caption as seen in Figure \ref{fig:caption2img}, there are many applications covering various different areas.
+%Generative modeling is a wide field involving capturing an unknown data distribution.\\
+
+% TODO (kinda similar to the first sentences in the introduction (and even abstract as well)
+Following the idea of deep models to learn hierarchical representations, these results should be applicable to generative models as well.
+% "learning deep generative models" gives these arguments!
+
+
+Sampling from generative models generally means sampling from a distribution which the model either implicitly or explicitly has learned.
+Interesting applications around sampling from these models include generating images given a caption as seen in Figure~\ref{fig:caption2img} or sampling 3D models from a learned latent representation~\cite{gan_3d:2016}.
+As generative models often have internal representations of the data distribution, these learned representational structures or features can be used in models built on top.
 A subset of these applications include
-image denoising, % TODO: citation
-image impainting, % TODO: citation
+image denoising~\cite{generative_denoising:2013}, % TODO: citation
 text-to-speech, % TODO: citation, e.g. WaveNet
 machine translation, % (neural?) TODO: e.g. NMT w/ VAE
-and semi-supervised learning, for example discussed in \ref{ssub:cvae}.
+and semi-supervised learning, for example discussed in~\ref{ssub:cvae}.
 \\\\
+
+\newpage
+
+%%%
+%%% history // other models
+%%%
+\todo[inline]{History}
+% traditional models (HMM, GMM)
+Traditional models include hidden Markov models used in speech recognition~\cite{hmm:1989} and Gaussian mixture models.
+
+% undirected networks (Boltzmann machine)
+Another class in generative models were undirected networks, for example various extensions of the Boltzmann machine~\cite{bm:1985} such as the restricted Boltzmann machine (RBM) and the deep Boltzmann machine~\cite{dbm:2009} were used.\\
+
+% directed networks (SBN, DBN)
+For directed networks, the sigmoid belief network (SBN) is an early model which is presented in~\ref{sec:sbn}.
+SBN has also been extended using an restricted Boltzmann machine resulting in Deep Belief Nets (DBN)~\cite{learning_dbn:2006}.
+
 
 %Directed generative models are a wide class of models used for generating samples from an unknown distribution $p_\mathrm{data}$.
 %The models presented in this article will approximate $p_\mathrm{data}$ with $p_\mathrm{model}$ which enables us to draw samples from the model.
 %Given this assumption, samples from a dataset following $p_\mathrm{data}$ should have high likelihood in $p_\mathrm{model}$ too.\\\\
 
 
-Generative models are in particular interesting as they 
-
-
-
-\paragraph{Short-term applications}
 \begin{itemize}
   \item \textbf{Data augmentation} is a technique to enrich an existing dataset by adding more derived information to provide more in-depth insight.
-  \item \textbf{Semi-supervised learning} on datasets with a small amount of unlabelled data and a large amount of labeled data to improve model performance. Examples include the conditional variational autoencoder discussed in \ref{ssub:cvae}.
-  \item \textbf{Data exploration and understanding} is often needed especially for high-dimensional and complex data. By using models which reduce the dimensions by selecting only important features for generative modeling can help to improve data understanding. Figure \ref{fig:vae_experiments} explores the two-dimensional manifold of a handwritten digit, which originally had 784 dimensions.
+  \item \textbf{Semi-supervised learning} on datasets with a small amount of unlabelled data and a large amount of labeled data to improve model performance. Examples include the conditional variational autoencoder discussed in~\ref{ssub:cvae}.
+  \item \textbf{Data exploration and understanding} is often needed especially for high-dimensional and complex data. By using models which reduce the dimensions by selecting only important features for generative modeling can help to improve data understanding. Figure~\ref{fig:vae_experiments} explores the two-dimensional manifold of a handwritten digit, which originally had 784 dimensions.
 \end{itemize}
 
 In addition to those short-term applications, there exist possibilities for more long-term aspects of generative modeling.
@@ -94,16 +130,17 @@ To understand how these statistical models help us to discover the data structur
 
 
 
-The assumption that the observed variables $x$ can be explained using the causal factors $z$ can be expressed as graphical model shown in Figure \ref{fig:dgm}.
+The assumption that the observed variables $x$ can be explained using the causal factors $z$ can be expressed as graphical model shown in Figure~\ref{fig:dgm}.
 %as having the conditional probability $p(x|z)$ where the latent variables $z$ are the causal factors. This stochastic dependency can be represented in a graphical model shown in figure \ref{fig:dgm}.\\
 
 \begin{figure}[htb]
 \centering
 \includegraphics{media/directed_graphical_model}
   \caption[Graphical Model]{Directed Graphical Model}
-  \label{fig:dgm}
+\label{fig:dgm}
   \medskip
   \small
+  \todo[inline]{arrow indicate stochastic dependency}
   The latent variable $z$ is a stochastic dependency of the observed data $x$.
 \end{figure}
 
