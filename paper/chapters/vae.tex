@@ -69,18 +69,41 @@ The key insight on how the variational autoencoder is able to optimize $q_\phi(z
 %\end{equation}
 %However, computing the right-hand side of equation \ref{eq:intractable_posterior} is intractable due to the exponentially many configurations of the hidden variables. As such it is often needed to use approximate inference such as variational inference.
 
-\subsection{Variational Inference}
-Variational inference (VI) can be used to turn the inference problem into an optmization problem which we are able to approximate using gradient-based methods.
-%The calculus of variations is used to perform optimization on a family of functions.
-%As such variational based methods have become a popular choice to deal with intractable posterior distributions occuring in inference problems as seen in \ref{eq:intractable_posterior}.
+\subsection{Approximated Inference}
+A problem which often arises in directed generative models is the \emph{inference problem}.
+As discussed in the introduction~\ref{sec:introduction}, we assume that the observations are stochastically dependent on some latent variables.
+Inference is called the process of coming up with values of $z$ which can produce the observations, which formally means evaluating $p(z|x)$ where $z$ are the latent variables and $x$ observations.
+\begin{equation}
+  p(z|x) = \frac{p(x|z)p(z)}{p(x)}\\
+  \label{eq:intractable_posterior}
+\end{equation}
+where
+\begin{conditions}
+  p(z|x) & posterior distribution\\
+  p(x|z) & likelihood of $x$ given $z$\\
+  p(z)   & prior distribution of $z$\\
+\end{conditions}
+Using Bayes's rule we can expand the posterior distribution $p(z|x)$ as shown in Equation~\ref{eq:intractable_posterior}.
+Note that to evaluate the denominator $p(x)$, all hidden variables need to be marginalized: $p(x) = \int p(x,z) dz$.\\
+Due to the possibly large number of hidden variables, this integral can be high-dimensional and therefore difficult to calculate.
+This integral can be difficult to compute and needs to be approximated.
+However, for a large number of hidden variables, this integral is intractable to compute exactly and therefore needs to be approximated~\cite[p.~461-462]{bishop:2006}.
+In order to approximate those intractable posterior distributions, we discuss two commonly used techniques:  Markov chain Monte Carlo and variational inference.
 
-These intractable posteriors unfortunately arise in almost all interesting models and there are mostly two different approaches to approximate the posterior distribution.
-% MCMC
-Using Markov chain Monte Carlo (MCMC) methods, which construct a Markov chain with the desired attributes matching those of the posterior. The advantage of this approach is that it is guaranteed to asympotically approach the desired posterior, however it is difficult to reason about the convergence rate. For deep neural networks, running MCMC in the inner loop of optimization techniques is impractical.\\
+\paragraph{Markov chain Monte Carlo}
+MCMC methods are a class of techniques which can be used to sample from a large class of distribution where direct sampling is not applicable~\cite[Chapter~11.2]{bishop:2006}.
+For the variational autoencoder, where we want to approximate the posterior distribution $p(z|x)$ a method called \emph{Gibbs sampling}~\cite[Chapter~11.3]{bishop:2006} can be used to obtain samples from that conditional distribution by constructing a Markov chain with the desired equilibrium distribution.
+%
+One advantage of MCMC methods is that the resulting distribution is proven to be exactly the desired distribution~\cite[Chapter~11.3]{bishop:2006}.
+However, due to the problems of mixing between mixing modes~\cite[Chapter~17.5]{deeplearning:2016} and slow convergence rate\cite[p.~603]{deeplearning:2016} these methods are impractical for usage in the inner loop of optimization techniques.
+
+\paragraph{Variational Inference}
 % variational inference
-Using variational inference is the second approach, used in the variational autoencoder, which picks a specific distribution restricted to a family of distributions matching the posterior most closely.
-Advantages using this approach rather than MCMC is the greater speed at which the computation is performed.
-However it is not guaranteed to approximate the posterior accurately, if the true posterior can not be approximately expressed as a distribution of the family.
+Due to the possibly slow convergence of MCMC methods, variational inference (VI)~\cite[Chapter~19.4]{deeplearning:2016} is used in the variational autoencoder.
+VI works by picking a specific distribution restricted to a family of distributions which matches the posterior most closely. This means that VI is used to turn the inference problem into an optimization technique, allowing for gradient-based optimization.
+%TODO: more on advantages and disadvantages
+Using VI yields better performance at the sacrifice of theoretical guarantee of matching the posterior distribution.
+
 
 More specifically, VI turns the inference problem of computing $p(z|x)$ where $z$ are the hidden and $x$ the observed variables into an optimization problem, where we can use gradient-based methods.
 
