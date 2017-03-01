@@ -28,7 +28,7 @@ where
 
 To draw samples from this network, it is possible to simply evaluate Equation~\ref{eq:sbn_node} for each visible node.
 However prior to that, the SBN first needs to learn how to generate good samples which includes the \emph{learning} and the \emph{inference} problem.\\
-Learning means in this context to adjust the weights and biases of the network to be more likely to generate previously observed input.
+Learning means in this context to adjust the weights and biases of the network to be more likely to generate data similar to samples from the given training dataset.
 Meanwhile statistical inference is tasked to infer the states of the hidden nodes based on the states in the visible layer.\\
 
 Due to each state being statistically depend on all ancestors, inference means to evaluate all possible configurations of every previous node.
