@@ -23,6 +23,11 @@
 \usepackage[textsize=small]{todonotes}
 
 
+
+\newenvironment{conditions}
+  {\par\vspace{\abovedisplayskip}\noindent\begin{tabular}{>{$}l<{$} @{${}={}$} l}}
+  {\end{tabular}\par\vspace{\belowdisplayskip}}
+
 \newcommand*\Let[2]{\State #1 $\gets$ #2}
 
 
