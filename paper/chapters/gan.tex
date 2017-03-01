@@ -218,7 +218,7 @@ Additionally, smoothed labels have been shown to reduce the attack surface of ne
 % TODO explain internal covariate shift?
 Batch normalization (BN) \cite{batch_norm:2015} is a recent technique to boost performance in deep neural networks addressing the \emph{internal covariate shift} by normalizing minibatches.
 Essentially, BN works by normalizing each sample from a minibatch to the statistics of the whole batch.
-To improve training performance of GANs, a modified version of batch normalization has been proposed \cite{improved_gan:2016} for training of the generator.
+To improve training performance of GANs, a modified version of batch normalization called virtual batch normalization has been proposed \cite{improved_gan:2016} for training of the generator.
 Instead of normalizing each input $x$ to their corresponding minibatch, one reference batch is chosen prior to training which will be used to normalize all further input.
 
 %In a paper \cite{improved_gan:2016} by Salimans et al on improving stability of the GAN training procedure, a variant of BN has been proposed called virtual batch normalization.
