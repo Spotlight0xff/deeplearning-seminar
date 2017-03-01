@@ -231,7 +231,7 @@ Instead of normalizing each input $x$ to their corresponding minibatch, one refe
 \label{ssub:gan_feature_matching}
 In computer vision, features are often used to identify relevant pieces of information in images for recognition and classification.
 With the recent advances in classification tasks performed by deep convolutional networks, automatically learned features have been a large part of that success.
-Feature matching is an technique designed to improve the learning procedure of GANs where not directly $\mathcal{L}_g$ is maximized but instead also learn the discriminator on intermediate layer activation outputs.
+Feature matching is an technique designed to improve the learning procedure of GANs where $\mathcal{L}_g$ is not not directly maximized but where the discriminator also learns on intermediate layer activation outputs.
 Using this modified procedure aids the generator to output data matching the statistics of the input data more closely.
 %With $f(x)$ denoting an intermediate layer in $D$, the new objective function becomes:
 %$$
