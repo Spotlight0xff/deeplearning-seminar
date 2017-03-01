@@ -293,7 +293,7 @@ $\mathcal{L}_{\mathrm{rec}}$ is necessary to force the encoder to produce latent
 To be able to apply the backpropagation\cite{backprop:1988} algorithm to the loss function of the VAE without any injected noise it has to be both differentiable and deterministic.
 However, as $z$ is sampled from the constructed probability distribution $q_\phi(z|x)$ it is stochastic.
 This poses a problem, because the gradient can not be computed accurately due to the added noise.\\
-In order to circumvent this restriction, the so-called ``reparameterization trick'' (as proposed by \cite{vae:2014} and \cite{dlgm:2014}) is applied.
+In order to circumvent this restriction, the reparameterization trick (as proposed by \cite{vae:2014} and \cite{dlgm:2014}) can be applied.
 Instead of drawing $z$ directly from $q_\phi(z|x)$, we first sample an auxiliary variable $\epsilon$ from the isotropic gaussian $\mathcal{N}(0, I)$. Then we apply Equation \ref{eq:rep_trick} to transform $\epsilon$ into $z$.
 \begin{equation}
   \label{eq:rep_trick}
