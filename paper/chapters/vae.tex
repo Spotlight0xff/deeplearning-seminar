@@ -24,7 +24,7 @@ In addition to this inference network there is a generator network which transfo
 
 One useful aspect of this approach is the possibility to train both networks using error backpropagation due to the use of neural networks as function approximators.\\\\
 
-Properly defined emits the described probabilitic encoder variational parameters $\phi$ used to define the probability distribution $q_\phi(z|x)$.
+Such function approximator will emit the variational parameters $\phi$ of the probability encoder distribution $q_\phi(z|x)$.
 Equally for the probabilistic decoder which constructs a distribution $p_\theta(x|z)$ with the parameters $\theta$.
 This architecture is shown in Figure \ref{fig:vae_architecture} with a one-dimensonal gaussian prior.
 \\
