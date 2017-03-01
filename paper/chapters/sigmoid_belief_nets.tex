@@ -18,12 +18,12 @@ In the case of SBNs however, all states are binary and the activation function i
 Each state $s_i$ is a random variable in the bayesian framework which means it can be observed, hidden or unknown representing different states of knowledge. As such it can also be interpreted with a probability distribution.
 \begin{equation}
   \label{eq:sbn_node}
-p(s_i) = \sigma\bigg(\sum_{j<i}W_{i,j}s_j+b_i\bigg)
+p(s_i) = \sigma\bigg(\sum_{j<i}W_{j,i}s_j+b_i\bigg)
 \end{equation}
 where 
 \begin{conditions}
   \sigma(x) & $\frac{1}{1 + e^{-x}}$ (sigmoid function)\\
-  W_{i,j} & connection weights from state $s_i$ to $s_j$\\
+  W_{j,i} & connection weights from state $s_j$ to $s_i$\\
 \end{conditions}
 
 To draw samples from this network, it is possible to simply evaluate Equation~\ref{eq:sbn_node} for each visible node.
