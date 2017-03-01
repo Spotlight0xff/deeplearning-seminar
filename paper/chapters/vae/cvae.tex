@@ -1,29 +1,25 @@
-\todo[inline]{Add citations to \cite{cvae:2014} and \cite{cvae_2:2015}}
 Instead of using VAEs in a completely unsupervised manner on a unlabeled dataset, it is also possible to learn from datasets where a small subset of datapoints has corresponding labels while most datapoints are still unlabeled.
-Techniques learning from such datasets are called semi-supervised learning and can improve performance significantly.\\
-
-To adjust the VAE model to the semi-supervised case, we have to add a random variable $y$ corresponding to the label if available.
-Thus we can extend the distributions as shown below.
-
+Techniques learning from such datasets are called semi-supervised learning and can improve performance significantly~\cite{cvae:2014}\cite{cvae_2:2015}.\\
+%
+To adjust the VAE model to the semi-supervised case, we have to add a random variable $y$ corresponding to the label if available.\\\\
+First, instead of using samples from the dataset alone we are now also conditioning on $y$, formally 
+$x \sim p_\theta(x|y,z)$ instead of $x \sim p_\theta(x|z)$.\\
+Then the probabilistic encoder and decoder can be written as $q_\theta(z|x,y)$ and $p_\phi(x|y,z)$ respectively.\\
+%
 %The modified setup of the semi-supervised case for the variational autoencoder can be formalized as follows.
 %Dataset $X$ of size $N$ with observations $x_i$ with $i<N$ where for some small subset of observations $x_i$ the corresponding labels $y_i$ are known.
 %We denote the labelled subset as $~p_l(x,y)$ and the unlabelled dataset as $~p_u(x,y)$.
 %\begin{equation}
-
+%
 %\end{equation}
 %Instead of randomly generated data, generation of output conditioned on some prior information is needed.
 %A few examples would be super-resolution of images (citation!), prediction of subsequent frames of an video or other prediction tasks
-
+%
 %Conditional VAE is a modification of the original VAE framework to support conditioning on another variable $y$ in addition to the input data $x$.
-
+%
 %To support conditional distributions, the following relations have to be rewritten:
-\begin{itemize}
-\item \textbf{Sampling from data space}: $x \sim p_\theta(x|y,z)$ instead of $x \sim p_\theta(x|z)$.\\
-\item \textbf{Probabilistic encoder}: $q_\theta(z|x,y)$ instead of just $q_\theta(z|x)$.\\
-\item \textbf{Probabilistic decoder}: $p_\phi(x|y,z)$ instead of just $p_\phi(x|z)$.\\
-\end{itemize}
-
-These modifications allows us to formalize the new objective functionas shown in equations \ref{eq:cvae_labels} and \ref{eq:cvae_unknown}.
+%
+These modifications allows us to reformulate the objective function $\mathcal{L}$ from Equation~\ref{eq:vae_obj} in equations \ref{eq:cvae_labels} and \ref{eq:cvae_unknown}.
 
 For datapoints $x$ where labels $y$ are available.
 \begin{align}
