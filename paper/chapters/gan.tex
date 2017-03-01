@@ -2,7 +2,7 @@
 \label{sec:gan}
 
 %%% when introduced, game theory approach
-Generative Adversarial Networks (GAN) is a framework proposed in 2014 by Goodfellow et al. \cite{gan:2014} based on a game theoretic approach to generative modeling.
+Generative Adversarial Networks (GAN) is a framework proposed in 2014 by Goodfellow et al. \cite{gan:2014} based on a game theoretic approach to generative modeling~\cite[Chapter~20.10.4]{deeplearning:2016}.
 %which has gathered a lot of attention in the deep learning community and in the last few years many extensions have been [proposed] (citations).
 
 GANs circumvent the issues arising around the inference problem by playing a two-player game. Both players play non-cooperatively against each other, which means they only try to maximize their respective success.
@@ -27,7 +27,7 @@ In the case of GANs, this situation arises when the generator produces samples w
 
 
 
-Another formulation of the same game is to define the zero-sum game between the generative model and its adversary, the discriminator.
+Another formulation of the same game is to define the zero-sum game between the generative model and its adversary, the discriminator~\cite[Chapter~20.10.4]{deeplearning:2016}.
 The payoff of the discriminator can be described as the value function $V(G,D)$ while the payoff of the generator is the negative payoff of $D$: $-V(G,D)$.\\
 This formulation allows us to define the reached nash equlibium in equation \ref{eq:zerosum_convergence}.
 \begin{equation}
@@ -189,11 +189,12 @@ For any given generator $G$ and data points $x \sim p_{data}(x)$, the optimal di
 \subsection{Stability and Performance}
 \label{sub:gan_stability}
 In the common case where both function approximators $G$ and $D$ are implemented using deep neural networks, GANs have been shown to be difficult to train using gradient descent.
-In fact, there is no guarantee that GANs will converge in the case of using non-convex functions to represent $G$ or $D$.
+In fact, there is no guarantee that GANs will converge in the case of using non-convex functions to represent $G$ or $D$~\cite[p.~700-701]{deeplearning:2016}.
 
 %These issues have been credited to the problem of finding the nash equilibrium in the minimax-game with continious, high-dimensional parameters instead of more traditional optimization problems.
 %TheseAdditionally to these hypothetical thoughts, \cite{gan_distinguish_crit:2014} have shown that these methods may fail to converge.
-Acknowledging these problems, Salimans et al.\cite{improved_gan:2016} has studied the stability and performance of GAN in detail, resulting in a number of practical methods improving performance of the training procedure of GANs.
+
+Acknowledging these problems, Salimans et al.\cite{improved_gan:2016} have studied the stability and performance of GAN in detail, resulting in a number of practical methods improving performance of the training procedure of GANs.
 We will take a look at a selection of these methods in the following, focussing on deep neural networks as approximators in both $D$ and $G$.
 
 \subsubsection{Freeze Learning}
