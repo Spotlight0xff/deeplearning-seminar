@@ -2,12 +2,12 @@
 \label{sec:gan}
 
 %%% when introduced, game theory approach
-Generative Adversarial Networks (GAN) is a framework proposed in 2014 by Goodfellow et al. \cite{gan:2014} based on a game theoretic approach to generative modeling~\cite[Chapter~20.10.4]{deeplearning:2016}.
+Generative Adversarial Networks (GAN) is a framework proposed in 2014 by Goodfellow et al. \cite{gan:2014} based on a game-theoretic approach to generative modeling~\cite[Chapter~20.10.4]{deeplearning:2016}.
 %which has gathered a lot of attention in the deep learning community and in the last few years many extensions have been [proposed] (citations).
 
 GANs circumvent the issues arising around the inference problem by playing a two-player game. Both players play non-cooperatively against each other, which means they only try to maximize their respective success.
 One player is called the generator $G$ which tries to produce authentic looking data samples while the other player, the discrimininator $D$ has to decide whether a received sample is generated or actually real data.
-It is important to note that the generator gets to know whether the discriminator accepted the generated output as \emph{real} or rejected it as \emph{fake}.
+It is important to note that the generator gets to know whether the discriminator accepted the generated output as real or rejected it as fake.
 
 As each party plays to maximize its own success, the discriminator will try to maximize the number of samples which got discriminated correctly.
 On the other side, the generator tries to produce samples aiming to fool the discriminator.
@@ -21,15 +21,14 @@ As the game progresses, both parties will get better at their respective objecti
 
 
 \paragraph{Solution}
-The game-theoretic solution to the emerging situation where neither $G$ nor $D$ can improve its own success with respect to the outcome of the game gets called \emph{Nash equilibrium}\cite{game_theory:1994}.
+The game-theoretic solution to the emerging situation where neither $G$ nor $D$ can improve its own success with respect to the outcome of the game gets called Nash equilibrium\cite{game_theory:1994}.
 In the case of GANs, this situation arises when the generator produces samples which get rejected with probability $p=0.5$ by the discriminator. In the case of such equilibrium, the generator produces good enough samples to fool the generator in about half cases.\\\\
-\todo[inline]{Add some text showing the theoretical foundation of GANs}
 
 
 
 Another formulation of the same game is to define the zero-sum game between the generative model and its adversary, the discriminator~\cite[Chapter~20.10.4]{deeplearning:2016}.
 The payoff of the discriminator can be described as the value function $V(G,D)$ while the payoff of the generator is the negative payoff of $D$: $-V(G,D)$.\\
-This formulation allows us to define the reached nash equlibium in equation \ref{eq:zerosum_convergence}.
+This formulation allows us to define the reached nash equilibrium in equation \ref{eq:zerosum_convergence}.
 \begin{equation}
   \label{eq:zerosum_convergence}
   G^* = \arg \min_{G} \max_{D} V(G,D)
@@ -104,8 +103,8 @@ This process can formally be written as minimizing $\mathcal{L}_g$ in equation \
   \mathcal{L}_g = \min \log\bigg(1 - D(G(z))\bigg)
 \end{equation}
 
-However, for gradient-based learning $\mathcal{L}_g$ provides poor gradient during learning \todo[inline]{early in training! show difference.} where the discriminator is able to reject samples from the generator with high confidence.\\
-Therefore is equation \ref{eq:l_g_2} more commonly used in practice \todo[inline]{citations! dcgan? improved gan?}.
+However, for gradient-based learning $\mathcal{L}_g$ provides poor gradient during learning where the discriminator is able to reject samples from the generator with high confidence.
+Therefore is Equation \ref{eq:l_g_2} advised to be used instead of Equation \ref{eq:l_g_1}~\cite{gan:2014}.\\
 
 \begin{equation}
   \label{eq:l_g_2}
@@ -140,11 +139,11 @@ This process can be formalized to maximizing the cost function $\mathcal{L}_d$ i
   (a) Prior to training when both $D$ and $G$ are poor and $p_{model}$ does not match $p_{data}$.\\
   (b) After a step of learning $D$ with fixed $G$, the discriminator is able to distinguish fake from real samples easily as indicated by the decision boundary.\\
   (c) After a step of learning $G$ with fixed $D$ has the generator learned to produce samples more similar to $p_{data}(x)$.\\
-  (d) The model has reached the nash equilibrium where $p_{model} = p_{data}$ and the discriminator can only distinguish between real and fake sample with $p=0.5$.
+  (d) The model has reached the nash equilibrium where $p_{model} = p_{data}$ and the discriminator can only distinguish between real and fake samples with $p=0.5$.
 \end{figure}
 
 
-Combining the two objectives into one value function yields equation \ref{eq:minimax_value} which is used to define minmax-game played by the two networks.
+Combining the two objectives into one value function yields equation \ref{eq:minimax_value} which is used to define the minmax-game played by the two networks.
 \begin{equation}
 \label{eq:minimax_value}
 \min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))]
@@ -155,7 +154,7 @@ Figure \ref{fig:gan_training} illustrates the ideal training procedure for learn
 Training will switch between training the generator and discriminator, where the other party is fixed respectively.
 
 %\paragraph{Theoretical Foundation}
-Using a model with infinite training time as well as infinite capacity in both generator and discriminator allows to formulate the nash equilibrium in the generative adversarial network.
+Using a model with infinite training time as well as infinite capacity in both generator and discriminator allows formulating the nash equilibrium in the generative adversarial network.
 For any given generator $G$ and data points $x \sim p_{data}(x)$, the optimal discriminator $D$ is given by equation \ref{eq:opt_d}.
 \begin{equation}
   \label{eq:opt_d}
@@ -201,13 +200,13 @@ We will take a look at a selection of these methods in the following, focussing 
 \label{ssub:gan_freeze_learning}
 One of the main issues prominent during GAN training is the disparity in performance between $G$ and $D$.
 Most of the time during training will one network outperform the other player by such great margin that the gradients from the stronger player will vanish resulting in even slower training for the weaker network.
-Thus one of the common practices\cite{improved_gan:2016}\cite{dcgan:2015} for learning GANs is to freeze one network and prevent it from learning until the other player has catched up.
+Thus one of the common practices\cite{improved_gan:2016}\cite{dcgan:2015} for learning GANs is to freeze one network and prevent it from learning until the other player has caught up.
 %In practice the generator is far slower to train than the discriminator in most cases (citation).
 
 
-\subsubsection{Label Smoothing \cite{improved_gan:2016}}
+\subsubsection{Label Smoothing}
 \label{ssub:gan_label_smoothing}
-Another rather basic idea to improve gradient flow is to replace the binary classification from the discriminator with smoothed values $0.1/0.9$ or $\epsilon/1-\epsilon$.
+Another rather basic idea to improve gradient flow is to replace the binary classification from the discriminator with smoothed values $0.1/0.9$ or $\epsilon/1-\epsilon$\cite{improved_gan:2016}.
 This helps the generator with an informative gradient to improve learning performance.
 Additionally, smoothed labels have been shown to reduce the attack surface of neural networks to adversarial examples \cite{adv_examples:2016}.
 % TODO replace 0/1 with e/1 − e ??
@@ -232,7 +231,7 @@ Instead of normalizing each input $x$ to their corresponding minibatch, one refe
 \label{ssub:gan_feature_matching}
 In computer vision, features are often used to identify relevant pieces of information in images for recognition and classification.
 With the recent advances in classification tasks performed by deep convolutional networks, automatically learned features have been a large part of that success.
-Feature matching is an technique designed to improve the learning procedure of GANs where $\mathcal{L}_g$ is not not directly maximized but where the discriminator also learns on intermediate layer activation outputs.
+Feature matching is an technique designed to improve the learning procedure of GANs where $\mathcal{L}_g$ is not directly maximized but where the discriminator also learns on intermediate layer activation outputs.
 Using this modified procedure aids the generator to output data matching the statistics of the input data more closely.
 %With $f(x)$ denoting an intermediate layer in $D$, the new objective function becomes:
 %$$
@@ -253,13 +252,12 @@ Using this modified procedure aids the generator to output data matching the sta
 \subsubsection{Deep Convolutional GAN}
 \label{ssub:dcgan}
 Deep convolutional networks\cite{lecun-89e} have yielded impressive results for image classification \cite{imagenet:2012} and have arguably been one of the main reasons for the recent success of deep learning.
-These techniques however have mostly been applied in a supervised learning context, not with unsupervised learning.
 
 The discriminator in the GAN model implements a binary classification task and the performance of the generator is heavily dependent on the discriminator, as the training procedure uses the discriminator in the objective function $\mathcal{L}_{g}$ in equation \ref{eq:l_g_1} and \ref{eq:l_g_2}.\\
-This leads to the suggestion that using deep convolutional networks helps boost the model performance. In fact is the deep convolution GAN proposed by Radford et al.\cite{dcgan:2015} one of the first GAN variants which results in visually pleasing results.
+This leads to the suggestion that using deep convolutional networks helps boost the model performance. In fact is the deep convolution GAN proposed by Radford et al.\cite{dcgan:2015} one of the first GAN variants which result in visually pleasing results.
 
-In order to use convolutional networks in the generator and discriminator, fractionally strided convolutions have been used to basically upsample the image. The exact details of the architecture is beyond the scope of this article, however in addition to the impressive generative performance the authors have shown that the model has learned to produce representional structures in latent space.
-Furthermore, as shown in Figure \ref{fig:dcgan_vector} they were able to perform vector artithmetic in the latent space with results indicating that their model was able to arrange the latent space in a useful way.
+In order to use convolutional networks in the generator and discriminator, fractionally strided convolutions (also called deconvolution~\cite{deconv:2010}) have been used to basically upsample the image. The exact details of the architecture is beyond the scope of this article, however in addition to the impressive generative performance the authors have shown that the model has learned to produce representational structures in latent space.
+Furthermore, as shown in Figure \ref{fig:dcgan_vector} they were able to perform vector arithmetic in the latent space with results indicating that their model was able to arrange the latent space in a useful way.
 %\todo[inline]{Elaborate on how DCGAN arranges latent space}
 
 \begin{figure}[t]

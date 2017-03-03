@@ -4,174 +4,81 @@
 %%%
 %%% intuition // generative vs discriminative
 %%%
-Intuitively, generative modeling is based on the idea that in order to produce data similar to previously seen data it helps to understand the data first~\cite{salakhutdinov:2009}.
-The case of deep learning suggests the use of deep, hierarchical architectures to capture dependencies within the data and reduce the high-dimensional input~\cite{reducing_dim:2006}.
-
-In contrast to discriminative models which handle the conditional distribution $p(y|x)$ of the labels $y$ given observations $x$, generative models use the joint distribution $p(x,y)$ over both labels and observations to describe the data~\cite{learning_dbn:2006}.\\\\
-
-%TODO more:
-% motivation
-
-
-%%%
-%%% applications
-%%%
-
-\begin{figure}[h]
-  \includegraphics[width=\linewidth]{media/caption2img}
-  \caption[Caption-to-Image Samples]{Image Synthesis from provided caption~\cite{gan_t2i:2016}}
-\label{fig:caption2img}
-\end{figure}
-%Generative modeling is a wide field involving capturing an unknown data distribution.\\
-
-% TODO (kinda similar to the first sentences in the introduction (and even abstract as well)
-Following the idea of deep models to learn hierarchical representations, these results should be applicable to generative models as well.
-% "learning deep generative models" gives these arguments!
-
-
-Sampling from generative models generally means sampling from a distribution which the model either implicitly or explicitly has learned.
-Interesting applications around sampling from these models include generating images given a caption as seen in Figure~\ref{fig:caption2img} or sampling 3D models from a learned latent representation~\cite{gan_3d:2016}.
-As generative models often have internal representations of the data distribution, these learned representational structures or features can be used in models built on top.
-A subset of these applications include
-image denoising~\cite{generative_denoising:2013}, % TODO: citation
-text-to-speech, % TODO: citation, e.g. WaveNet
-machine translation, % (neural?) TODO: e.g. NMT w/ VAE
-and semi-supervised learning, for example discussed in~\ref{ssub:cvae}.
-\\\\
-
-\newpage
-
-%%%
-%%% history // other models
-%%%
-\todo[inline]{History}
-% traditional models (HMM, GMM)
-Traditional models include hidden Markov models used in speech recognition~\cite{hmm:1989} and Gaussian mixture models.
-
-% undirected networks (Boltzmann machine)
-Another class in generative models were undirected networks, for example various extensions of the Boltzmann machine~\cite{bm:1985} such as the restricted Boltzmann machine (RBM) and the deep Boltzmann machine~\cite{dbm:2009} were used.\\
-
-% directed networks (SBN, DBN)
-For directed networks, the sigmoid belief network (SBN) is an early model which is presented in~\ref{sec:sbn}.
-SBN has also been extended using an restricted Boltzmann machine resulting in Deep Belief Nets (DBN)~\cite{learning_dbn:2006}.
-
-
-%Directed generative models are a wide class of models used for generating samples from an unknown distribution $p_\mathrm{data}$.
-%The models presented in this article will approximate $p_\mathrm{data}$ with $p_\mathrm{model}$ which enables us to draw samples from the model.
-%Given this assumption, samples from a dataset following $p_\mathrm{data}$ should have high likelihood in $p_\mathrm{model}$ too.\\\\
-
-
-\begin{itemize}
-  \item \textbf{Data augmentation} is a technique to enrich an existing dataset by adding more derived information to provide more in-depth insight.
-  \item \textbf{Semi-supervised learning} on datasets with a small amount of unlabelled data and a large amount of labeled data to improve model performance. Examples include the conditional variational autoencoder discussed in~\ref{ssub:cvae}.
-  \item \textbf{Data exploration and understanding} is often needed especially for high-dimensional and complex data. By using models which reduce the dimensions by selecting only important features for generative modeling can help to improve data understanding. Figure~\ref{fig:vae_experiments} explores the two-dimensional manifold of a handwritten digit, which originally had 784 dimensions.
-\end{itemize}
-
-In addition to those short-term applications, there exist possibilities for more long-term aspects of generative modeling.
-For example with unsupervised representation learning, where statistical models are able to learn robust, accurate and generalized internal representations from high-dimensional sensory input can help power future agents to help understand real-world data, allowing these agents to take actions and reason about the real world.
-
-\newpage
-%Deep learning techniques have provided great success in applying gradient-based optimization methods to deep neural networks to achieve impressive results in discriminative models.
-%These models require however large amounts of labelled data, which is often expensive or infeasible to obtain.
-%Generative models can be used to learn \emph{representational} structures from rich, unlabelled data by having less parameters than the input data and are thus forced to capture only essential information.\\
-%\newpage
-
-
-%Prior to discussion individual models, we need to declare a few assumptions and definitions.
-%Additionally we assume that samples $x$ are also conditionally dependent on some hidden structure $z$: $x \sim p(x|z)$. 
-%\begin{equation}
-  %z \sim p(z)\\
-  %x \sim p(x|z)
-%\end{equation}
-
-%\paragraph{Sampling}
-%means for any given $z$ to draw a sample $x$ from our model.
-%Most commonly, sampling is the easiest requirement to fulfil.
-
-%\paragraph{Learning}
-%of the model parameters through maximum likelihood estimation generally involves $p(x)$ or its gradient.\\
-%To get $p(x)$, we first need to marginalize our the latent variables.
-%\begin{equation}
-  %p(x) = \sum_h p(x|z)p(z)
-%\end{equation}
-%Unfortunately, in the case of deep learning with many layers this is intractable, as we need to evaluate all model configurations.
-%via maximum likelihood generally involves the gradients of $p(x)$
-%\paragraph{Inference}
-% motivation / what we want exactly and why
-%Building intelligent systems requires having accurate and generalized information about the environment in order to perform actions or reason about the world.
-%Inferring structured and meaning information from unlabelled data, a process called unsupervised learning, remains a challenging task.
-
-%However, due to the massive increases in availability of data emerging from the web as well as the ongoing progress in computational power there has been significant progress using this data.
-
-%Generative modelling aims to generate new data similar to previously seen input, in a way which is sound with the internal structure of the data.
-
-%% on building reasonable representations
-%The assumption that data can be explained using an underlying, simpler structure than the raw input data is important to handle the high-dimensional nature of most data source.
-Models using deep learning often assume that observed data $x$ is stochastically dependent on some hidden structure $z$.
-To understand how these statistical models help us to discover the data structure, we will take a look at a few examples of high-dimensional real-world data.
-
-\begin{itemize}
-  \item \textbf{Images} consisting of millions of pixels can be interpreted as data vectors with each pixel representing an own dimension.
-  However, these dimensions are highly correlated and structured, for example nearby pixels have with high probability similar values.
-  Looking at images of handwritten digits, the data can be reduced to a handful of variables which may include the digit number, stroke width, position or size.
-  Statistical models help us discover these relations and reduce them to representations in lower-dimensional space.
-  %\item commonly have thousands of dimensions, but the underlying structure is often far simpler. For example are 28x28 images of handwritten digits 784-dimensional but assuming one-hot encoding the most important information - the digit - it can be explained using 10 dimensions. There are a few more dimensions, stroke width, cursive, position, size. But still far lower than 784. We will take a look at this example later on in \ref{sec:vae}.
-  \item \textbf{Audio data} is omni-present in the real world, however most data sources can be transformed from raw audio samples to spoken words or musical notes without losing too much information for reconstruction.
-  %\item \textbf{...}
-\end{itemize}
-% cope with
-%To develop systems learning from real world data we use statistical models which are able to infer the underlying structure from
-%Real world data is often high-dimensional and noise and transforming this data into an compact representation is therefore an important and also challenging task to perform.
-%Generative models are ideal for this task since it has to understand the underlying structure to generate similar data.
-%Building this structure is called \textbf{representation learning} and is key to many generative models and how they perform.\\
-
-%With this assumption in mind we can take a look at some examples of input data.
-
-
-
-
-The assumption that the observed variables $x$ can be explained using the causal factors $z$ can be expressed as graphical model shown in Figure~\ref{fig:dgm}.
-%as having the conditional probability $p(x|z)$ where the latent variables $z$ are the causal factors. This stochastic dependency can be represented in a graphical model shown in figure \ref{fig:dgm}.\\
-
+Intuitively, generative modeling is based on the idea that in order to produce data similar to samples from a dataset it helps to understand the data first~\cite[p.~720]{deeplearning:2016}.
+%The case of deep learning suggests the use of deep, hierarchical architectures to capture dependencies within the data and reduce the high-dimensional input~\cite{reducing_dim:2006}.
+In contrast to discriminative models which model the conditional distribution $p(y|x)$ of the labels $y$ given observations $x$, generative algorithms model the joint distribution $p(x,y)$ over both labels and observations to describe how the data was generated~\cite{learning_dbn:2006}.
+As there are only observations given, the generative task seems more difficult than classification where both input and desired output are given during training.~\cite[p.~695]{deeplearning:2016}\\\\
+%
+Due to the nature of generative models, they are unsupervised learning algorithms which mean that they try to learn the structure of samples from an unlabeled dataset\cite[p.~105-106]{deeplearning:2016}\cite{prob_unsupervised:1999}.
+%
+Generative models in machine learning using probabilistic models can be mostly separated into directed and undirected models~\cite[p.~77]{deeplearning:2016}.
+%
+This separation indicates how the model can be mapped to a graph with random variables as vertices and interactions between random variables as edges.
+Directed models induce a directed network graph while undirected models induce a network graph with undirected edges.\\\\
+%
+%
+In directed models, we assume that the observations $x$ are stochastically dependent on the underlying factors, also called latent variables $z$. This relationship can be expressed as the graphical model shown in Figure~\ref{fig:dgm}.
+Note that the latent variables can be structured hierarchically in order to express different levels of granularity in the features of the underlying factors and representations~\cite[p.~557]{deeplearning:2016}.
 \begin{figure}[htb]
 \centering
-\includegraphics{media/directed_graphical_model}
+  \includegraphics[width=1.3cm]{media/directed_graphical_model}
   \caption[Graphical Model]{Directed Graphical Model}
 \label{fig:dgm}
   \medskip
   \small
-  \todo[inline]{arrow indicate stochastic dependency}
-  The latent variable $z$ is a stochastic dependency of the observed data $x$.
+  The observed data $x$ is stochastically dependent on the latent variables $z$.\\
+  Based on~\cite[Chapter 8]{bishop:2006}.
 \end{figure}
 
 
+
+\subsection{Overview}
+% traditional models (HMM, GMM)
+Traditional models include hidden Markov models used for example in speech recognition~\cite{hmm:1989}, which are generative models~\cite[p.~878]{modern_approach:2009} and Gaussian mixture models~\cite[p.~190]{deeplearning:2016}\cite{schuster:1999}.\\\\
+%
+% undirected networks (Boltzmann machine)
+Undirected generative models include various extensions of the Boltzmann machine~\cite{bm:1985} such as the restricted Boltzmann machine (RBM), first described as Harmonium~\cite{smolensky:1986} and the deep Boltzmann machine~\cite{dbm:2009}\cite[Chapter~20.4]{deeplearning:2016}.\\\\
+%
+% directed networks (SBN, DBN)
+For directed models, the sigmoid belief network (SBN) is an early model described in 1992~\cite{neal:1992} which is presented in Section~\ref{sec:sbn}.
+SBN has also been extended with a restricted Boltzmann machine for the first two layers resulting in deep belief nets (DBN)~\cite{learning_dbn:2006}, which have been attributed to spark the beginning of current deep learning~\cite[p.~662]{deeplearning:2016}. DBN are partially directed models, as they contain both directed and undirected connections~\cite[p.~664]{deeplearning:2016}.\\\\
+%
+%Another class of generative models are auto-regressive networks (ARN), which 
+%\newpage
+%%%
+%%% applications
+%%%
+
+\subsection{Applications}
+
+
+\begin{figure}[t]
+  \includegraphics[width=\linewidth]{media/caption2img}
+  \caption[Caption-to-Image Samples]{Generative Text to Image Synthesis~\cite{gan_t2i:2016}}
+  \medskip
+  \small
+  The top row shows the provided captions and in the bottom row the corresponding synthesized images.
+\label{fig:caption2img}
+\end{figure}
+
+
+Generative models learn the joint distribution $p(x,y)$ and due to this fact they can be used to perform classification as well by expand $p(x,y)$ to $p(y|x)$ as indicated by Equation~\ref{eq:class}.
+\begin{equation}
+  \label{eq:class}
+  p(y|x) = \frac{p(x,y)}{p(x)}
+\end{equation}
+%
+One obvious application of generative models is to use the model to sample more data similar to samples from a given training dataset.\\
+%
+In computer vision tasks, generative models have been largely outperformed by much simpler models until at least 2011~\cite{thesis:2011}. In 2015 however, convolutional networks have been shown to surpass those models in image synthesis~\cite{synthesis:2015}.
+Other tasks involving image modeling include performing super-resolution~\cite{superres:2017}, constructing 3D models from 2D images~\cite{gan_3d:2016}, predicting the next video frames~\cite{gan_video:2016}, and synthesizing new images from captions as shown in Figure~\ref{fig:caption2img}.\\
+%
+In the area of reinforcement learning, generative models offer a way to perform action space exploration~\cite{rl_variational:2016}. Generative adversarial networks discussed in Section~\ref{sec:gan} have been shown to be used in imitation learning, where the generative model is used to imitate previously seen interactions~\cite{imitation_learning:2016}.\\
+%
+SampleRNN~\cite{samplernn:2016}, which is a recurrent neural network combined with an auto-regressive network have been shown to produce good generated audio samples.\\\\
+%
+Recently, generative models have also shown to improve semi-supervised learning performance significantly~\cite{cvae:2014}. Semi-supervised learning algorithms use only small amount of labeled data, which is usually difficult to obtain and large amounts of unlabeled data, which is easier to obtain in most cases.
+
+
+
 \newpage
-%Inverting $p(x|z)$ yields $p(z|x)$ which is one of the main tasks of some generative models, for example the VAE \ref{sec:vae}.
-
-
-%After a short overview of different approaches and methods and an introductory example with the sigmoid belief net (SBN), we will take a closer look at two recent promising frameworks, the variational autoencoder (VAE \ref{sec:vae}) and the generative adversarial network (GAN \ref{sec:gan}).
-
-
-
-%Generative models are one of the most promising ways to perform unsupervised learning (citation needed).
-%More specifically, generative modelling assumes a hidden structure $z$ explaining the input data $x$.
-%This assumption is reasonable given the following examples:\\
-
-
-
-
-%Generative models have been proposed as one of the most promising approaches towards
-%learning representations of real world data by some of the leading researchers (YannLeCun, OpenAI blogpost).
-
-%In recent years supervised learning has yielded impressive results,
-%however for these models to succeed huge amount of labelled data is needed.
-%Unsupervised learning, that is learning from unlabelled data, has been expressed
-%as one hurdles toward general articial intelligence (citation needed).
-%Early approaches toward this problem however have shown that these problems are very hard to learn (intractable?).
-
-%In generative models the approach is different in a way that
-%we search for a good internal representation of the data.
-%This resembles the way humans learn about the world where we incrementally build
-%a model of the world.
-
-

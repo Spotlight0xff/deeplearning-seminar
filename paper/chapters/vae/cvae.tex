@@ -1,4 +1,4 @@
-Instead of using VAEs in a completely unsupervised manner on a unlabeled dataset, it is also possible to learn from datasets where a small subset of datapoints has corresponding labels while most datapoints are still unlabeled.
+Instead of using VAEs in a completely unsupervised manner on an unlabeled dataset, it is also possible to learn from datasets where a small subset of data points has corresponding labels while most data points are still unlabeled.
 Techniques learning from such datasets are called semi-supervised learning and can improve performance significantly~\cite{cvae:2014}\cite{cvae_2:2015}.\\
 %
 To adjust the VAE model to the semi-supervised case, we have to add a random variable $y$ corresponding to the label if available.\\\\
@@ -33,4 +33,4 @@ And for the unsupervised case where the label $y$ corresponds to an unknown enti
   \log p_\theta(x) &\geq \mathbb{E}_{q_\phi(y,z|x)} \bigg[\log p_\theta(x|y,z) + \log p_\theta(y) + \log p(z) - \log q_\phi(y,z|x)\bigg]
 \end{align}
 
-The final objective function for whole dataset is the summation between right-hand terms of equations \ref{eq:cvae_labels} for the labelled subset and \ref{eq:cvae_unknown} for the unlabelled subset.
+The final objective function forthe  whole dataset is the summation between right-hand terms of equations \ref{eq:cvae_labels} for the labeled subset and \ref{eq:cvae_unknown} for the unlabelled subset.

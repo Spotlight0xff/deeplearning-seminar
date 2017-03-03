@@ -3,7 +3,7 @@
 % write about k passes (just averages)
 
 % write about IWAE, extends these k passes with importance weights
-The Importance Weighted Autoencoders\cite{iwae:2015} (IWAE) extends on the VAE framework using $k$-sampled importance weighting of the log-likelihood.
+The Importance Weighted Autoencoder\cite{iwae:2015} (IWAE) extends on the VAE framework using $k$-sampled importance weighting of the log-likelihood.
 % add intuition for IWAE, ruslan explained it very well during his DL summer school talk! (talk_Montreal_2016_Salakhutdinov.pdf)
 Using importance weighting can be informally interpreted as putting more weight on data with high likelihood.
 
@@ -12,7 +12,7 @@ Improving on the theoretical results in the VAE framework, using IWAE with more 
 \log p(x) \geq \mathcal{L}_{k+1}(x) \geq \mathcal{L}_{k}(x)
 \end{equation*}
 
-Additionally, if $\frac{p(h,x)}{q(h|x)}$ is bounded, then the model is guaranteed to reach the optimimum as $k$ approaches infinity in equation \ref{eq:iwae}
+Additionally, if $\frac{p(h,x)}{q(h|x)}$ is bounded, then the model is guaranteed to reach the optimum as $k$ approaches infinity in equation \ref{eq:iwae}
 \begin{equation}
 \label{eq:iwae}
 \lim_{k \rightarrow \infty} \mathcal{L}_{k}(x) = \log p(x)
